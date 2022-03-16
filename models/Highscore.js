@@ -21,4 +21,4 @@ highscoreSchema.set("toJSON", {
 
 const Highscore = mongoose.model("Highscore", highscoreSchema);
 
-module.export = Highscore;
+module.exports = Highscore;

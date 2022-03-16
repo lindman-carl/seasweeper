@@ -1,6 +1,6 @@
 const highscoresRouter = require("express").Router();
 
-const Highscore = require("../models/HighScore");
+const Highscore = require("../models/Highscore");
 
 // get all highscores
 highscoresRouter.get("/", async (req, res) => {
