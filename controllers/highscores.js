@@ -35,6 +35,8 @@ highscoresRouter.post("/", async (req, res) => {
   // save to db
   const savedHighscoreObject = await newHighscoreObject.save();
 
+  console.log(savedHighscoreObject);
+
   // respond with saved object
   res.status(201).json(savedHighscoreObject);
 });

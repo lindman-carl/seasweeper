@@ -1,9 +1,4 @@
 import React, { useState } from "react";
-
-import { BsCheckCircle } from "react-icons/bs";
-
-import { Link } from "react-router-dom";
-
 import axios from "axios";
 
 import gameUtils from "./gameUtils";
@@ -11,7 +6,9 @@ import gameUtils from "./gameUtils";
 // components
 import Timer from "./Timer";
 import Tile from "./Tile";
+import GameOverBox from "./GameOverBox";
 
+// data fetching functions
 const postHighscore = async (time, playerName) => {
   const res = await axios.post("http://localhost:3001/api/highscores", {
     time,
@@ -22,36 +19,17 @@ const postHighscore = async (time, playerName) => {
 };
 
 function Game() {
+  // states, should use useReducer
   const [board, setBoard] = useState(gameUtils.populateBoard(10, 10, 10));
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameTime, setGameTime] = useState(0);
   const [intervalId, setIntervalId] = useState();
   const [winTime, setWinTime] = useState(null);
+  const [win, setWin] = useState(false);
   const [nRevealed, setNRevealed] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [canSendHighscore, setCanSendHighscore] = useState(false);
-  const [hoveredTile, setHoveredTile] = useState(-1);
-
-  const placeFlag = () => {
-    console.log("placing at", hoveredTile);
-    const flaggedTile = board.find((t) => t.id === hoveredTile);
-    const newBoard = [
-      ...board.filter((t) => t.id !== hoveredTile),
-      { ...flaggedTile, flag: true },
-    ];
-
-    setBoard(newBoard);
-  };
-
-  const handleHover = (tile) => {
-    setHoveredTile(tile.id);
-  };
-
-  const handleSendHighscore = () => {
-    postHighscore(winTime, playerName);
-    setCanSendHighscore(false);
-  };
 
   const countRevealed = (boardToCount) => {
     const revealed = boardToCount.filter((t) => t.revealed).length;
@@ -79,6 +57,7 @@ function Game() {
     setNRevealed(0);
     clearInterval(intervalId);
     setCanSendHighscore(false);
+    setWin(false);
   };
 
   const startGame = () => {
@@ -87,6 +66,16 @@ function Game() {
       setGameTime((prev) => prev + 10);
     }, 10);
     setIntervalId(gameInterval);
+  };
+
+  // event handlers
+  const handlePlayerNameChange = ({ target }) => {
+    setPlayerName(target.value);
+  };
+
+  const handleSendHighscore = () => {
+    postHighscore(winTime, playerName);
+    setCanSendHighscore(false);
   };
 
   const handleClick = (tile) => {
@@ -113,6 +102,7 @@ function Game() {
       setGameOver(true);
       // reveal all
       setBoard(revealAll());
+      clearInterval(intervalId);
       return null;
     }
 
@@ -134,10 +124,12 @@ function Game() {
 
     if (revealed === 90) {
       console.log("win");
+      setWin(true);
       setWinTime(gameTime);
       setGameOver(true);
       setBoard(flagAllBombs(sortedUpdatedBoard));
       setCanSendHighscore(true);
+      clearInterval(intervalId);
     }
 
     setBoard(sortedUpdatedBoard);
@@ -146,74 +138,45 @@ function Game() {
 
   return (
     <div
-      className="w-full h-full flex flex-col justify-center items-center"
-      onKeyDown={() => placeFlag()}
+      className="
+            w-screen h-max 
+            sm:h-full 
+            lg:w-full
+            flex flex-col justify-start items-center"
     >
       <div className="mt-2 mb-2 text-2xl text-slate-700 font-bold">
-        {!gameOver ? (
-          <Timer time={gameTime} />
-        ) : winTime ? (
-          <Timer time={winTime} />
-        ) : (
-          "Game Over!"
-        )}
+        <Timer time={gameTime} />
       </div>
       <div className=" text-2xl text-slate-700 font-bold">
-        {!winTime ? `Tiles left to clear: ${90 - nRevealed}` : "You Win!"}
+        {!gameOver
+          ? `Tiles left to clear: ${90 - nRevealed}`
+          : win
+          ? "You win!"
+          : "Game over!"}
       </div>
-      <div className="grid grid-cols-10 grid-rows-10">
+      <div className="grid gap-0 grid-cols-10 grid-rows-10 grid-flow-row">
         {board.map((tile, idx) => (
           <Tile
             key={idx}
             tile={tile}
             onClick={() => handleClick(tile)}
-            onHover={() => handleHover(tile)}
             board={board}
           />
         ))}
       </div>
       {gameOver && (
-        <div className="w-96 h-48 z-10 absolute top-auto border-2 border-dashed rounded-md bg-slate-100 shadow-lg flex flex-col justify-center items-center">
-          <div className="mb-2 text-2xl font-bold">
-            {(winTime / 1000).toFixed(2)}s
-          </div>
-          <input
-            autoFocus
-            placeholder="Player name"
-            className=" bg-slate-100 font-semibold mb-2 border-b-2 text-center text-lg focus:outline-none"
-            value={playerName}
-            onChange={({ target }) => setPlayerName(target.value)}
-          />
-          <div className="w-full h-12 flex justify-center items-center">
-            {canSendHighscore ? (
-              <button
-                className="font-semibold border-2 border-dashed rounded m-1 p-1 pl-2 pr-2 mt-2 bg-gray-300 hover:border-4 hover:border-slate-500 hover:rounded-lg hover:shadow-lg active:scale-90 active:rounded-xl active:shadow-sm
-        cursor-pointer transition-all duration-75 flex flex-row justify-center items-center"
-                onClick={handleSendHighscore}
-                disabled={!canSendHighscore}
-              >
-                Submit highscore
-              </button>
-            ) : (
-              <BsCheckCircle size={24} />
-            )}
-          </div>
-          <div className="w-full h-12 flex justify-center items-center">
-            <button
-              className="font-semibold border-2 border-dashed rounded m-1 p-1 pl-2 pr-2 mt-2 bg-gray-300 hover:border-4 hover:border-slate-500 hover:rounded-lg hover:shadow-lg active:scale-90 active:rounded-xl active:shadow-sm
-              cursor-pointer transition-all duration-75"
-              onClick={restartGame}
-            >
-              Retry
-            </button>
-          </div>
-          <div className="w-full h-12 flex justify-center items-center">
-            <Link to="/highscores">View highscores</Link>
-          </div>
-        </div>
+        <GameOverBox
+          gameTime={gameTime}
+          win={win}
+          playerName={playerName}
+          handlePlayerNameChange={handlePlayerNameChange}
+          canSendHighscore={canSendHighscore}
+          handleSendHighscore={handleSendHighscore}
+          handleRestartGame={restartGame}
+        />
       )}
-      <div className="mt-2 text-xl text-slate-700 font-thin">
-        Flags are for pussies, mark them in your head!
+      <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
+        Flags are for slow players, mark the mines in your head!
       </div>
     </div>
   );

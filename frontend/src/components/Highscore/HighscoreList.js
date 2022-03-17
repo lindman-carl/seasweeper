@@ -13,11 +13,14 @@ const HighScores = ({ data, isLoading }) => {
    */
   const mapHighscores = () => {
     return data.map((highscore, idx) => (
-      <div key={idx} className="w-96 flex flex-row justify-start items-center">
+      <div
+        key={idx}
+        className="w-48 sm:w-64 flex flex-row justify-start items-center"
+      >
         {idx < 3 ? (
-          <HighscoreListRow highscore={highscore} rank={idx} size={"2xl"} />
+          <HighscoreListRow highscore={highscore} rank={idx} size={"xl"} />
         ) : (
-          <HighscoreListRow highscore={highscore} rank={idx} size={"lg"} />
+          <HighscoreListRow highscore={highscore} rank={idx} size={"md"} />
         )}
       </div>
     ));

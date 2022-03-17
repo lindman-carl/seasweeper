@@ -28,7 +28,7 @@ const HighScoreRow = ({ highscore: { playerName, time }, rank, size }) => {
         {rankFormatted()}
       </div>
       <div className={`text-${size} grow font-medium`}>{playerName}</div>
-      <div className={`w-16 text-${size} text-left font-medium`}>
+      <div className={`w-16 text-${size} text-right font-medium`}>
         {(time / 1000).toFixed(2)}
       </div>
     </>

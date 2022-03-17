@@ -29,9 +29,17 @@ const GameApp = () => {
   }
 
   return (
-    <div>
-      <Game />
-      <HighscoreList data={highscoreData} isLoading={isLoading} />
+    <div
+      className="
+          flex flex-col items-center justify-center 
+          lg:flex-row lg:justify-center"
+    >
+      <div className="">
+        <Game />
+      </div>
+      <div className="justify-self-start lg:ml-8">
+        <HighscoreList data={highscoreData} isLoading={isLoading} />
+      </div>
     </div>
   );
 };
