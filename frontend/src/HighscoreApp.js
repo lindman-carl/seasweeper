@@ -7,11 +7,8 @@ import HighscoreList from "./components/Highscore/HighscoreList";
 const fetchHighscores = async () => {
   const res = await axios.get("http://localhost:3001/api/highscores");
   const sortedData = res.data.sort((a, b) => a.time - b.time);
-  console.log(sortedData);
 
-  // get top 10
-  const topTenData = sortedData.slice(0, 10);
-  return topTenData;
+  return sortedData;
 };
 
 const HighscoreApp = (props) => {

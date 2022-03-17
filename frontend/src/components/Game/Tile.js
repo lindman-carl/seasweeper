@@ -33,7 +33,7 @@ const Tile = ({ tile, onClick }) => {
             md:w-12 md:h-12
             lg:w-16 lg:h-16
             border-dashed border
-            sm:border-2
+            md:border-2
             ${color}
             transition-all duration-75 ease`}
         >
@@ -65,7 +65,7 @@ const Tile = ({ tile, onClick }) => {
             md:w-12 md:h-12
             lg:w-16 lg:h-16
             border-dashed border
-            sm:border-2
+            md:border-2
             shadow-md 
             ${color}
             sm:hover:border-4 

@@ -15,7 +15,9 @@ const HighScores = ({ data, isLoading }) => {
     return data.map((highscore, idx) => (
       <div
         key={idx}
-        className="w-48 sm:w-64 flex flex-row justify-start items-center"
+        className="
+        w-48 sm:w-64 
+        flex flex-row justify-start items-center"
       >
         {idx < 3 ? (
           <HighscoreListRow highscore={highscore} rank={idx} size={"xl"} />
@@ -27,21 +29,25 @@ const HighScores = ({ data, isLoading }) => {
   };
 
   return (
-    <div
-      className="w-full h-full 
-        flex flex-col justify-start items-center"
-    >
+    <div className="w-full h-full flex flex-col justify-start items-center">
       <HighscoreAppHeader />
-      {isLoading ? (
-        <div className="mt-16">
-          <ClipLoader />
-        </div>
-      ) : (
-        <>
-          <HighscoreHeaders />
-          {mapHighscores()}
-        </>
-      )}
+      <div
+        className="w-96 h-full
+      max-h-96
+      overflow-scroll
+      flex flex-col justify-start items-center"
+      >
+        {isLoading ? (
+          <div className="mt-16">
+            <ClipLoader />
+          </div>
+        ) : (
+          <>
+            <HighscoreHeaders />
+            {mapHighscores()}
+          </>
+        )}
+      </div>
     </div>
   );
 };
