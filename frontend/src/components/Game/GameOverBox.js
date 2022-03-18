@@ -18,6 +18,26 @@ const NameInput = ({ register, required }) => (
   />
 );
 
+const SendHighscoreForm = ({ handleSubmit, onSubmit, register }) => (
+  <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="flex flex-col items-center"
+  >
+    <NameInput register={register} required />
+    <div className="gameoverbox-item">
+      <button type="submit" className="gameoverbox-button">
+        Submit highscore
+      </button>
+    </div>
+  </form>
+);
+
+const FormResponse = ({ isSendingHighscore }) => (
+  <div className="gameoverbox-response">
+    {isSendingHighscore ? <ClipLoader /> : <BsCheckCircle size={32} />}
+  </div>
+);
+
 const RetryButton = ({ handleRestartGame }) => (
   <button className="gameoverbox-button" onClick={handleRestartGame}>
     Retry
@@ -26,9 +46,7 @@ const RetryButton = ({ handleRestartGame }) => (
 
 const GameOverBox = ({
   gameTime,
-  playerName,
   win,
-  handlePlayerNameChange,
   handleSendHighscore,
   isSendingHighscore,
   handleRestartGame,
@@ -41,48 +59,37 @@ const GameOverBox = ({
     setHasSubmit(true);
   };
 
+  const renderForm = () =>
+    !hasSubmit ? (
+      <SendHighscoreForm
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        register={register}
+      />
+    ) : (
+      <FormResponse isSendingHighscore={isSendingHighscore} />
+    );
+
+  const gameoverMode = () =>
+    win ? (
+      <>
+        <div className="gameoverbox-header font-bold">
+          {(gameTime / 1000).toFixed(2)}s
+        </div>
+
+        {renderForm()}
+      </>
+    ) : (
+      <div className="gameoverbox-item">
+        <div className="gameoverbox-header font-semibold">
+          Failure achieved in {(gameTime / 1000).toFixed(2)}s
+        </div>
+      </div>
+    );
+
   return (
     <div className="gameoverbox-container">
-      {win ? (
-        <>
-          <div className="mb-2 mt-2 text-2xl font-bold">
-            {(gameTime / 1000).toFixed(2)}s
-          </div>
-
-          {!hasSubmit ? (
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col items-center"
-            >
-              <NameInput
-                playerName={playerName}
-                handlePlayerNameChange={handlePlayerNameChange}
-                register={register}
-                required
-              />
-              <div className="gameoverbox-item">
-                <button type="submit" className="gameoverbox-button">
-                  Submit highscore
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="gameoverbox-response">
-              {isSendingHighscore ? (
-                <ClipLoader />
-              ) : (
-                <BsCheckCircle size={32} />
-              )}
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="gameoverbox-item">
-          <div className="gameoverbox-header font-semibold">
-            Failure achieved in {(gameTime / 1000).toFixed(2)}s
-          </div>
-        </div>
-      )}
+      {gameoverMode()}
 
       <div className="gameoverbox-item">
         <RetryButton handleRestartGame={handleRestartGame} />
