@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { ClipLoader } from "react-spinners";
 
 const NameInput = ({ register, required }) => (
   <input
@@ -18,19 +19,7 @@ const NameInput = ({ register, required }) => (
 );
 
 const RetryButton = ({ handleRestartGame }) => (
-  <button
-    className="
-          w-48
-          m-1 p-1 pl-2 pr-2 mt-2 
-          border-2 border-dashed rounded 
-          font-semibold 
-          bg-gray-300 
-          hover:border-4 hover:border-slate-500 hover:rounded-lg hover:shadow-lg 
-          active:scale-90 active:rounded-xl active:shadow-sm
-          cursor-pointer 
-          transition-all duration-75"
-    onClick={handleRestartGame}
-  >
+  <button className="gameoverbox-button" onClick={handleRestartGame}>
     Retry
   </button>
 );
@@ -41,6 +30,7 @@ const GameOverBox = ({
   win,
   handlePlayerNameChange,
   handleSendHighscore,
+  isSendingHighscore,
   handleRestartGame,
 }) => {
   const { register, handleSubmit } = useForm();
@@ -52,18 +42,7 @@ const GameOverBox = ({
   };
 
   return (
-    <div
-      className="
-            w-5/6 h-min
-            w-96
-            max-w-[24rem]
-            sm:w-96
-            z-10 top-1/3 absolute 
-            flex flex-col justify-center items-center
-            border-2 border-dashed rounded-md 
-            bg-slate-100 
-            shadow-lg"
-    >
+    <div className="gameoverbox-container">
       {win ? (
         <>
           <div className="mb-2 mt-2 text-2xl font-bold">
@@ -81,30 +60,25 @@ const GameOverBox = ({
                 register={register}
                 required
               />
-              <button
-                type="submit"
-                className="
-                      w-48
-                      m-1 p-1 pl-2 pr-2 mt-2 
-                      flex flex-row justify-center items-center
-                      border-2 border-dashed rounded 
-                      bg-gray-300 
-                      font-semibold 
-                      hover:border-4 hover:border-slate-500 hover:rounded-lg hover:shadow-lg 
-                      active:scale-90 active:rounded-xl active:shadow-sm
-                      cursor-pointer 
-                      transition-all duration-75"
-              >
-                Submit highscore
-              </button>
+              <div className="gameoverbox-item">
+                <button type="submit" className="gameoverbox-button">
+                  Submit highscore
+                </button>
+              </div>
             </form>
           ) : (
-            <BsCheckCircle size={32} className="m-2" />
+            <div className="gameoverbox-response">
+              {isSendingHighscore ? (
+                <ClipLoader />
+              ) : (
+                <BsCheckCircle size={32} />
+              )}
+            </div>
           )}
         </>
       ) : (
         <div className="gameoverbox-item">
-          <div className="mb-2 mt-2 text-2xl font-semibold">
+          <div className="gameoverbox-header font-semibold">
             Failure achieved in {(gameTime / 1000).toFixed(2)}s
           </div>
         </div>

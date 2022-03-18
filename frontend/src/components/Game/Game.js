@@ -14,7 +14,7 @@ const postHighscore = async (time, playerName) => {
     time,
     playerName,
   });
-  console.log(res.data);
+
   return res.data;
 };
 
@@ -27,8 +27,7 @@ function Game() {
   const [intervalId, setIntervalId] = useState();
   const [win, setWin] = useState(false);
   const [nRevealed, setNRevealed] = useState(0);
-  // const [playerName, setPlayerName] = useState("");
-  const [canSendHighscore, setCanSendHighscore] = useState(false);
+  const [isSendingHighscore, setIsSendingHighscore] = useState(false);
 
   const countRevealed = (boardToCount) => {
     const revealed = boardToCount.filter((t) => t.revealed).length;
@@ -54,7 +53,6 @@ function Game() {
     setGameTime(0);
     setNRevealed(0);
     clearInterval(intervalId);
-    setCanSendHighscore(false);
     setWin(false);
   };
 
@@ -71,9 +69,13 @@ function Game() {
     // setPlayerName(target.value);
   };
 
-  const handleSendHighscore = ({ playerName }) => {
-    postHighscore(gameTime, playerName);
-    setCanSendHighscore(false);
+  const handleSendHighscore = async ({ playerName }) => {
+    setIsSendingHighscore(true); // trigger loading animation
+
+    const postedHighscore = await postHighscore(gameTime, playerName);
+    console.log("posted highscore", postedHighscore);
+
+    setIsSendingHighscore(false); // untrigger loading animation
   };
 
   const handleClick = (tile) => {
@@ -125,7 +127,6 @@ function Game() {
       setWin(true);
       setGameOver(true);
       setBoard(flagAllBombs(sortedUpdatedBoard));
-      setCanSendHighscore(true);
       clearInterval(intervalId);
     }
 
@@ -167,6 +168,7 @@ function Game() {
           win={win}
           handlePlayerNameChange={handlePlayerNameChange}
           handleSendHighscore={handleSendHighscore}
+          isSendingHighscore={isSendingHighscore}
           handleRestartGame={restartGame}
         />
       )}
