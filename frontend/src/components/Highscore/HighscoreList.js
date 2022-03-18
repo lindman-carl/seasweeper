@@ -32,10 +32,10 @@ const HighScores = ({ data, isLoading, error }) => {
     <div className="w-full h-full flex flex-col justify-start items-center">
       <HighscoreAppHeader />
       <div
-        className="w-96 h-full
-      max-h-96
-      overflow-scroll
-      flex flex-col justify-start items-center"
+        className="
+              w-96 h-full max-h-96
+              overflow-scroll
+              flex flex-col justify-start items-center"
       >
         {!error ? (
           isLoading ? (

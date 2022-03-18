@@ -22,13 +22,17 @@ const HighScoreRow = ({ highscore: { playerName, time }, rank, size }) => {
     }
   };
 
+  const textSize = () => {
+    return `text-${size}`;
+  };
+
   return (
     <>
-      <div className={`w-4 ml-1 mr-8 text-${size} font-medium`}>
+      <div className={`w-4 ml-1 mr-8 ${textSize()} font-medium`}>
         {rankFormatted()}
       </div>
-      <div className={`text-${size} grow font-medium`}>{playerName}</div>
-      <div className={`w-16 text-${size} text-right font-medium`}>
+      <div className={`${textSize()} grow font-medium`}>{playerName}</div>
+      <div className={`w-16 ${textSize()} text-right font-medium`}>
         {(time / 1000).toFixed(2)}
       </div>
     </>

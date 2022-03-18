@@ -6,7 +6,7 @@ const SendHighscoreForm = ({ handleSubmit, onSubmit, register }) => (
     className="flex flex-col items-center"
   >
     <TextInput
-      placeholder={"p-name"}
+      placeholder={"Player name"}
       registerName={"playerName"}
       register={register}
       required

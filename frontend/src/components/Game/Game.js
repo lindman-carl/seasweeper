@@ -173,7 +173,8 @@ function Game() {
         />
       )}
       <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
-        Flags are for slow players, mark the mines in your head!
+        Click to reveal tile. Flags are for slow players, mark the mines in your
+        head!
       </div>
     </div>
   );
