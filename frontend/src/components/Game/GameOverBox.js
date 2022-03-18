@@ -4,33 +4,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
 
-const NameInput = ({ register, required }) => (
-  <input
-    autoFocus
-    placeholder="Player name"
-    className="
-          mb-2 
-          border-b-2 
-          bg-slate-100 
-          font-semibold text-center text-lg 
-          focus:outline-none"
-    {...register("playerName", { required })}
-  />
-);
-
-const SendHighscoreForm = ({ handleSubmit, onSubmit, register }) => (
-  <form
-    onSubmit={handleSubmit(onSubmit)}
-    className="flex flex-col items-center"
-  >
-    <NameInput register={register} required />
-    <div className="gameoverbox-item">
-      <button type="submit" className="gameoverbox-button">
-        Submit highscore
-      </button>
-    </div>
-  </form>
-);
+// components
+import SendHighscoreForm from "./SendHighscoreForm";
 
 const FormResponse = ({ isSendingHighscore }) => (
   <div className="gameoverbox-response">
