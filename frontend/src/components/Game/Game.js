@@ -12,7 +12,7 @@ import GameOverBox from "./GameOverBox";
 const postHighscore = async (time, playerName) => {
   const res = await axios.post("http://localhost:3001/api/highscores", {
     time,
-    playerName,
+    playerName: playerName.trim(),
   });
 
   return res.data;

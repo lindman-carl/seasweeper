@@ -15,7 +15,14 @@ const TextInput = ({
           bg-slate-100 
           font-semibold text-center text-lg 
           focus:outline-none"
-    {...register(registerName, { required, minLength, maxLength })}
+    {...register(registerName, {
+      required,
+      minLength,
+      maxLength,
+      validate: (value) => {
+        return !!value.trim();
+      },
+    })}
   />
 );
 
