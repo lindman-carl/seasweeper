@@ -6,7 +6,7 @@ const HighscoreAppHeader = () => (
   <div className="m-4 font-bold text-2xl">Highscores</div>
 );
 
-const HighScores = ({ data, isLoading }) => {
+const HighScores = ({ data, isLoading, error }) => {
   /**
    * Maps data to HighscoreListRow objects
    * @returns Array of HigscoreListRow objects
@@ -37,15 +37,19 @@ const HighScores = ({ data, isLoading }) => {
       overflow-scroll
       flex flex-col justify-start items-center"
       >
-        {isLoading ? (
-          <div className="mt-16">
-            <ClipLoader />
-          </div>
+        {!error ? (
+          isLoading ? (
+            <div className="mt-16">
+              <ClipLoader />
+            </div>
+          ) : (
+            <>
+              <HighscoreHeaders />
+              {mapHighscores()}
+            </>
+          )
         ) : (
-          <>
-            <HighscoreHeaders />
-            {mapHighscores()}
-          </>
+          <div className="mt-16">Error fetching highscores.</div>
         )}
       </div>
     </div>

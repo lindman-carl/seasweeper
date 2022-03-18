@@ -67,9 +67,19 @@ const recFloodFill = (tile, copiedBoard, tilesToReveal) => {
   // iterate neighbours
   for (let yoff = -1; yoff <= 1; yoff++) {
     for (let xoff = -1; xoff <= 1; xoff++) {
+      // // break if outside of board
+      // if (
+      //   tile.x + xoff < 0 ||
+      //   tile.x + xoff > 9 ||
+      //   tile.y + yoff < 0 ||
+      //   tile.y + yoff > 9
+      // ) {
+      //   break;
+      // }
       const neighbour = copiedBoard.find(
         (t) => t.x === tile.x + xoff && t.y === tile.y + yoff
       );
+
       if (
         neighbour &&
         neighbour.id !== tile.id &&
@@ -88,12 +98,11 @@ const recFloodFill = (tile, copiedBoard, tilesToReveal) => {
 
 const startFloodFill = (tile, board, tilesToReveal) => {
   const copiedBoard = [...board];
-
   recFloodFill(tile, copiedBoard, tilesToReveal);
-  console.log(tilesToReveal);
+
   return tilesToReveal;
 };
 
-const gameUtils = { populateBoard, startFloodFill, recFloodFill };
+const gameUtils = { populateBoard, startFloodFill };
 
 export default gameUtils;

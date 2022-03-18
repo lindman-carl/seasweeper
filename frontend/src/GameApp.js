@@ -23,11 +23,6 @@ const GameApp = () => {
     refetchOnWindowFocus: false,
   });
 
-  if (error) {
-    console.log(error);
-    return <div>error</div>;
-  }
-
   return (
     <div
       className="
@@ -38,7 +33,11 @@ const GameApp = () => {
         <Game />
       </div>
       <div className="justify-self-start lg:ml-8">
-        <HighscoreList data={highscoreData} isLoading={isLoading} />
+        <HighscoreList
+          data={highscoreData}
+          isLoading={isLoading}
+          error={error}
+        />
       </div>
     </div>
   );

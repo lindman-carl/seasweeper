@@ -25,10 +25,9 @@ function Game() {
   const [gameOver, setGameOver] = useState(false);
   const [gameTime, setGameTime] = useState(0);
   const [intervalId, setIntervalId] = useState();
-  const [winTime, setWinTime] = useState(null);
   const [win, setWin] = useState(false);
   const [nRevealed, setNRevealed] = useState(0);
-  const [playerName, setPlayerName] = useState("");
+  // const [playerName, setPlayerName] = useState("");
   const [canSendHighscore, setCanSendHighscore] = useState(false);
 
   const countRevealed = (boardToCount) => {
@@ -53,7 +52,6 @@ function Game() {
     setGameStarted(false);
     setGameOver(false);
     setGameTime(0);
-    setWinTime(null);
     setNRevealed(0);
     clearInterval(intervalId);
     setCanSendHighscore(false);
@@ -70,11 +68,11 @@ function Game() {
 
   // event handlers
   const handlePlayerNameChange = ({ target }) => {
-    setPlayerName(target.value);
+    // setPlayerName(target.value);
   };
 
-  const handleSendHighscore = () => {
-    postHighscore(winTime, playerName);
+  const handleSendHighscore = ({ playerName }) => {
+    postHighscore(gameTime, playerName);
     setCanSendHighscore(false);
   };
 
@@ -125,7 +123,6 @@ function Game() {
     if (revealed === 90) {
       console.log("win");
       setWin(true);
-      setWinTime(gameTime);
       setGameOver(true);
       setBoard(flagAllBombs(sortedUpdatedBoard));
       setCanSendHighscore(true);
@@ -168,9 +165,7 @@ function Game() {
         <GameOverBox
           gameTime={gameTime}
           win={win}
-          playerName={playerName}
           handlePlayerNameChange={handlePlayerNameChange}
-          canSendHighscore={canSendHighscore}
           handleSendHighscore={handleSendHighscore}
           handleRestartGame={restartGame}
         />
