@@ -1,4 +1,11 @@
-const TextInput = ({ placeholder, registerName, register, required }) => (
+const TextInput = ({
+  placeholder,
+  registerName,
+  register,
+  required,
+  minLength,
+  maxLength,
+}) => (
   <input
     autoFocus
     placeholder={placeholder}
@@ -8,7 +15,7 @@ const TextInput = ({ placeholder, registerName, register, required }) => (
           bg-slate-100 
           font-semibold text-center text-lg 
           focus:outline-none"
-    {...register(registerName, { required })}
+    {...register(registerName, { required, minLength, maxLength })}
   />
 );
 

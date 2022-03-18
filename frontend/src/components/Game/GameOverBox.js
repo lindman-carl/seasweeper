@@ -26,7 +26,11 @@ const GameOverBox = ({
   isSendingHighscore,
   handleRestartGame,
 }) => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ reValidateMode: "onSubmit" });
   const [hasSubmit, setHasSubmit] = useState(false);
 
   const onSubmit = (data) => {
@@ -36,11 +40,14 @@ const GameOverBox = ({
 
   const renderForm = () =>
     !hasSubmit ? (
-      <SendHighscoreForm
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        register={register}
-      />
+      <>
+        <SendHighscoreForm
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          register={register}
+          errors={errors}
+        />
+      </>
     ) : (
       <FormResponse isSendingHighscore={isSendingHighscore} />
     );

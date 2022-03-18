@@ -32,7 +32,7 @@ const GameApp = () => {
       <div className="">
         <Game />
       </div>
-      <div className="justify-self-start lg:ml-8">
+      <div className="justify-self-start lg:ml-4">
         <HighscoreList
           data={highscoreData}
           isLoading={isLoading}
