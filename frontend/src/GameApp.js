@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 
 import Game from "./components/Game/Game";
 import HighscoreList from "./components/Highscore/HighscoreList";
+import Logo from "./components/Logo";
 
 const fetchHighscores = async () => {
   const res = await axios.get("/api/highscores");
@@ -33,14 +34,17 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
       <div className="">
         <Game w={w} h={h} nBombs={nBombs} refetchHighscore={handleRefetch} />
       </div>
-      <div className="justify-self-start lg:ml-4">
-        <HighscoreList
-          data={highscoreData}
-          isLoading={isLoading}
-          error={error}
-          filter={undefined}
-          inGame={true}
-        />
+      <div className="flex flex-col items-center">
+        <Logo />
+        <div className="justify-self-start lg:ml-4">
+          <HighscoreList
+            data={highscoreData}
+            isLoading={isLoading}
+            error={error}
+            filter={undefined}
+            inGame={true}
+          />
+        </div>
       </div>
     </div>
   );
