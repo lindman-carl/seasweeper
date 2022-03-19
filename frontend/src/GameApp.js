@@ -5,7 +5,7 @@ import Game from "./components/Game/Game";
 import HighscoreList from "./components/Highscore/HighscoreList";
 
 const fetchHighscores = async () => {
-  const res = await axios.get("http://localhost:3001/api/highscores");
+  const res = await axios.get("/api/highscores");
   const sortedData = res.data.sort((a, b) => a.time - b.time);
   return sortedData;
 };
