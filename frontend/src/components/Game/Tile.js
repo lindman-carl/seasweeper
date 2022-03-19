@@ -9,7 +9,7 @@ const Tile = ({ tile, onClick }) => {
   if (tile.revealed) {
     color = "bg-white-100";
   } else {
-    color = "bg-gray-300";
+    color = "bg-blue-300";
   }
 
   const formatCount = () => {
@@ -18,6 +18,34 @@ const Tile = ({ tile, onClick }) => {
     }
     return null;
   };
+
+  // land
+  if (tile.type === 1) {
+    return (
+      <div
+        className={`w-full h-min p-0.5 sm:p-1 flex justify-center items-center`}
+        onClick={onClick}
+      >
+        <div
+          className={`
+            w-7 h-7
+            sm:w-8 sm:h-8
+            md:w-12 md:h-12
+            lg:w-16 lg:h-16
+            border-dashed border
+            md:border-2
+            shadow-md 
+            bg-green-300
+            sm:hover:border-4 
+            hover:border-slate-500 sm:hover:rounded-lg sm:hover:shadow-lg 
+            active:rounded-xl
+            sm:active:scale-90 sm:active:shadow-sm
+            cursor-pointer
+            transition-all duration-100 ease`}
+        ></div>
+      </div>
+    );
+  }
 
   if (tile.revealed) {
     // revealed tile

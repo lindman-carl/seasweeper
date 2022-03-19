@@ -14,7 +14,7 @@ const fetchHighscores = async () => {
   return topTenData;
 };
 
-const GameApp = () => {
+const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
   const {
     data: highscoreData,
     isLoading,
@@ -30,7 +30,13 @@ const GameApp = () => {
           lg:flex-row lg:justify-center"
     >
       <div className="">
-        <Game />
+        <Game
+          w={w}
+          h={h}
+          nIslands={nIslands}
+          clusterSpread={clusterSpread}
+          nBombs={nBombs}
+        />
       </div>
       <div className="justify-self-start lg:ml-4">
         <HighscoreList

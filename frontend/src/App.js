@@ -11,7 +11,18 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<GameApp />} />
+          <Route
+            path="/"
+            element={
+              <GameApp
+                w={10}
+                h={10}
+                nIslands={4}
+                clusterSpread={2}
+                nBombs={5}
+              />
+            }
+          />
           <Route path="highscores" element={<HighscoreApp />} />
         </Routes>
       </BrowserRouter>

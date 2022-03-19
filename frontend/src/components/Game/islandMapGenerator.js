@@ -207,6 +207,7 @@ const mergeLayers = (mapToMerge) => {
 };
 
 const generateValidMergedMap = (w, h, nIslands, clusterSpread) => {
+  console.log("called generateValidMergedMap");
   const validMap = generateValidMap(w, h, nIslands, clusterSpread);
   const mergedMap = mergeLayers(validMap);
   return mergedMap;
