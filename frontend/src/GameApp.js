@@ -42,7 +42,7 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
             isLoading={isLoading}
             error={error}
             filter={undefined}
-            inGame={true}
+            inGame={false}
           />
         </div>
       </div>
