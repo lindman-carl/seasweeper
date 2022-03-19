@@ -12,7 +12,7 @@ import { ClipLoader } from "react-spinners";
 
 // data fetching functions
 const postHighscore = async (time, playerName) => {
-  const res = await axios.post("http://localhost:3001/api/highscores", {
+  const res = await axios.post("/api/highscores", {
     time,
     playerName: playerName.trim(),
     gameMode: "island10",
