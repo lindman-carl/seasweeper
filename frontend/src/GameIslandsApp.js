@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import Game from "./components/Game/Game";
+import GameIslands from "./components/Game/GameIslands";
 import HighscoreList from "./components/Highscore/HighscoreList";
 
 const fetchHighscores = async () => {
@@ -21,9 +21,10 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
   });
 
   const handleRefetch = () => {
-    console.log("refetching");
+    console.log("refetching highscores");
     refetch();
   };
+
   return (
     <div
       className="
@@ -31,14 +32,21 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
           lg:flex-row lg:justify-center"
     >
       <div className="">
-        <Game w={w} h={h} nBombs={nBombs} refetchHighscore={handleRefetch} />
+        <GameIslands
+          w={w}
+          h={h}
+          nIslands={nIslands}
+          clusterSpread={clusterSpread}
+          nBombs={nBombs}
+          refetchHighscore={handleRefetch}
+        />
       </div>
       <div className="justify-self-start lg:ml-4">
         <HighscoreList
           data={highscoreData}
           isLoading={isLoading}
           error={error}
-          filter={undefined}
+          filter={"island10"}
           inGame={true}
         />
       </div>

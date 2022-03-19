@@ -33,7 +33,11 @@ const HighscoreApp = (props) => {
       <Link to="/" className="mt-2">
         Back to game
       </Link>
-      <HighscoreList isLoading={isLoading} data={highscoreData} />
+      <HighscoreList
+        isLoading={isLoading}
+        data={highscoreData}
+        inGame={false}
+      />
     </div>
   );
 };

@@ -186,7 +186,7 @@ const generateValidMap = (w, h, nIslands, clusterSpread) => {
     const islandMap = generateIslandMap(w, h, nIslands, clusterSpread);
     const { map, count } = floodFillMap(islandMap);
 
-    if (count > (w * h) / 2) {
+    if (count > w * h * 0.75) {
       return map;
     }
   }

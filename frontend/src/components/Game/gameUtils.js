@@ -110,6 +110,7 @@ const populateBoard = (width, height, nBombs) => {
         bomb: false,
         revealed: false,
         count: -1,
+        type: 2,
       };
       if (bombIds.includes(newTile.id)) {
         // add bomb

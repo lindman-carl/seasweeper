@@ -6,13 +6,15 @@ const HighscoreAppHeader = () => (
   <div className="m-4 font-bold text-2xl">Highscores</div>
 );
 
-const HighScores = ({ data, isLoading, error }) => {
+const HighScores = ({ data, isLoading, error, filter, inGame }) => {
   /**
    * Maps data to HighscoreListRow objects
    * @returns Array of HigscoreListRow objects
    */
   const mapHighscores = () => {
-    return data.map((highscore, idx) => (
+    const filteredData = data.filter((e) => e.gameMode === filter);
+    const slicedData = inGame ? filteredData.slice(0, 10) : filteredData;
+    return slicedData.map((highscore, idx) => (
       <div
         key={idx}
         className="

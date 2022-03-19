@@ -21,7 +21,7 @@ const postHighscore = async (time, playerName) => {
   return res.data;
 };
 
-function Game({ w, h, nIslands, clusterSpread, nBombs }) {
+function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
   // states, should use useReducer
   const [generatedMap, setGeneratedMap] = useState(null);
   const [board, setBoard] = useState(null);
@@ -84,6 +84,7 @@ function Game({ w, h, nIslands, clusterSpread, nBombs }) {
     setNRevealed(0);
     clearInterval(intervalId);
     setWin(false);
+    setSeaTiles(board.filter((t) => t.type === 2).length);
   };
 
   const startGame = () => {
@@ -106,6 +107,8 @@ function Game({ w, h, nIslands, clusterSpread, nBombs }) {
     console.log("posted highscore", postedHighscore);
 
     setIsSendingHighscore(false); // untrigger loading animation
+
+    refetchHighscore(); // refetch highscore list
   };
 
   const handleClick = (tile) => {
@@ -157,7 +160,7 @@ function Game({ w, h, nIslands, clusterSpread, nBombs }) {
     const sortedUpdatedBoard = updatedBoard.sort((a, b) => a.id - b.id);
     const revealed = countRevealed(sortedUpdatedBoard);
 
-    if (revealed === seaTiles - nBombs) {
+    if (revealed >= seaTiles - nBombs) {
       console.log("win");
       setWin(true);
       setGameOver(true);
@@ -183,7 +186,9 @@ function Game({ w, h, nIslands, clusterSpread, nBombs }) {
         </div>
         <div className=" text-2xl text-slate-700 font-bold">
           {!gameOver
-            ? `Tiles left to clear: ${seaTiles - nRevealed - nBombs}`
+            ? `There are ${nBombs} mines. Tiles left to clear: ${
+                seaTiles - nRevealed - nBombs
+              }`
             : win
             ? "You win!"
             : "Game over!"}

@@ -18,7 +18,7 @@ const postHighscore = async (time, playerName) => {
   return res.data;
 };
 
-function Game() {
+function Game({ w, h, nBombs, refetchHighscore }) {
   // states, should use useReducer
   const [board, setBoard] = useState(gameUtils.populateBoard(10, 10, 10));
   const [gameStarted, setGameStarted] = useState(false);
@@ -76,6 +76,8 @@ function Game() {
     console.log("posted highscore", postedHighscore);
 
     setIsSendingHighscore(false); // untrigger loading animation
+
+    refetchHighscore();
   };
 
   const handleClick = (tile) => {
@@ -112,7 +114,9 @@ function Game() {
     tilesToReveal.push(tile.id);
 
     if (tile.count === 0) {
+      console.log("flooding");
       tilesToReveal = gameUtils.startFloodFill(tile, board, tilesToReveal);
+      console.log("tiles to reveal", tilesToReveal);
     }
 
     const updatedBoard = copiedBoard.map((t) =>

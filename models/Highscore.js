@@ -11,7 +11,6 @@ const highscoreSchema = mongoose.Schema({
   },
   gameMode: {
     type: String,
-    required: true,
   },
   timestamp: {
     type: Number,
