@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import gameUtils from "./gameUtils";
 
@@ -178,7 +179,10 @@ function Game({ w, h, nBombs, refetchHighscore }) {
       )}
       <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
         Click to reveal tile. Flags are for slow players, mark the mines in your
-        head!
+        head!{" "}
+        <Link to="/islands" className="font-medium underline">
+          Play islands
+        </Link>
       </div>
     </div>
   );

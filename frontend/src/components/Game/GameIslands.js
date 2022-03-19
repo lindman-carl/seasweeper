@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import gameUtils from "./gameUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
@@ -225,7 +226,10 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
         )}
         <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
           Click to reveal tile. Flags are for slow players, mark the mines in
-          your head!
+          your head!{" "}
+          <Link to="/" className="font-medium underline">
+            Play open sea
+          </Link>
         </div>
       </div>
     );
