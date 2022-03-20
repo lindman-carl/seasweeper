@@ -50,7 +50,7 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs, name }) => {
             data={highscoreData}
             isLoading={isLoading}
             error={error}
-            filter={"island10"}
+            filter={name}
             inGame={false}
           />
         </div>
