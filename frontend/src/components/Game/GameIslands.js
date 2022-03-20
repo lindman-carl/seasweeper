@@ -370,7 +370,7 @@ function Game({
         <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
           Click to reveal tile. Flags are for slow players, mark the mines in
           your head!
-          <Link to="/" className="font-medium underline">
+          <Link to="/opensea" className="font-medium underline">
             Play open sea
           </Link>
         </div>

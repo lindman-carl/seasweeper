@@ -14,7 +14,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/islands"
+              path="/"
               element={
                 <GameIslandsApp
                   w={22}
@@ -26,7 +26,10 @@ function App() {
                 />
               }
             />
-            <Route path="/" element={<GameApp w={10} h={10} nBombs={10} />} />
+            <Route
+              path="/opensea"
+              element={<GameApp w={10} h={10} nBombs={10} />}
+            />
             <Route path="highscores" element={<HighscoreApp />} />
           </Routes>
         </BrowserRouter>

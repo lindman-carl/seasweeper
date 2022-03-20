@@ -180,7 +180,7 @@ function Game({ w, h, nBombs, refetchHighscore }) {
       <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
         Click to reveal tile. Flags are for slow players, mark the mines in your
         head!{" "}
-        <Link to="/islands" className="font-medium underline">
+        <Link to="/" className="font-medium underline">
           Play islands
         </Link>
       </div>
