@@ -16,7 +16,7 @@ const populateGeneratedMap = (nBombs, mapToPopulate) => {
         x,
         y,
         id,
-        flag: false,
+        marked: false,
         bomb: false,
         revealed: false,
         count: -1,

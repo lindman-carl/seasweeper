@@ -3,8 +3,9 @@ import { IconContext } from "react-icons";
 // import { BsFlagFill } from "react-icons/bs";
 import { FaBomb } from "react-icons/fa";
 import { SiLighthouse } from "react-icons/si";
+import { GiBuoy } from "react-icons/gi";
 
-const Tile = React.memo(({ tile, onClick }) => {
+const Tile = React.memo(({ tile, onClick, markMode }) => {
   let iconSize = "1.5em";
 
   const formatCount = () => {
@@ -19,7 +20,8 @@ const Tile = React.memo(({ tile, onClick }) => {
       className={`
     tile-base
     shadow-none
-    ${tile.lit ? "bg-yellow-100" : "bg-sky-50"}`}
+    ${tile.lit ? "bg-yellow-100" : "bg-sky-50"}
+    cursor-default`}
     >
       <div className="tile-icon-container text-black text-2xl font-bold">
         {tile.bomb ? (
@@ -50,14 +52,43 @@ const Tile = React.memo(({ tile, onClick }) => {
     </div>
   );
 
+  const formatWater = () => {
+    const icon = () => (
+      <div className="tile-icon-container text-yellow-300 drop-shadow-lg animate-wiggle ">
+        <IconContext.Provider value={{ size: "1.5em" }}>
+          <div className="relative w-full h-full">
+            <GiBuoy className=" scale-y-100 scale-x-50 rotate-3 absolute bottom-1.5 z-50 text-red-300 opacity-80" />
+            <GiBuoy className=" scale-y-110 scale-x-75 absolute bottom-1.5 z-40 text-red-400 opacity-80 " />
+            <GiBuoy className=" scale-y-110 scale-x-90 absolute bottom-1.5 z-20 text-red-500 opacity-80" />
+            <GiBuoy className=" scale-y-125 scale-x-95 absolute bottom-1.5 z-30 text-sky-800 opacity-80" />
+            <GiBuoy className=" scale-y-150 scale-x-105 absolute bottom-2 z-10 text-red-500 opacity-80" />
+            <GiBuoy className=" scale-y-150 scale-x-125 absolute bottom-2 z-0 text-sky-800 opacity-" />
+          </div>
+        </IconContext.Provider>
+      </div>
+    );
+    return (
+      <div
+        className="
+            tile-base
+            tile-clickable
+            bg-blue-300"
+      >
+        {tile.marked && icon()}
+      </div>
+    );
+  };
+
   const formatTile = () => {
     if (tile.type === 1) {
+      // land tile
       return (
         <div className="tile-container" onClick={onClick}>
           {formatLand()}
         </div>
       );
     } else if (tile.type === 2) {
+      // water tile
       if (tile.revealed) {
         // revealed tile
         return (
@@ -69,12 +100,7 @@ const Tile = React.memo(({ tile, onClick }) => {
         // hidden tile
         return (
           <div className="tile-container" onClick={onClick}>
-            <div
-              className="
-                tile-base
-                tile-clickable
-                bg-blue-300"
-            ></div>
+            {formatWater()}
           </div>
         );
       }

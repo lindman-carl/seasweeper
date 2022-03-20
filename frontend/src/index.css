@@ -49,6 +49,7 @@
       text-purple-500
       border border-purple-500 rounded-md
       bg-white
+      select-none
       cursor-default;
   }
   .icon-checkbox-base {
@@ -60,6 +61,7 @@
       text-purple-500
       border border-purple-500 rounded-md
       bg-white
+      select-none
       cursor-pointer;
   }
 
@@ -72,7 +74,8 @@
   .tile-container {
     @apply w-full h-min 
     p-px md:p-0.5 
-    flex justify-center items-center;
+    flex justify-center items-center
+    cursor-pointer;
   }
 
   .tile-base {
@@ -87,7 +90,8 @@
     @apply hover:border-slate-500 
     sm:hover:border-2 sm:hover:rounded-md sm:hover:shadow-lg 
     active:rounded-lg
-    sm:active:scale-90 sm:active:shadow-sm;
+    sm:active:scale-90 sm:active:shadow-sm
+    cursor-pointer;
   }
 
   .tile-icon-container {

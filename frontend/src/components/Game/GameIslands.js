@@ -155,6 +155,19 @@ function Game({
       return null;
     }
 
+    // markMode
+    if (markMode) {
+      // check if water
+      if (tile.type === 2) {
+        tile.marked = !tile.marked;
+      }
+      return null;
+    }
+
+    if (tile.marked) {
+      return null;
+    }
+
     // lighthouse mode
     if (lighthouseMode) {
       // check if on land
@@ -256,6 +269,7 @@ function Game({
           tile={tile}
           onClick={() => handleClick(tile)}
           board={board}
+          markMode={markMode}
         />
       ));
       rows.push(mappedRow);
@@ -270,7 +284,10 @@ function Game({
   };
 
   const handleLighthouseMode = () => {
-    if (availableLighthouses > 0) setLighthouseMode(!lighthouseMode);
+    if (availableLighthouses > 0) {
+      setLighthouseMode(!lighthouseMode);
+      setMarkMode(false);
+    }
   };
 
   const handleMarkMode = () => {
@@ -288,7 +305,7 @@ function Game({
               flex flex-col justify-start items-center"
       >
         <div className="w-full px-2 sm:px-20 flex flex-row justify-between items-center basis-0">
-          <div className="flex flex-row justify-start">
+          <div className="flex flex-row justify-start grow">
             <IconBadge
               icon={<FaBomb size={20} />}
               value={nBombs}
@@ -300,7 +317,7 @@ function Game({
               tooltip={"Number of tiles left to clear"}
             />
           </div>
-          <div className="flex flex-row justify-center">
+          <div className="flex flex-row justify-center grow">
             <div className="mt-2 mb-2 text-3xl text-sky-900 font-bold">
               {gameStarted ? (
                 !gameOver ? (
@@ -315,7 +332,7 @@ function Game({
               )}
             </div>
           </div>
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row justify-end grow">
             <IconCheckbox
               icon={<SiLighthouse size={28} />}
               status={lighthouseMode}
