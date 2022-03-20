@@ -41,22 +41,20 @@
   }
 
   .icon-badge-base {
-    @apply w-16 h-8
+    @apply w-14 h-8
     sm:w-20
-      ml-2 
-      mt-2
-      flex justify-center items-center
-      text-purple-500
-      border border-purple-500 rounded-md
-      bg-white
-      select-none
-      cursor-default;
+    md:w-24
+    flex justify-center items-center
+    text-purple-500
+    border border-purple-500 rounded-md
+    bg-white
+    select-none
+    cursor-default;
   }
   .icon-checkbox-base {
     @apply w-14 h-12 
       sm:w-20
       md:w-24 
-      mb-4 ml-2 mt-4
       flex justify-center items-center
       text-purple-500
       border border-purple-500 rounded-md

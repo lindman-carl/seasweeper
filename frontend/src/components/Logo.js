@@ -5,7 +5,7 @@ const Logo = ({ size }) => {
     return (
       <div
         className="
-                  ml-8 
+                  w-full
                   mt-4
                   flex flex-row justify-center 
                   text-2xl

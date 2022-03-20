@@ -15,10 +15,11 @@ const Timer = ({ time }) => {
   };
   return (
     <div
-      className="min-w-[6rem] w-full h-12 
-            mx-4
+      className="min-w-[8rem] w-full h-12 
+            mx-auto
+            px-4
             flex justify-center items-start
-            border-2 border-sky-900 rounded-md
+            border border-sky-900 rounded-md
             text-sky-900  
             bg-white
             cursor-default

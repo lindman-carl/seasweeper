@@ -304,21 +304,25 @@ function Game({
               bg-sky-50
               flex flex-col justify-start items-center"
       >
-        <div className="w-full px-2 sm:px-20 flex flex-row justify-between items-center basis-0">
-          <div className="flex flex-row justify-start grow">
-            <IconBadge
-              icon={<FaBomb size={20} />}
-              value={nBombs}
-              tooltip={"Number of bombs remaining in the sea"}
-            />
-            <IconBadge
-              icon={<BiSquare size={20} />}
-              value={seaTiles - nRevealed - nBombs}
-              tooltip={"Number of tiles left to clear"}
-            />
+        <div className="w-full my-2 px-2 sm:px-20 flex flex-row justify-between items-center ">
+          <div className="flex w-64 flex-row mt-1 justify-start items-center grow">
+            <div className="mr-1">
+              <IconBadge
+                icon={<FaBomb size={20} />}
+                value={nBombs}
+                tooltip={"Number of bombs remaining in the sea"}
+              />
+            </div>
+            <div className="ml-1">
+              <IconBadge
+                icon={<BiSquare size={20} />}
+                value={seaTiles - nRevealed - nBombs}
+                tooltip={"Number of tiles left to clear"}
+              />
+            </div>
           </div>
-          <div className="w-64 flex flex-row justify-center grow">
-            <div className="mt-2 mb-5 text-3xl text-sky-900 font-bold">
+          <div className="w-64 flex flex-row justify-center ">
+            <div className="text-3xl text-sky-900 font-bold">
               {gameStarted ? (
                 !gameOver ? (
                   <Timer time={gameTime} />
@@ -328,25 +332,31 @@ function Game({
                   "Game over!"
                 )
               ) : (
-                <Logo size={"sm"} />
+                <div className="mb-3">
+                  <Logo size={"sm"} />
+                </div>
               )}
             </div>
           </div>
-          <div className="flex flex-row justify-end grow">
-            <IconCheckbox
-              icon={<SiLighthouse size={28} />}
-              status={lighthouseMode}
-              value={availableLighthouses}
-              onClick={handleLighthouseMode}
-              tooltip={"Toogle place lighthouse mode"}
-            />
-            <IconCheckbox
-              icon={<GiBroom size={36} className="mr-1" />}
-              alternateIcon={<GiBuoy size={36} />}
-              status={markMode}
-              onClick={handleMarkMode}
-              tooltip={"Toggle between mark and sweep mode"}
-            />
+          <div className="w-64 flex flex-row justify-end items-center">
+            <div className="mr-1">
+              <IconCheckbox
+                icon={<SiLighthouse size={28} />}
+                status={lighthouseMode}
+                value={availableLighthouses}
+                onClick={handleLighthouseMode}
+                tooltip={"Toogle place lighthouse mode"}
+              />
+            </div>
+            <div className="ml-1">
+              <IconCheckbox
+                icon={<GiBroom size={36} className="mr-1" />}
+                alternateIcon={<GiBuoy size={36} />}
+                status={markMode}
+                onClick={handleMarkMode}
+                tooltip={"Toggle between mark and sweep mode"}
+              />
+            </div>
           </div>
           <ReactTooltip id="badgeInfo" type="info" effect="solid" />
           <ReactTooltip
@@ -369,7 +379,7 @@ function Game({
         )}
         <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
           Click to reveal tile. Flags are for slow players, mark the mines in
-          your head!
+          your head!{" "}
           <Link to="/opensea" className="font-medium underline">
             Play open sea
           </Link>
