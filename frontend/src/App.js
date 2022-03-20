@@ -10,24 +10,26 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/islands"
-            element={
-              <GameIslandsApp
-                w={20}
-                h={20}
-                nIslands={12}
-                clusterSpread={4}
-                nBombs={24}
-              />
-            }
-          />
-          <Route path="/" element={<GameApp w={10} h={10} nBombs={10} />} />
-          <Route path="highscores" element={<HighscoreApp />} />
-        </Routes>
-      </BrowserRouter>
+      <div className="bg-sky-200">
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/islands"
+              element={
+                <GameIslandsApp
+                  w={22}
+                  h={22}
+                  nIslands={14}
+                  clusterSpread={4}
+                  nBombs={12}
+                />
+              }
+            />
+            <Route path="/" element={<GameApp w={10} h={10} nBombs={10} />} />
+            <Route path="highscores" element={<HighscoreApp />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </QueryClientProvider>
   );
 }

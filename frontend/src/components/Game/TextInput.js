@@ -12,9 +12,10 @@ const TextInput = ({
     className="
           mb-2 
           border-b-2 
-          bg-slate-100 
+          bg-white
+          text-sky-900
           font-semibold text-center text-lg 
-          focus:outline-none"
+          focus:outline"
     {...register(registerName, {
       required,
       minLength,

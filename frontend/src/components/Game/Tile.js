@@ -1,16 +1,11 @@
+import React from "react";
 import { IconContext } from "react-icons";
-import { BsFlagFill } from "react-icons/bs";
+// import { BsFlagFill } from "react-icons/bs";
 import { FaBomb } from "react-icons/fa";
+import { SiLighthouse } from "react-icons/si";
 
-const Tile = ({ tile, onClick }) => {
+const Tile = React.memo(({ tile, onClick }) => {
   let iconSize = "1.5em";
-  let color = "bg-gray-300";
-
-  if (tile.revealed) {
-    color = "bg-white-100";
-  } else {
-    color = "bg-blue-300";
-  }
 
   const formatCount = () => {
     if (tile.count > 0) {
@@ -19,95 +14,76 @@ const Tile = ({ tile, onClick }) => {
     return null;
   };
 
-  // land
-  if (tile.type === 1) {
-    return (
-      <div
-        className={`w-full h-min p-0.5 sm:p-1 flex justify-center items-center`}
-        onClick={onClick}
-      >
-        <div
-          className={`
-            w-7 h-7
-            border-dashed border
-            md:border-1
-            shadow-md 
-            bg-green-300
-            sm:hover:border-2
-            hover:border-slate-500 sm:hover:rounded-md sm:hover:shadow-lg 
-            active:rounded-lg
-            sm:active:scale-90 sm:active:shadow-sm
-            cursor-pointer
-            transition-all duration-100 ease`}
-        ></div>
+  const formatRevealed = () => (
+    <div
+      className={`
+    tile-base
+    shadow-none
+    ${tile.lit ? "bg-yellow-100" : "bg-sky-50"}`}
+    >
+      <div className="tile-icon-container text-black text-2xl font-bold">
+        {tile.bomb ? (
+          <IconContext.Provider value={{ size: iconSize }}>
+            <FaBomb className="drop-shadow" />
+          </IconContext.Provider>
+        ) : (
+          <div className="text-lg font-semibold ">{formatCount()}</div>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (tile.revealed) {
-    // revealed tile
-    return (
-      <div
-        className={`w-full h-min p-0.5 sm:p-1 flex justify-center items-center`}
-        onClick={onClick}
-      >
-        <div
-          className={`
-            w-7 h-7
-            border-dashed border
-            md:border-1
-            ${color}
-            transition-all duration-75 ease`}
-        >
-          <div className="w-full h-full flex justify-center items-center text-black text-2xl font-bold">
-            {tile.bomb ? (
-              <IconContext.Provider value={{ size: iconSize }}>
-                <FaBomb className="drop-shadow" />
-              </IconContext.Provider>
-            ) : (
-              <div className="text-sm sm:text-lg md:text-2xl">
-                {formatCount()}
-              </div>
-            )}
-          </div>
-        </div>
+  const formatLand = () => (
+    <div
+      className="
+            tile-base
+            tile-clickable
+            bg-green-300"
+    >
+      <div className="tile-icon-container text-red-500 ">
+        {tile.lighthouse && (
+          <IconContext.Provider value={{ size: iconSize }}>
+            <SiLighthouse className="drop-shadow" />
+          </IconContext.Provider>
+        )}
       </div>
-    );
-  } else {
-    // hidden tile
-    return (
-      <div
-        className={`w-full h-min p-0.5 sm:p-1 flex justify-center items-center`}
-        onClick={onClick}
-      >
-        <div
-          // sm:w-8 sm:h-8
-          // md:w-12 md:h-12
-          // lg:w-16 lg:h-16
-          className={`
-            w-7 h-7
-            border-dashed border
-            md:border-1
-            shadow-md 
-            ${color}
-            sm:hover:border-2 
-            hover:border-slate-500 sm:hover:rounded-md sm:hover:shadow-lg 
-            active:rounded-lg
-            sm:active:scale-90 sm:active:shadow-sm
-            cursor-pointer
-            transition-all duration-100 ease`}
-        >
-          <div className="w-full h-full flex justify-center items-center text-red-500 ">
-            {tile.flag && (
-              <IconContext.Provider value={{ size: iconSize }}>
-                <BsFlagFill className="drop-shadow" />
-              </IconContext.Provider>
-            )}
-          </div>
+    </div>
+  );
+
+  const formatTile = () => {
+    if (tile.type === 1) {
+      return (
+        <div className="tile-container" onClick={onClick}>
+          {formatLand()}
         </div>
-      </div>
-    );
-  }
-};
+      );
+    } else if (tile.type === 2) {
+      if (tile.revealed) {
+        // revealed tile
+        return (
+          <div className="tile-container" onClick={onClick}>
+            {formatRevealed()}
+          </div>
+        );
+      } else {
+        // hidden tile
+        return (
+          <div className="tile-container" onClick={onClick}>
+            <div
+              className="
+                tile-base
+                tile-clickable
+                bg-blue-300"
+            ></div>
+          </div>
+        );
+      }
+    }
+  };
+
+  // render
+
+  return formatTile();
+});
 
 export default Tile;

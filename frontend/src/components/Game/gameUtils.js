@@ -103,14 +103,16 @@ const populateBoard = (width, height, nBombs) => {
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const newTile = {
-        x,
-        y,
         id,
-        flag: false,
-        bomb: false,
-        revealed: false,
         count: -1,
         type: 2,
+        x,
+        y,
+        bomb: false,
+        flag: false,
+        lighthouse: false,
+        lit: false,
+        revealed: false,
       };
       if (bombIds.includes(newTile.id)) {
         // add bomb

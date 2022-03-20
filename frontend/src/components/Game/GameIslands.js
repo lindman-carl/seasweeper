@@ -9,7 +9,18 @@ import { generateValidMergedMap } from "./islandMapGenerator";
 import Timer from "./Timer";
 import Tile from "./Tile";
 import GameOverBox from "./GameOverBox";
+import IconCheckbox from "./IconCheckbox";
+import Logo from "../Logo";
+
+// icons & animations
+import { BiSquare } from "react-icons/bi";
+import { FaBomb } from "react-icons/fa";
+import { GiBroom, GiNewBorn } from "react-icons/gi";
+import { GiBuoy } from "react-icons/gi";
+import { SiLighthouse } from "react-icons/si";
 import { ClipLoader } from "react-spinners";
+import IconBadge from "./IconBadge";
+import ReactTooltip from "react-tooltip";
 
 // data fetching functions
 const postHighscore = async (time, playerName) => {
@@ -22,28 +33,44 @@ const postHighscore = async (time, playerName) => {
   return res.data;
 };
 
-function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
+function Game({
+  w,
+  h,
+  nIslands,
+  clusterSpread,
+  nBombs,
+  refetchHighscore,
+  nLighthouses = 2,
+}) {
   // states, should use useReducer
-  const [generatedMap, setGeneratedMap] = useState(null);
   const [board, setBoard] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameTime, setGameTime] = useState(0);
+  const [startTime, setStartTime] = useState(null);
   const [intervalId, setIntervalId] = useState();
   const [win, setWin] = useState(false);
   const [nRevealed, setNRevealed] = useState(0);
   const [isSendingHighscore, setIsSendingHighscore] = useState(false);
   const [seaTiles, setSeaTiles] = useState(null);
 
-  const refreshRate = 10;
+  // lighthouseMode
+  const [lighthouseMode, setLighthouseMode] = useState(false);
+  const [availableLighthouses, setAvailableLighthouses] =
+    useState(nLighthouses);
+
+  // markMode
+  const [markMode, setMarkMode] = useState(false);
+
+  const refreshRate = 100;
 
   const generateMap = async () => {
     // generate a map and make a game board out of it
     const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
-    const tempBoard = gameUtils.populateGeneratedMap(nBombs, tempMap);
-    const nSeaTiles = tempBoard.filter((t) => t.type === 2).length;
+    const tempBoard = await gameUtils.populateGeneratedMap(nBombs, tempMap);
+    const nSeaTiles = tempBoard.filter((t) => t.type !== 1).length;
+    console.log("nseatiles", nSeaTiles);
     // set states
-    setGeneratedMap(tempMap);
     setBoard(tempBoard);
     setSeaTiles(nSeaTiles);
   };
@@ -52,7 +79,9 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
   }, []);
 
   const countRevealed = (boardToCount) => {
-    const revealed = boardToCount.filter((t) => t.revealed).length;
+    const revealed = boardToCount.filter(
+      (t) => t.type !== 1 && t.revealed && !t.bomb
+    ).length;
     return revealed;
   };
 
@@ -71,31 +100,31 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
   };
 
   const restartGame = async () => {
-    console.log("restarting");
+    console.log("restartGame");
     await generateMap();
-
     setGameStarted(false);
     setGameOver(false);
     setGameTime(0);
-    setNRevealed(0);
-    clearInterval(intervalId);
+
     setWin(false);
-    setSeaTiles(board.filter((t) => t.type === 2).length);
+    setAvailableLighthouses(nLighthouses);
   };
 
   const startGame = () => {
+    console.log("startGame");
+    setNRevealed(0);
     setGameStarted(true);
+
+    // timer
+    const tempTime = Date.now();
+    setStartTime(tempTime);
     const gameInterval = setInterval(() => {
-      setGameTime((prev) => prev + refreshRate);
+      setGameTime(Date.now() - tempTime);
     }, refreshRate);
     setIntervalId(gameInterval);
   };
 
   // event handlers
-  const handlePlayerNameChange = ({ target }) => {
-    // setPlayerName(target.value);
-  };
-
   const handleSendHighscore = async ({ playerName }) => {
     setIsSendingHighscore(true); // trigger loading animation
 
@@ -107,15 +136,68 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
     refetchHighscore(); // refetch highscore list
   };
 
+  const checkWinConditions = (boardToCheck) => {
+    const revealed = countRevealed(boardToCheck);
+    setNRevealed(revealed);
+
+    if (revealed >= seaTiles - nBombs) {
+      console.log("win");
+      setWin(true);
+      setGameOver(true);
+      clearInterval(intervalId);
+    }
+  };
+
   const handleClick = (tile) => {
     // dont handle clicks if the game is over
     if (gameOver) {
       return null;
     }
 
-    // cant click land
-    if (tile.type === 1) {
+    // lighthouse mode
+    if (lighthouseMode) {
+      // check if on land
+      if (tile.type === 1 && availableLighthouses > 0) {
+        console.log("placing lighthouse");
+        // set lighthouse
+        // map ids that are directly around the lighthouse, max 8
+        const litTiles = board
+          .filter(
+            (t) =>
+              t.x >= tile.x - 1 &&
+              t.x <= tile.x + 1 &&
+              t.y >= tile.y - 1 &&
+              t.y <= tile.y + 1 &&
+              t.id !== tile.id &&
+              t
+          )
+          .map((t) => t.id);
+
+        const newMap = board.map((t) =>
+          t.id === tile.id ? { ...t, lighthouse: true } : t
+        );
+        const litMap = newMap.map((t) =>
+          litTiles.includes(t.id) ? { ...t, revealed: true, lit: true } : t
+        );
+
+        if (availableLighthouses <= 1) {
+          setLighthouseMode(false);
+        }
+
+        setAvailableLighthouses((prev) => prev - 1);
+
+        checkWinConditions(litMap);
+
+        setBoard(litMap);
+        setNRevealed(countRevealed(litMap));
+      } else if (tile.type === 2) {
+        console.log("cant place lighthouse on water");
+      }
       return null;
+    } else {
+      if (tile.type === 1) {
+        return null;
+      }
     }
 
     // start game if not already started
@@ -124,8 +206,8 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
       if (tile.bomb) {
         console.log("boom");
         // repopulate board
-        restartGame();
-        return;
+        // startGame();
+        return null;
       }
       console.log("starting game");
       startGame();
@@ -154,18 +236,10 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
     );
 
     const sortedUpdatedBoard = updatedBoard.sort((a, b) => a.id - b.id);
-    const revealed = countRevealed(sortedUpdatedBoard);
 
-    if (revealed >= seaTiles - nBombs) {
-      console.log("win");
-      setWin(true);
-      setGameOver(true);
-      setBoard(flagAllBombs(sortedUpdatedBoard));
-      clearInterval(intervalId);
-    }
+    checkWinConditions(sortedUpdatedBoard);
 
     setBoard(sortedUpdatedBoard);
-    setNRevealed(revealed);
 
     renderMap();
   };
@@ -186,7 +260,6 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
       rows.push(mappedRow);
     }
 
-    console.log("rows", rows);
     const rowsMapped = rows.map((row) => (
       <div className="flex flex-row justify-start items-start shrink">
         {row}
@@ -195,55 +268,82 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
     return rowsMapped;
   };
 
+  const handleLighthouseMode = () => {
+    if (availableLighthouses > 0) setLighthouseMode(!lighthouseMode);
+  };
+
+  const handleMarkMode = () => {
+    setMarkMode(!markMode);
+    setLighthouseMode(false);
+  };
+
   if (board) {
     return (
       <div
         className="
-              w-screen h-max 
-              sm:h-full 
+              w-screen min-h-screen
               lg:w-full
+              bg-sky-50
               flex flex-col justify-start items-center"
       >
-        <div className="mt-2 mb-2 text-2xl text-slate-700 font-bold">
-          <Timer time={gameTime} />
+        <div className="w-full px-2 sm:px-20 flex flex-row justify-between items-center basis-0">
+          <div className="flex flex-row justify-start">
+            <IconBadge
+              icon={<FaBomb size={20} />}
+              value={nBombs}
+              tooltip={"Number of bombs remaining in the sea"}
+            />
+            <IconBadge
+              icon={<BiSquare size={20} />}
+              value={seaTiles - nRevealed - nBombs}
+              tooltip={"Number of tiles left to clear"}
+            />
+          </div>
+          <div className="flex flex-row justify-center">
+            <div className="mt-2 mb-2 text-3xl text-sky-900 font-bold">
+              {gameStarted ? (
+                !gameOver ? (
+                  <Timer time={gameTime} />
+                ) : win ? (
+                  "You win!"
+                ) : (
+                  "Game over!"
+                )
+              ) : (
+                <Logo size={"sm"} />
+              )}
+            </div>
+          </div>
+          <div className="flex flex-row justify-end">
+            <IconCheckbox
+              icon={<SiLighthouse size={28} />}
+              status={lighthouseMode}
+              value={availableLighthouses}
+              onClick={handleLighthouseMode}
+              tooltip={"Toogle place lighthouse mode"}
+            />
+            <IconCheckbox
+              icon={<GiBroom size={36} className="mr-1" />}
+              alternateIcon={<GiBuoy size={36} />}
+              status={markMode}
+              onClick={handleMarkMode}
+              tooltip={"Toggle between mark and sweep mode"}
+            />
+          </div>
+          <ReactTooltip id="badgeInfo" type="info" effect="solid" />
+          <ReactTooltip
+            id="checkboxInfo"
+            type="info"
+            effect="solid"
+            delayShow={600}
+            place="top"
+          />
         </div>
-        <div className=" text-2xl text-slate-700 font-bold">
-          {!gameOver
-            ? `There are ${nBombs} mines. Tiles left to clear: ${
-                seaTiles - nRevealed - nBombs
-              }`
-            : win
-            ? "You win!"
-            : "Game over!"}
-        </div>
-        <div
-          // className={`grid gap-0 grid-flow-row grid-cols-${w} auto-rows-max`}
-          // // style={{
-          // //   display: "grid",
-          // //   gridGap: 0,
-          // //   gridAutoFlow: "row",
-          // //   gridTemplateColumns: w,
-          // //   gridTemplateRows: h,
-          // // }}
-          className="flex flex-col"
-        >
-          {
-            board && renderMap()
-            // board.map((tile, idx) => (
-            //   <Tile
-            //     key={idx}
-            //     tile={tile}
-            //     onClick={() => handleClick(tile)}
-            //     board={board}
-            //   />
-            // ))
-          }
-        </div>
+        {board && <div className="flex flex-col">{renderMap()}</div>}
         {gameOver && (
           <GameOverBox
             gameTime={gameTime}
             win={win}
-            handlePlayerNameChange={handlePlayerNameChange}
             handleSendHighscore={handleSendHighscore}
             isSendingHighscore={isSendingHighscore}
             handleRestartGame={restartGame}
@@ -251,7 +351,7 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
         )}
         <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
           Click to reveal tile. Flags are for slow players, mark the mines in
-          your head!{" "}
+          your head!
           <Link to="/" className="font-medium underline">
             Play open sea
           </Link>
@@ -259,7 +359,12 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
       </div>
     );
   } else {
-    return <ClipLoader />;
+    return (
+      <div className="w-full min-h-[50vh] flex flex-column items-center justify-center">
+        <div className="font-thin">Generating map...</div>
+        <ClipLoader size={20} />
+      </div>
+    );
   }
 }
 
