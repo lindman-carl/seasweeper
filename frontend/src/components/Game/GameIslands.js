@@ -304,7 +304,7 @@ function Game({
               bg-sky-50
               flex flex-col justify-start items-center"
       >
-        <div className="w-full my-2 px-2 sm:px-20 flex flex-row justify-between items-center ">
+        <div className="w-full h-16 my-2 px-2 sm:px-20 flex flex-row justify-between items-center ">
           <div className="flex w-64 flex-row mt-1 justify-start items-center grow">
             <div className="mr-1">
               <IconBadge

@@ -25,7 +25,7 @@ const Timer = ({ time }) => {
             cursor-default
             select-none"
     >
-      {time ? formatTime() : "lol"}
+      {time ? formatTime() : " "}
     </div>
   );
 };
