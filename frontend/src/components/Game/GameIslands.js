@@ -317,8 +317,8 @@ function Game({
               tooltip={"Number of tiles left to clear"}
             />
           </div>
-          <div className="flex flex-row justify-center grow">
-            <div className="mt-2 mb-2 text-3xl text-sky-900 font-bold">
+          <div className="w-64 flex flex-row justify-center grow">
+            <div className="mt-2 mb-5 text-3xl text-sky-900 font-bold">
               {gameStarted ? (
                 !gameOver ? (
                   <Timer time={gameTime} />

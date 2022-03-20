@@ -10,15 +10,14 @@ const Logo = ({ size }) => {
                   flex flex-row justify-center 
                   text-2xl
                   sm:text-3xl
-
-                  
                   font-extrabold 
                   text-sky-900 
                   underline underline-offset-auto decoration-blue-300
                   select-none"
       >
         <div className="flex flex-row whitespace-nowrap">
-          Sea Sweeper <GiBroom />
+          Sea Sweeper
+          <GiBroom />
         </div>
       </div>
     );
