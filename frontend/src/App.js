@@ -16,11 +16,11 @@ function App() {
             path="/islands"
             element={
               <GameIslandsApp
-                w={10}
-                h={10}
-                nIslands={4}
-                clusterSpread={2}
-                nBombs={8}
+                w={20}
+                h={20}
+                nIslands={12}
+                clusterSpread={4}
+                nBombs={24}
               />
             }
           />

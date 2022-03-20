@@ -37,23 +37,18 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
 
   const refreshRate = 10;
 
+  const generateMap = async () => {
+    // generate a map and make a game board out of it
+    const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
+    const tempBoard = gameUtils.populateGeneratedMap(nBombs, tempMap);
+    const nSeaTiles = tempBoard.filter((t) => t.type === 2).length;
+    // set states
+    setGeneratedMap(tempMap);
+    setBoard(tempBoard);
+    setSeaTiles(nSeaTiles);
+  };
   useEffect(() => {
-    const generate = async () => {
-      console.log("generate");
-      const tempMap = await generateValidMergedMap(
-        w,
-        h,
-        nIslands,
-        clusterSpread
-      );
-      console.log("temp:", tempMap);
-      setGeneratedMap(tempMap);
-      console.log("state", generatedMap);
-      const tempBoard = gameUtils.populateGeneratedMap(nBombs, tempMap);
-      setBoard(tempBoard);
-      setSeaTiles(tempBoard.filter((t) => t.type === 2).length);
-    };
-    generate();
+    generateMap();
   }, []);
 
   const countRevealed = (boardToCount) => {
@@ -75,10 +70,10 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
     return flaggedBoard;
   };
 
-  const restartGame = () => {
+  const restartGame = async () => {
     console.log("restarting");
-    setGeneratedMap(generateValidMergedMap(w, h, nIslands, clusterSpread));
-    setBoard(gameUtils.populateGeneratedMap(nBombs, generatedMap));
+    await generateMap();
+
     setGameStarted(false);
     setGameOver(false);
     setGameTime(0);
@@ -171,6 +166,33 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
 
     setBoard(sortedUpdatedBoard);
     setNRevealed(revealed);
+
+    renderMap();
+  };
+
+  const renderMap = () => {
+    const rows = [];
+    for (let y = 0; y < h; y++) {
+      // iterate y axis
+      const row = board.filter((t) => t.y === y).sort((a, b) => a.x - b.x);
+      const mappedRow = row.map((tile, idx) => (
+        <Tile
+          key={idx}
+          tile={tile}
+          onClick={() => handleClick(tile)}
+          board={board}
+        />
+      ));
+      rows.push(mappedRow);
+    }
+
+    console.log("rows", rows);
+    const rowsMapped = rows.map((row) => (
+      <div className="flex flex-row justify-start items-start shrink">
+        {row}
+      </div>
+    ));
+    return rowsMapped;
   };
 
   if (board) {
@@ -195,24 +217,27 @@ function Game({ w, h, nIslands, clusterSpread, nBombs, refetchHighscore }) {
             : "Game over!"}
         </div>
         <div
-          className={`grid gap-0 grid-flow-row grid-cols-${w} auto-rows-max`}
-          // style={{
-          //   display: "grid",
-          //   gridGap: 0,
-          //   gridAutoFlow: "row",
-          //   gridTemplateColumns: w,
-          //   gridTemplateRows: h,
-          // }}
+          // className={`grid gap-0 grid-flow-row grid-cols-${w} auto-rows-max`}
+          // // style={{
+          // //   display: "grid",
+          // //   gridGap: 0,
+          // //   gridAutoFlow: "row",
+          // //   gridTemplateColumns: w,
+          // //   gridTemplateRows: h,
+          // // }}
+          className="flex flex-col"
         >
-          {board &&
-            board.map((tile, idx) => (
-              <Tile
-                key={idx}
-                tile={tile}
-                onClick={() => handleClick(tile)}
-                board={board}
-              />
-            ))}
+          {
+            board && renderMap()
+            // board.map((tile, idx) => (
+            //   <Tile
+            //     key={idx}
+            //     tile={tile}
+            //     onClick={() => handleClick(tile)}
+            //     board={board}
+            //   />
+            // ))
+          }
         </div>
         {gameOver && (
           <GameOverBox

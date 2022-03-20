@@ -29,16 +29,13 @@ const Tile = ({ tile, onClick }) => {
         <div
           className={`
             w-7 h-7
-            sm:w-8 sm:h-8
-            md:w-12 md:h-12
-            lg:w-16 lg:h-16
             border-dashed border
-            md:border-2
+            md:border-1
             shadow-md 
             bg-green-300
-            sm:hover:border-4 
-            hover:border-slate-500 sm:hover:rounded-lg sm:hover:shadow-lg 
-            active:rounded-xl
+            sm:hover:border-2
+            hover:border-slate-500 sm:hover:rounded-md sm:hover:shadow-lg 
+            active:rounded-lg
             sm:active:scale-90 sm:active:shadow-sm
             cursor-pointer
             transition-all duration-100 ease`}
@@ -57,11 +54,8 @@ const Tile = ({ tile, onClick }) => {
         <div
           className={`
             w-7 h-7
-            sm:w-8 sm:h-8
-            md:w-12 md:h-12
-            lg:w-16 lg:h-16
             border-dashed border
-            md:border-2
+            md:border-1
             ${color}
             transition-all duration-75 ease`}
         >
@@ -87,18 +81,18 @@ const Tile = ({ tile, onClick }) => {
         onClick={onClick}
       >
         <div
+          // sm:w-8 sm:h-8
+          // md:w-12 md:h-12
+          // lg:w-16 lg:h-16
           className={`
             w-7 h-7
-            sm:w-8 sm:h-8
-            md:w-12 md:h-12
-            lg:w-16 lg:h-16
             border-dashed border
-            md:border-2
+            md:border-1
             shadow-md 
             ${color}
-            sm:hover:border-4 
-            hover:border-slate-500 sm:hover:rounded-lg sm:hover:shadow-lg 
-            active:rounded-xl
+            sm:hover:border-2 
+            hover:border-slate-500 sm:hover:rounded-md sm:hover:shadow-lg 
+            active:rounded-lg
             sm:active:scale-90 sm:active:shadow-sm
             cursor-pointer
             transition-all duration-100 ease`}
