@@ -23,11 +23,11 @@ import IconBadge from "./IconBadge";
 import ReactTooltip from "react-tooltip";
 
 // data fetching functions
-const postHighscore = async (time, playerName) => {
+const postHighscore = async (time, playerName, gameMode) => {
   const res = await axios.post("/api/highscores", {
     time,
     playerName: playerName.trim(),
-    gameMode: "island10",
+    gameMode,
   });
 
   return res.data;
@@ -41,6 +41,7 @@ function Game({
   nBombs,
   refetchHighscore,
   nLighthouses = 2,
+  name,
 }) {
   // states, should use useReducer
   const [board, setBoard] = useState(null);
@@ -128,7 +129,7 @@ function Game({
   const handleSendHighscore = async ({ playerName }) => {
     setIsSendingHighscore(true); // trigger loading animation
 
-    const postedHighscore = await postHighscore(gameTime, playerName);
+    const postedHighscore = await postHighscore(gameTime, playerName, name);
     console.log("posted highscore", postedHighscore);
 
     setIsSendingHighscore(false); // untrigger loading animation

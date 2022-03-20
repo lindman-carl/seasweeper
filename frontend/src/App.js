@@ -21,7 +21,8 @@ function App() {
                   h={22}
                   nIslands={14}
                   clusterSpread={4}
-                  nBombs={12}
+                  nBombs={32}
+                  name="islands2232"
                 />
               }
             />

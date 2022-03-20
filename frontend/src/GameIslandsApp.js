@@ -11,7 +11,7 @@ const fetchHighscores = async () => {
   return sortedData;
 };
 
-const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
+const GameApp = ({ w, h, nIslands, clusterSpread, nBombs, name }) => {
   const {
     data: highscoreData,
     isLoading,
@@ -40,6 +40,7 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs }) => {
           clusterSpread={clusterSpread}
           nBombs={nBombs}
           refetchHighscore={handleRefetch}
+          name={name}
         />
       </div>
       <div className="flex flex-col items-center">
