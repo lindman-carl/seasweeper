@@ -184,6 +184,7 @@ const floodFillMap = (islandMap) => {
 const generateValidMap = (w, h, nIslands, clusterSpread) => {
   while (true) {
     const islandMap = generateIslandMap(w, h, nIslands, clusterSpread);
+
     const { map, count } = floodFillMap(islandMap);
 
     if (count > w * h * 0.65) {
@@ -207,8 +208,8 @@ const mergeLayers = (mapToMerge) => {
 };
 
 const generateValidMergedMap = (w, h, nIslands, clusterSpread) => {
-  console.log("called generateValidMergedMap");
   const validMap = generateValidMap(w, h, nIslands, clusterSpread);
+  console.log("generating islands map");
   const mergedMap = mergeLayers(validMap);
   return mergedMap;
 };

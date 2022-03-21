@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 
+// components
 import GameIslands from "./components/Game/GameIslands";
 import HighscoreList from "./components/Highscore/HighscoreList";
 import Logo from "./components/Logo";
@@ -11,7 +12,7 @@ const fetchHighscores = async () => {
   return sortedData;
 };
 
-const GameApp = ({ w, h, nIslands, clusterSpread, nBombs, name }) => {
+const GameApp = ({ name, gamemodes, navigate }) => {
   const {
     data: highscoreData,
     isLoading,
@@ -26,6 +27,9 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs, name }) => {
     refetch();
   };
 
+  const { w, h, nBombs, nIslands, clusterSpread, nLighthouses } =
+    gamemodes.find((gamemode) => gamemode.name === name);
+
   return (
     <div
       className="
@@ -36,11 +40,14 @@ const GameApp = ({ w, h, nIslands, clusterSpread, nBombs, name }) => {
         <GameIslands
           w={w}
           h={h}
+          nBombs={nBombs}
+          nLighthouses={nLighthouses}
           nIslands={nIslands}
           clusterSpread={clusterSpread}
-          nBombs={nBombs}
           refetchHighscore={handleRefetch}
           name={name}
+          gamemodes={gamemodes}
+          navigate={navigate}
         />
       </div>
       <div className="flex flex-col items-center">

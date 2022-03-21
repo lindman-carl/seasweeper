@@ -21,7 +21,7 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
     tile-base
     shadow-none
     ${tile.lit ? "bg-yellow-100" : "bg-sky-50"}
-    cursor-default`}
+    `}
     >
       <div className="tile-icon-container text-black text-2xl font-bold">
         {tile.bomb ? (

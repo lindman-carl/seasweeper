@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { ClipLoader } from "react-spinners";
+import { ClipLoader, BarLoader } from "react-spinners";
 
 // components
 import SendHighscoreForm from "./SendHighscoreForm";
@@ -32,6 +32,7 @@ const GameOverBox = ({
     handleSubmit,
   } = useForm({ reValidateMode: "onSubmit" });
   const [hasSubmit, setHasSubmit] = useState(false);
+  const [isGeneratingMap, setIsGeneratingMap] = useState(false);
 
   const onSubmit = (data) => {
     handleSendHighscore(data);
@@ -74,7 +75,16 @@ const GameOverBox = ({
       {gameoverMode()}
 
       <div className="gameoverbox-item">
-        <RetryButton handleRestartGame={handleRestartGame} />
+        {isGeneratingMap ? (
+          <BarLoader />
+        ) : (
+          <RetryButton
+            handleRestartGame={() => {
+              handleRestartGame();
+              setIsGeneratingMap(true);
+            }}
+          />
+        )}
       </div>
 
       <div className="gameoverbox-item">

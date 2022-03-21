@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import gameUtils from "./gameUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
@@ -15,12 +15,13 @@ import Logo from "../Logo";
 // icons & animations
 import { BiSquare } from "react-icons/bi";
 import { FaBomb } from "react-icons/fa";
-import { GiBroom, GiNewBorn } from "react-icons/gi";
+import { GiBroom } from "react-icons/gi";
 import { GiBuoy } from "react-icons/gi";
 import { SiLighthouse } from "react-icons/si";
 import { ClipLoader } from "react-spinners";
 import IconBadge from "./IconBadge";
 import ReactTooltip from "react-tooltip";
+import GamemodeCarousel from "./GamemodeCarousel";
 
 // data fetching functions
 const postHighscore = async (time, playerName, gameMode) => {
@@ -42,6 +43,7 @@ function Game({
   refetchHighscore,
   nLighthouses = 2,
   name,
+  gamemodes,
 }) {
   // states, should use useReducer
   const [board, setBoard] = useState(null);
@@ -63,10 +65,17 @@ function Game({
   // markMode
   const [markMode, setMarkMode] = useState(false);
 
+  // gamemode carousel
+  const [gamemodeCarousel, setGamemodeCarousel] = useState(false);
+
+  // react router
+  const navigate = useNavigate();
+
   const refreshRate = 100;
 
-  const generateMap = async () => {
+  const generateIslandMap = async () => {
     // generate a map and make a game board out of it
+    // creates the map async, to keep the app responsive
     const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
     const tempBoard = await gameUtils.populateGeneratedMap(nBombs, tempMap);
     const nSeaTiles = tempBoard.filter((t) => t.type !== 1).length;
@@ -75,6 +84,23 @@ function Game({
     setBoard(tempBoard);
     setSeaTiles(nSeaTiles);
   };
+
+  const generateOpenseaMap = () => {
+    const blankMap = gameUtils.populateBoard(w, h, nBombs);
+    const nSeaTiles = w * h;
+    // states
+    setBoard(blankMap);
+    setSeaTiles(nSeaTiles);
+  };
+
+  const generateMap = () => {
+    if (nIslands > 0) {
+      generateIslandMap();
+    } else {
+      generateOpenseaMap();
+    }
+  };
+
   useEffect(() => {
     generateMap();
   }, []);
@@ -106,6 +132,7 @@ function Game({
     setGameStarted(false);
     setGameOver(false);
     setGameTime(0);
+    clearInterval(intervalId);
 
     setWin(false);
     setAvailableLighthouses(nLighthouses);
@@ -155,16 +182,17 @@ function Game({
       return null;
     }
 
+    // if (!lighthouseMode && tile.type === 1) {
+    //   return null;
+    // }
+
     // markMode
     if (markMode) {
-      // check if water
+      // if water, toggle marked
       if (tile.type === 2) {
         tile.marked = !tile.marked;
       }
-      return null;
-    }
-
-    if (tile.marked) {
+      // do nothing if land
       return null;
     }
 
@@ -174,7 +202,8 @@ function Game({
       if (tile.type === 1 && availableLighthouses > 0) {
         console.log("placing lighthouse");
         // set lighthouse
-        // map ids that are directly around the lighthouse, max 8
+        // filters and map ids of the tiles directly surrounding the lighthouse,
+        // max 8 ignore self
         const litTiles = board
           .filter(
             (t) =>
@@ -187,31 +216,35 @@ function Game({
           )
           .map((t) => t.id);
 
+        // maps lighthouse to tile
         const newMap = board.map((t) =>
           t.id === tile.id ? { ...t, lighthouse: true } : t
         );
+        // maps lit tiles
         const litMap = newMap.map((t) =>
           litTiles.includes(t.id) ? { ...t, revealed: true, lit: true } : t
         );
 
-        if (availableLighthouses <= 1) {
+        // decrement available lighthouses
+        setAvailableLighthouses((prev) => prev - 1);
+
+        // toggles lighthouse mode if no more lighthouses are available
+        if (availableLighthouses < 1) {
           setLighthouseMode(false);
         }
 
-        setAvailableLighthouses((prev) => prev - 1);
-
+        // check if the placed lighthouse has won the game
         checkWinConditions(litMap);
 
+        // update board
         setBoard(litMap);
-        setNRevealed(countRevealed(litMap));
-      } else if (tile.type === 2) {
-        console.log("cant place lighthouse on water");
+        setNRevealed(countRevealed(litMap)); // update number of revealed tile
+      } else {
+        // toggle lighthouseMode
+        setLighthouseMode(false);
       }
+    } else if (tile.type === 1) {
       return null;
-    } else {
-      if (tile.type === 1) {
-        return null;
-      }
     }
 
     // start game if not already started
@@ -220,7 +253,8 @@ function Game({
       if (tile.bomb) {
         console.log("boom");
         // repopulate board
-        // startGame();
+        restartGame();
+        startGame();
         return null;
       }
       console.log("starting game");
@@ -236,26 +270,35 @@ function Game({
       return null;
     }
 
+    // handle reveal and floodfill
     const copiedBoard = [...board];
+    // use array to reveal all tiles at the same time
     let tilesToReveal = [];
 
+    // reveal this tile
     tilesToReveal.push(tile.id);
 
     if (tile.count === 0) {
+      // start flood fill algo if the tile has no neighbouring bombs
       tilesToReveal = gameUtils.startFloodFill(tile, board, tilesToReveal);
     }
 
+    // reveal tiles and update board
     const updatedBoard = copiedBoard.map((t) =>
       tilesToReveal.includes(t.id) ? { ...t, revealed: true } : t
     );
 
+    // sort board by id
     const sortedUpdatedBoard = updatedBoard.sort((a, b) => a.id - b.id);
 
+    // check win
     checkWinConditions(sortedUpdatedBoard);
 
+    // update board
     setBoard(sortedUpdatedBoard);
 
-    renderMap();
+    // rerender map after click
+    // renderMap();
   };
 
   const renderMap = () => {
@@ -293,6 +336,17 @@ function Game({
   const handleMarkMode = () => {
     setMarkMode(!markMode);
     setLighthouseMode(false);
+  };
+
+  const handleSelectGamemode = (link) => {
+    console.log("navigate to", link);
+    setGamemodeCarousel(false);
+    navigate(link, { replace: true });
+    window.location.reload();
+  };
+
+  const handleCloseSelectGamemode = () => {
+    setGamemodeCarousel(false);
   };
 
   if (board) {
@@ -368,6 +422,14 @@ function Game({
           />
         </div>
         {board && <div className="flex flex-col">{renderMap()}</div>}
+        {gamemodeCarousel && (
+          <GamemodeCarousel
+            name={name}
+            gamemodes={gamemodes}
+            handleSelectGamemode={handleSelectGamemode}
+            handleCloseSelectGamemode={handleCloseSelectGamemode}
+          />
+        )}
         {gameOver && (
           <GameOverBox
             gameTime={gameTime}
@@ -380,9 +442,12 @@ function Game({
         <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
           Click to reveal tile. Flags are for slow players, mark the mines in
           your head!{" "}
-          <Link to="/opensea" className="font-medium underline">
-            Play open sea
-          </Link>
+          <button
+            className="font-medium underline"
+            onClick={() => setGamemodeCarousel(true)}
+          >
+            Select gamemode
+          </button>
         </div>
       </div>
     );
