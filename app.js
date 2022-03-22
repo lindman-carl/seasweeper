@@ -28,7 +28,7 @@ mongoose
 app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
-app.use(compression({ filter: shouldCompress }));
+app.use(compression());
 
 // routers
 app.use("/api/highscores", highscoresRouter);
