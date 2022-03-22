@@ -170,7 +170,7 @@ const GameApp = ({ name, gamemodes }) => {
                   water tiles. Flags are for slow players, try to mark the mines
                   in your head!
                   <br />
-                  <div className="flex flex-row justify-around items-center mt-4">
+                  <div className="flex flex-row justify-around items-center mt-4 mb-2">
                     <IconCheckbox
                       icon={<GiTrophy size={28} />}
                       status={false}
