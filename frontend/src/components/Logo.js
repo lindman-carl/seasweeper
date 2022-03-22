@@ -10,7 +10,7 @@ const Logo = ({ size }) => {
                   w-full
                   h-12
                   flex flex-row justify-center items-center
-                  text-sm
+                  text-3xl
                   tracking-tighter
                   sm:text-3xl
                   font-extrabold 

@@ -165,12 +165,12 @@ const GameApp = ({ name, gamemodes }) => {
             <div className="flex flex-col items-center justify-center w-screen lg:w-full lg:h-screen">
               <Logo />
               <div className="lg:ml-4">
-                <div className="max-w-fit mt-2 text-base md:text-lg text-slate-700 font-extralight text-center">
+                <div className="max-w-fit mt-2 text-base md:text-lg text-sky-900 font-light text-center">
                   Click to reveal tile. Place lighthouses on shoreline to reveal
                   water tiles. Flags are for slow players, try to mark the mines
                   in your head!
                   <br />
-                  <div className="flex flex-row justify-around items-center">
+                  <div className="flex flex-row justify-around items-center mt-4">
                     <IconCheckbox
                       icon={<GiTrophy size={28} />}
                       status={false}

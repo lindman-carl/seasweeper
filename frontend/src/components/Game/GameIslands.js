@@ -11,6 +11,7 @@ import Hud from "./Hud";
 
 // icons & animations
 import { ClipLoader } from "react-spinners";
+import { RiArrowDownSLine } from "react-icons/ri";
 
 // data fetching functions
 const postHighscore = async (time, playerName, gameMode) => {
@@ -362,6 +363,7 @@ const Game = ({
               lg:w-full
               bg-sky-50
               flex flex-col justify-start items-center
+              grow
               shadow-2xl"
       >
         {children}
@@ -381,7 +383,7 @@ const Game = ({
           showGamemodeCarousel={showGamemodeCarousel}
           handleShowGamemodeCarousel={handleShowGamemodeCarousel}
         />
-        {currentBoard && <div className="flex flex-col">{renderMap()}</div>}
+        {currentBoard && <div className="flex flex-col ">{renderMap()}</div>}
         {gameOver && (
           <GameOverBox
             gameTime={gameTime}
@@ -391,6 +393,11 @@ const Game = ({
             handleRestartGame={newGame}
           />
         )}
+        <div className="lg:hidden grow h-full mt-auto flex items-end">
+          <div className="mb-4 animate-pulse text-sky-700">
+            <RiArrowDownSLine size={24} />
+          </div>
+        </div>
       </div>
     );
   } else {

@@ -32,7 +32,7 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
 
   return (
     <div className="w-full h-full flex flex-col justify-start items-center">
-      <HighscoreAppHeader />
+      {/* <HighscoreAppHeader /> */}
       <div
         className="
               w-96 h-full max-h-96
