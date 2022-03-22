@@ -167,7 +167,7 @@ const GameApp = ({ name, gamemodes, navigate }) => {
                 data={highscoreData}
                 isLoading={isLoading}
                 error={error}
-                filter={name}
+                filter={currentGamemodeObject.name}
                 inGame={false}
               />
             </div>
