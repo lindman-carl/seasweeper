@@ -68,22 +68,11 @@ const gamemodes = [
 ];
 
 function App() {
-  // const element = useRoutes();
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className="bg-sky-200">
         <BrowserRouter>
           <Routes>
-            {gamemodes.map((gamemode) => (
-              <Route
-                path={gamemode.link}
-                element={
-                  <GameIslandsApp name={gamemode.name} gamemodes={gamemodes} />
-                }
-                key={gamemode.name}
-              />
-            ))}
             <Route
               path="/"
               element={

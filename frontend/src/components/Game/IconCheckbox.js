@@ -1,3 +1,5 @@
+import { IconContext } from "react-icons";
+
 const IconCheckbox = ({
   icon,
   alternateIcon,
@@ -6,6 +8,7 @@ const IconCheckbox = ({
   onClick,
   tooltip,
   activeTooltip,
+  primaryColor,
 }) => {
   const checkboxContent = (iconToDisplay = icon) => (
     <div
@@ -13,7 +16,9 @@ const IconCheckbox = ({
             w-full h-full
             flex justify-center items-center"
     >
-      {iconToDisplay}
+      <IconContext.Provider value={{ color: primaryColor }}>
+        {iconToDisplay}
+      </IconContext.Provider>
       {value !== undefined && (
         <div className="ml-0 sm:ml-2 font-semibold">
           {value > 0 ? value : "-"}
@@ -28,10 +33,9 @@ const IconCheckbox = ({
         className={`
         icon-checkbox-base
         icon-checkbox-animation
-        text-sky-700
-        border-sky-700
-        shadow-lg
-        `}
+        text-sky-800
+        border-sky-800
+        shadow-lg`}
         data-tip={tooltip}
         data-for="checkboxInfo"
       >

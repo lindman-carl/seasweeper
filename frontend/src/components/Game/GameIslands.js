@@ -34,9 +34,11 @@ const Game = ({
     nIslands,
     clusterSpread,
     nBombs,
-    handleShowGamemodeCarousel,
+    showGamemodeCarousel,
   },
+  handleShowGamemodeCarousel,
   refetchHighscore,
+  children,
 }) => {
   // states, should use useReducer
   const [currentBoard, setCurrentBoard] = useState(board);
@@ -356,10 +358,13 @@ const Game = ({
       <div
         className="
               w-screen min-h-screen
+              lg:max-w-[50%]
               lg:w-full
               bg-sky-50
-              flex flex-col justify-start items-center"
+              flex flex-col justify-start items-center
+              shadow-2xl"
       >
+        {children}
         <Hud
           nBombs={nBombs}
           seaTiles={seaTiles}
@@ -373,6 +378,8 @@ const Game = ({
           handleLighthouseMode={handleLighthouseMode}
           markMode={markMode}
           handleMarkMode={handleMarkMode}
+          showGamemodeCarousel={showGamemodeCarousel}
+          handleShowGamemodeCarousel={handleShowGamemodeCarousel}
         />
         {currentBoard && <div className="flex flex-col">{renderMap()}</div>}
         {gameOver && (

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 import gameUtils from "./components/Game/gameUtils";
 import { generateValidMergedMap } from "./components/Game/islandMapGenerator";
@@ -10,6 +11,10 @@ import GameIslands from "./components/Game/GameIslands";
 import HighscoreList from "./components/Highscore/HighscoreList";
 import Logo from "./components/Logo";
 import GamemodeCarousel from "./components/Game/GamemodeCarousel";
+import IconCheckbox from "./components/Game/IconCheckbox";
+
+// icons
+import { GiCompass, GiTrophy } from "react-icons/gi";
 
 const fetchHighscores = async () => {
   const res = await axios.get("/api/highscores");
@@ -52,9 +57,11 @@ const regenerateSingleMappedGamemode = async (mappedGamemodes, id) => {
   return newMappedGamemodes;
 };
 
-const GameApp = ({ name, gamemodes, navigate }) => {
+const GameApp = ({ name, gamemodes }) => {
   // refs
-  // const gameBoardRef = useRef();
+  const gamemodeSelectRef = useRef();
+  // hooks
+  const navigate = useNavigate();
 
   // states¨
   const [mappedGamemodes, setMappedGamemodes] = useState(null);
@@ -104,6 +111,11 @@ const GameApp = ({ name, gamemodes, navigate }) => {
     setShowGamemodeCarousel(false);
   };
 
+  const handleShowGamemodeCarousel = () => {
+    console.log("handling");
+    setShowGamemodeCarousel(!showGamemodeCarousel);
+  };
+
   useEffect(() => {
     const start = async () => {
       const mapped = await mapGamemodes(gamemodes);
@@ -115,61 +127,67 @@ const GameApp = ({ name, gamemodes, navigate }) => {
     start();
   }, []);
 
-  // useEffect(() => {
-  //   const start = async () => {
-  //     const mapped = await mapGamemodes(gamemodes);
-  //     const current = mapped.find((gm) => gm.id === currentGamemodeId);
-
-  //     setMappedGamemodes(mapped);
-  //     setCurrentGamemodeObject(current);
-  //   };
-  //   start();
-  // }, [currentGame, currentGamemodeId, gamemodes, handleRefetch]);
-
   return (
     <>
       {currentGamemodeObject && (
         <div
           className="
-                flex flex-col items-center justify-center 
-                lg:flex-row lg:justify-center"
+                h-full 
+                flex flex-col items-start justify-center 
+                lg:h-screen lg:min-h-full
+                lg:flex-row lg:justify-center
+                lg:overflow-hidden
+                overflow-x-hidden"
         >
-          {showGamemodeCarousel && (
-            <GamemodeCarousel
-              name={name}
-              mappedGamemodes={mappedGamemodes}
-              gamemodes={gamemodes}
-              handleSelectGamemode={handleSelectGamemode}
-              handleCloseSelectGamemode={handleCloseSelectGamemode}
-            />
-          )}
           <GameIslands
             gamemodeObject={currentGamemodeObject}
             refetchHighscore={handleRefetch}
             gamemodes={gamemodes}
             key={randomKey}
-          />
-          <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
-            Click to reveal tile. Flags are for slow players, try to mark the
-            mines in your head!
-            <br />
-            <button
-              className="font-medium underline"
-              onClick={() => setShowGamemodeCarousel(true)}
-            >
-              Select gamemode
-            </button>
-          </div>
-          <div className="flex flex-col items-center">
-            <Logo />
-            <div className="justify-self-start lg:ml-4">
-              <HighscoreList
-                data={highscoreData}
-                isLoading={isLoading}
-                error={error}
-                filter={currentGamemodeObject.name}
-                inGame={false}
+            showGamemodeCarousel={showGamemodeCarousel}
+            handleShowGamemodeCarousel={handleShowGamemodeCarousel}
+          >
+            {showGamemodeCarousel && (
+              <GamemodeCarousel
+                name={name}
+                mappedGamemodes={mappedGamemodes}
+                gamemodes={gamemodes}
+                handleSelectGamemode={handleSelectGamemode}
+                handleCloseSelectGamemode={handleCloseSelectGamemode}
+                showGamemodeCarousel={showGamemodeCarousel}
               />
+            )}
+          </GameIslands>
+          <div
+            className="flex flex-col items-center justify-center
+                      mt-4 lg:ml-16"
+          >
+            <div className="flex flex-col items-center justify-center w-screen lg:w-full lg:h-screen">
+              <Logo />
+              <div className="lg:ml-4">
+                <div className="max-w-fit mt-2 text-base md:text-lg text-slate-700 font-extralight text-center">
+                  Click to reveal tile. Place lighthouses on shoreline to reveal
+                  water tiles. Flags are for slow players, try to mark the mines
+                  in your head!
+                  <br />
+                  <div className="flex flex-row justify-around items-center">
+                    <IconCheckbox
+                      icon={<GiTrophy size={28} />}
+                      status={false}
+                      onClick={() => navigate("/highscores")}
+                      tooltip={"Browse highscores"}
+                      primaryColor={"#D6AF36"}
+                    />
+                  </div>
+                </div>
+                <HighscoreList
+                  data={highscoreData}
+                  isLoading={isLoading}
+                  error={error}
+                  filter={currentGamemodeObject.name}
+                  inGame={false}
+                />
+              </div>
             </div>
           </div>
         </div>

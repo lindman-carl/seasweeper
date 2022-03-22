@@ -51,7 +51,7 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
             </>
           )
         ) : (
-          <div className="mt-16">Error fetching highscores.</div>
+          <div className="my-16">Error fetching highscores.</div>
         )}
       </div>
     </div>
