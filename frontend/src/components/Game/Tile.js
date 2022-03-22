@@ -15,7 +15,7 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
     return null;
   };
 
-  const formatRevealed = () => (
+  const renderRevealed = () => (
     <div
       className={`
     tile-base
@@ -35,7 +35,7 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
     </div>
   );
 
-  const formatLand = () => (
+  const renderLand = () => (
     <div
       className="
             tile-base
@@ -52,8 +52,8 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
     </div>
   );
 
-  const formatWater = () => {
-    const icon = () => (
+  const renderWater = () => {
+    const markedIcon = () => (
       <div className="tile-icon-container text-yellow-300 drop-shadow-lg animate-wiggle ">
         <IconContext.Provider value={{ size: "1.5em" }}>
           <div className="relative w-full h-full">
@@ -74,42 +74,29 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
             tile-clickable
             bg-blue-300"
       >
-        {tile.marked && icon()}
+        {tile.marked && markedIcon()}
       </div>
     );
   };
 
-  const formatTile = () => {
-    if (tile.type === 1) {
-      // land tile
-      return (
-        <div className="tile-container" onClick={onClick}>
-          {formatLand()}
-        </div>
-      );
-    } else if (tile.type === 2) {
-      // water tile
-      if (tile.revealed) {
-        // revealed tile
-        return (
-          <div className="tile-container" onClick={onClick}>
-            {formatRevealed()}
-          </div>
-        );
-      } else {
-        // hidden tile
-        return (
-          <div className="tile-container" onClick={onClick}>
-            {formatWater()}
-          </div>
-        );
-      }
-    }
+  // redering function
+  const renderTile = () => {
+    return (
+      <div className="tile-container" onClick={onClick}>
+        {
+          tile.type === 1
+            ? renderLand() // if land
+            : tile.type === 2 && tile.revealed // if water
+            ? renderRevealed() // if revealed water
+            : renderWater() // if not revealed water
+        }
+      </div>
+    );
   };
 
   // render
 
-  return formatTile();
+  return renderTile();
 });
 
 export default Tile;

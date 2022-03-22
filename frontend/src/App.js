@@ -8,7 +8,7 @@ import HighscoreApp from "./HighscoreApp";
 import IslandsGamemode from "./assets/gamemodes/islandsGamemode.png";
 import OpenseaGamemode from "./assets/gamemodes/openseaGamemode.png";
 import ArchipelagoGamemode from "./assets/gamemodes/archipelagoGamemode.png";
-import PacificoceanGamemode from "./assets/gamemodes/pacificoceanGamemode.png";
+import PacificoceanGamemode from "./assets/gamemodes/pacificoceanGamemode.webp";
 
 const queryClient = new QueryClient();
 

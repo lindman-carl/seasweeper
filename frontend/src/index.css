@@ -69,6 +69,19 @@
       transition-all duration-150;
   }
 
+  .tile-carousel-container {
+    @apply w-full h-min 
+    p-px
+    flex justify-center items-center;
+  }
+
+  .tile-carousel-base {
+    @apply w-2 h-2
+      border-dashed border border-gray-300
+      shadow-sm
+      select-none;
+  }
+
   .tile-container {
     @apply w-full h-min 
     p-px md:p-0.5 
