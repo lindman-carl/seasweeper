@@ -209,7 +209,7 @@ const mergeLayers = (mapToMerge) => {
 
 const generateValidMergedMap = (w, h, nIslands, clusterSpread) => {
   const validMap = generateValidMap(w, h, nIslands, clusterSpread);
-  console.log("generating islands map");
+  // console.log("generating islands map");
   const mergedMap = mergeLayers(validMap);
   return mergedMap;
 };

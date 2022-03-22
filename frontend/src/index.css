@@ -41,12 +41,13 @@
   }
 
   .icon-badge-base {
-    @apply w-14 h-8
-    sm:w-20
-    md:w-24
+    @apply w-20 h-6 mt-1
+    sm:w-20 sm:h-6 sm:mt-0
+    md:w-20
     flex justify-center items-center
     text-purple-500
-    border border-purple-500 rounded-md
+    border
+    sm:border border-purple-500 rounded-md
     bg-white
     select-none
     cursor-default;

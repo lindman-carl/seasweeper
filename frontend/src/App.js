@@ -24,6 +24,7 @@ const gamemodes = [
     nLighthouses: 2,
     nIslands: 12,
     clusterSpread: 4,
+    id: 0,
   },
   {
     name: "opensea2032",
@@ -33,9 +34,10 @@ const gamemodes = [
     w: 20,
     h: 20,
     nBombs: 32,
-    nLighthouses: 2,
+    nLighthouses: 0,
     nIslands: 0,
     clusterSpread: 4,
+    id: 1,
   },
   {
     name: "archipelago2032",
@@ -48,6 +50,7 @@ const gamemodes = [
     nLighthouses: 3,
     nIslands: 20,
     clusterSpread: 2,
+    id: 2,
   },
   {
     name: "pacificocean2032",
@@ -60,13 +63,9 @@ const gamemodes = [
     nLighthouses: 1,
     nIslands: 6,
     clusterSpread: 2,
+    id: 3,
   },
 ];
-
-const gamemodeRoutes = gamemodes.map((el) => ({
-  path: el.link,
-  element: <GameIslandsApp name={el.name} gamemodes={gamemodes} />,
-}));
 
 function App() {
   // const element = useRoutes();

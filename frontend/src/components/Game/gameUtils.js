@@ -1,6 +1,5 @@
 // ISLAND GAMES
 const populateGeneratedMap = (nBombs, mapToPopulate) => {
-  console.log("called populateGeneratedMap");
   const map = [...mapToPopulate];
   const height = map.length;
   const width = map[0].length;
@@ -40,8 +39,6 @@ const populateGeneratedMap = (nBombs, mapToPopulate) => {
     }
     bombIds.push(randomId);
   }
-
-  console.log("bombIds:", bombIds);
 
   // add bombs to board
   for (let bombId of bombIds) {

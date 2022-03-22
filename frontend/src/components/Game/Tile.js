@@ -5,7 +5,7 @@ import { FaBomb } from "react-icons/fa";
 import { SiLighthouse } from "react-icons/si";
 import { GiBuoy } from "react-icons/gi";
 
-const Tile = React.memo(({ tile, onClick, markMode }) => {
+const Tile = ({ tile, onClick }) => {
   let iconSize = "1.5em";
 
   const formatCount = () => {
@@ -15,25 +15,49 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
     return null;
   };
 
-  const renderRevealed = () => (
-    <div
-      className={`
-    tile-base
-    shadow-none
-    ${tile.lit ? "bg-yellow-100" : "bg-sky-50"}
+  const renderRevealed = () => {
+    if (tile.lit) {
+      return (
+        <div
+          className={`
+        tile-base
+        shadow-none
+        bg-yellow-100
+        `}
+        >
+          <div className="tile-icon-container text-black text-2xl font-bold">
+            {tile.bomb ? (
+              <IconContext.Provider value={{ size: iconSize }}>
+                <FaBomb className="drop-shadow" />
+              </IconContext.Provider>
+            ) : (
+              <div className="text-lg font-semibold ">{formatCount()}</div>
+            )}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className={`
+            tile-base
+            shadow-none
+            bg-sky-50
     `}
-    >
-      <div className="tile-icon-container text-black text-2xl font-bold">
-        {tile.bomb ? (
-          <IconContext.Provider value={{ size: iconSize }}>
-            <FaBomb className="drop-shadow" />
-          </IconContext.Provider>
-        ) : (
-          <div className="text-lg font-semibold ">{formatCount()}</div>
-        )}
-      </div>
-    </div>
-  );
+        >
+          <div className="tile-icon-container text-black text-2xl font-bold">
+            {tile.bomb ? (
+              <IconContext.Provider value={{ size: iconSize }}>
+                <FaBomb className="drop-shadow" />
+              </IconContext.Provider>
+            ) : (
+              <div className="text-lg font-semibold ">{formatCount()}</div>
+            )}
+          </div>
+        </div>
+      );
+    }
+  };
 
   const renderLand = () => (
     <div
@@ -97,6 +121,6 @@ const Tile = React.memo(({ tile, onClick, markMode }) => {
   // render
 
   return renderTile();
-});
+};
 
 export default Tile;

@@ -2,7 +2,7 @@ const Timer = ({ time }) => {
   const formatTime = () => {
     const seconds = Math.floor(time / 1000);
     const hundreds = Math.floor((time % 1000) / 100);
-    console.log(time, seconds, hundreds);
+    // console.log(time, seconds, hundreds);
 
     return (
       <>
@@ -15,7 +15,9 @@ const Timer = ({ time }) => {
   };
   return (
     <div
-      className="min-w-[8rem] w-full h-12 
+      className="w-full h-12
+            min-w-[6rem]
+            sm:min-w-[8rem]  
             mx-auto
             px-4
             flex justify-center items-start

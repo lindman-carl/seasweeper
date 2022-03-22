@@ -12,8 +12,8 @@ import { generateValidMergedMap } from "./islandMapGenerator";
 // components
 import TileCarousel from "./TileCarousel";
 
-const CarouselBoard = ({ board }) => {
-  const renderBoard = () => {
+const CarouselBoard = ({ mappedGamemodes, currentIndex }) => {
+  const renderBoard = (board) => {
     const rows = [];
     for (let y = 0; y < board.length; y++) {
       // iterate y axis
@@ -24,18 +24,32 @@ const CarouselBoard = ({ board }) => {
       rows.push(mappedRow);
     }
 
-    const rowsMapped = rows.map((row) => (
-      <div className="flex flex-row justify-start items-start shrink">
+    const rowsMapped = rows.map((row, idx) => (
+      <div key={idx} className="flex flex-row justify-start items-start shrink">
         {row}
       </div>
     ));
     return rowsMapped;
   };
 
-  return board && <div className="flex flex-col">{renderBoard()}</div>;
+  const renderCurrentBoard = (currentIndex) => {
+    const board = mappedGamemodes.find((gm) => gm.id === currentIndex).board;
+    return renderBoard(board);
+  };
+
+  return (
+    mappedGamemodes && (
+      <div className="flex flex-col">{renderCurrentBoard(currentIndex)}</div>
+    )
+  );
 };
 
-const GamemodeCarousel = ({ gamemodes, name, handleSelectGamemode }) => {
+const GamemodeCarousel = ({
+  gamemodes,
+  name,
+  handleSelectGamemode,
+  mappedGamemodes,
+}) => {
   const startIndex = gamemodes.findIndex((gamemode) => gamemode.name === name);
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
 
@@ -74,13 +88,12 @@ const GamemodeCarousel = ({ gamemodes, name, handleSelectGamemode }) => {
         </div>
         <div
           className="carousel-image"
-          onClick={() => handleSelectGamemode(gamemodes[currentIndex].link)}
+          onClick={() => handleSelectGamemode(currentIndex)}
         >
-          {/* <img
-            src={gamemodes[currentIndex].img}
-            alt={gamemodes[currentIndex].label}
-          /> */}
-          <CarouselBoard board={testBoard} />
+          <CarouselBoard
+            mappedGamemodes={mappedGamemodes}
+            currentIndex={currentIndex}
+          />
         </div>
         <div className="carousel-button" onClick={() => handleCarouselClick(1)}>
           <MdArrowForwardIos size={32} />

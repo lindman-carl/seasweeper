@@ -10,11 +10,15 @@ const IconCheckbox = ({
   const checkboxContent = (iconToDisplay = icon) => (
     <div
       className="
-    w-full h-full
-    flex justify-center items-center"
+            w-full h-full
+            flex justify-center items-center"
     >
       {iconToDisplay}
-      {value && <div className="ml-0 sm:ml-2 font-semibold">{value}</div>}
+      {value !== undefined && (
+        <div className="ml-0 sm:ml-2 font-semibold">
+          {value > 0 ? value : "-"}
+        </div>
+      )}
     </div>
   );
   const inactiveState = () => {
@@ -67,6 +71,8 @@ const IconCheckbox = ({
               bg-gray-50
               shadow-none
               cursor-not-allowed"
+        data-tip={tooltip}
+        data-for="checkboxInfo"
       >
         {checkboxContent()}
       </div>

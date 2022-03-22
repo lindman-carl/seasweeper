@@ -3,7 +3,7 @@ const IconBadge = ({ icon, value, tooltip, tooltipId }) => {
     <div
       className="
     w-full h-full
-    mx-2
+    mx-1
     sm:mx-4
     flex justify-between items-center"
       data-tip={tooltip}
