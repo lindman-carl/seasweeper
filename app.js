@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
+const compression = require("compression");
 require("express-async-errors");
 
 // utils
@@ -27,6 +28,7 @@ mongoose
 app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
+app.use(compression({ filter: shouldCompress }));
 
 // routers
 app.use("/api/highscores", highscoresRouter);
