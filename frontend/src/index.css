@@ -144,9 +144,9 @@
   }
 
   .carousel-image {
-    @apply hover:scale-110
-    active:scale-95
+    @apply hover:scale-90
     m-2
+    shadow-lg
     cursor-pointer
     select-none
     transition-all duration-100;
@@ -162,8 +162,8 @@
     @apply w-4 max-w-[12rem] h-48
     m-4
     flex flex-row justify-center items-center grow justify-self-stretch
-    hover:scale-125
-    active:scale-95
+    hover:scale-90
+    active:scale-75
     transition-all duration-100
     cursor-pointer;
   }
