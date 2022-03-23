@@ -31,7 +31,7 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center">
+    <div className="w-full h-full flex flex-col justify-start items-center bg-sky-50">
       {/* <HighscoreAppHeader /> */}
       <div
         className="

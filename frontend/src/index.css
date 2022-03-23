@@ -139,14 +139,14 @@
   }
 
   .carousel-card {
-    @apply w-min p-2 m-2
-      flex flex-row justify-center items-center;
+    @apply w-full h-80  m-2
+      flex flex-row justify-around items-center;
   }
 
   .carousel-image {
     @apply hover:scale-110
     active:scale-95
-    my-2
+    m-2
     cursor-pointer
     select-none
     transition-all duration-100;
@@ -166,5 +166,52 @@
     active:scale-95
     transition-all duration-100
     cursor-pointer;
+  }
+
+  .webgl {
+    @apply absolute bottom-0 z-10
+    w-full h-screen
+    hidden lg:block;
+  }
+
+  .highscores-container {
+    @apply h-full w-full 
+    bg-white
+    my-4
+    flex flex-col justify-around items-center
+    shadow-lg;
+  }
+
+  /* Highscore filter */
+  .highscores-filter-container {
+    @apply h-full w-full
+    mb-2
+    flex flex-row justify-start items-center shrink
+    text-sky-600;
+  }
+  .highscores-filter-input {
+    @apply w-4/6
+    mr-4
+    ml-1 shrink
+    px-1
+    bg-transparent
+    border-b border-sky-600
+    text-sm
+    focus:border-sky-900 focus:drop-shadow-md
+    text-sky-900
+    placeholder:text-sky-600
+    focus:outline-none;
+  }
+
+  /* Highscore select */
+  .highscores-select {
+    @apply w-min shrink
+    p-1
+    border border-sky-700
+    text-sky-700
+    text-sm
+    font-semibold
+    shadow-sm
+    focus:outline-none;
   }
 }

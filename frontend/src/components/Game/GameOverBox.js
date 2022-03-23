@@ -78,17 +78,35 @@ const GameOverBox = ({
         {isGeneratingMap ? (
           <BarLoader />
         ) : (
-          <RetryButton
-            handleRestartGame={() => {
-              handleRestartGame();
-              setIsGeneratingMap(true);
-            }}
-          />
+          <div className="flex flex-col">
+            {/* <RetryButton
+              handleRestartGame={() => {
+                handleRestartGame();
+                setIsGeneratingMap(true);
+              }}
+            /> */}
+            <RetryButton
+              handleRestartGame={() => {
+                handleRestartGame();
+                setIsGeneratingMap(true);
+              }}
+            />
+          </div>
         )}
       </div>
 
-      <div className="gameoverbox-item">
-        <Link to="/highscores">View highscores</Link>
+      <div className="gameoverbox-item h-12 lg:h-4">
+        <button
+          onClick={() =>
+            window.scrollTo({
+              top: 1000,
+              behavior: "smooth",
+            })
+          }
+          className="lg:hidden"
+        >
+          View highscores
+        </button>
       </div>
     </div>
   );
