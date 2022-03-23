@@ -133,36 +133,13 @@ const GameApp = ({ name, gamemodes }) => {
       setCurrentGamemodeObject(current);
     };
     start();
-
-    setFilteredHighscoreData(filterHighscores());
   }, []);
 
   const handleSearchFilter = ({ target }) => {
-    setCurrentSearchFilter(target.value);
-    const filtered = filterHighscores(target.value);
-    setFilteredHighscoreData(filtered);
+    setCurrentSearchFilter(target.value.trim());
   };
   const handleMapFilter = ({ target }) => {
     setCurrentMapFilter(target.value);
-    const filtered = filterHighscores();
-    setFilteredHighscoreData(filtered);
-  };
-  const filterHighscores = (searchString) => {
-    const filteredByGamemode = highscoreData.filter(
-      (el) => el.gameMode === currentMapFilter
-    );
-
-    if (searchString) {
-      return filteredByGamemode.filter((el) =>
-        el.name
-          .toLowerCase()
-          .trim()
-          .includes(searchString.toLowerCase().trim())
-          .sort((a, b) => a.time - b.time)
-      );
-    }
-
-    return filteredByGamemode.sort((a, b) => a.time - b.time);
   };
 
   return (
@@ -233,10 +210,11 @@ const GameApp = ({ name, gamemodes }) => {
                     </select>
                   </div>
                   <HighscoreList
-                    data={filteredHighscoreData}
+                    data={highscoreData}
                     isLoading={isLoading}
                     error={error}
-                    filter={currentGamemodeObject.name}
+                    mapFilter={currentMapFilter}
+                    searchFilter={currentSearchFilter}
                     inGame={false}
                   />
                 </HighScoresContainer>

@@ -6,15 +6,30 @@ const HighscoreAppHeader = () => (
   <div className="m-4 font-bold text-2xl">Highscores</div>
 );
 
-const HighScores = ({ data, isLoading, error, filter, inGame }) => {
+const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
   /**
    * Maps data to HighscoreListRow objects
    * @returns Array of HigscoreListRow objects
    */
   const mapHighscores = () => {
-    // const filteredData = data.filter((e) => e.gameMode === filter);
-    // const slicedData = inGame ? filteredData.slice(0, 10) : filteredData;
-    return data.map((highscore, idx) => (
+    const filterHighscores = () => {
+      const filteredByGamemode = data.filter((el) => el.gameMode === mapFilter);
+
+      if (searchFilter) {
+        return filteredByGamemode.filter((el) =>
+          el.name
+            .toLowerCase()
+            .trim()
+            .includes(searchFilter.toLowerCase().trim())
+            .sort((a, b) => a.time - b.time)
+        );
+      }
+
+      return filteredByGamemode.sort((a, b) => a.time - b.time);
+    };
+
+    const filteredData = filterHighscores();
+    return filteredData.map((highscore, idx) => (
       <div
         key={idx}
         className="
