@@ -44,13 +44,15 @@ const generateBoard = async ({ w, h, nBombs, nIslands, clusterSpread }) => {
 
 const mapGamemodes = async (gamemodes) => {
   const mappedGamemodes = await Promise.all(
-    gamemodes.map(async (gm) => {
-      const newBoard = await generateBoard(gm);
-      const mapped = { ...gm, board: newBoard };
-      return mapped;
-    })
+    gamemodes
+      .map(async (gm) => {
+        const newBoard = await generateBoard(gm);
+        const mapped = { ...gm, board: newBoard };
+        return mapped;
+      })
+      .sort((a, b) => a.id - b.id)
   );
-
+  console.log("hakkkkkkkooo", mappedGamemodes);
   return mappedGamemodes;
 };
 
@@ -63,7 +65,7 @@ const regenerateSingleMappedGamemode = async (mappedGamemodes, id) => {
     newMappedGamemode,
   ];
 
-  return newMappedGamemodes;
+  return newMappedGamemodes.sort((a, b) => a.id - b.id);
 };
 
 const GameApp = ({ name, gamemodes }) => {
