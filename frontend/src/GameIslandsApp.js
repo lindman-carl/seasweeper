@@ -133,6 +133,8 @@ const GameApp = ({ name, gamemodes }) => {
       setCurrentGamemodeObject(current);
     };
     start();
+
+    setFilteredHighscoreData(filterHighscores());
   }, []);
 
   const handleSearchFilter = ({ target }) => {
@@ -231,11 +233,7 @@ const GameApp = ({ name, gamemodes }) => {
                     </select>
                   </div>
                   <HighscoreList
-                    data={
-                      filteredHighscoreData
-                        ? filteredHighscoreData
-                        : highscoreData
-                    }
+                    data={filteredHighscoreData}
                     isLoading={isLoading}
                     error={error}
                     filter={currentGamemodeObject.name}
