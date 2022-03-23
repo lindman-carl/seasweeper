@@ -128,7 +128,7 @@
   .carousel-container {
     @apply w-screen h-96
     lg:w-[50%]
-    z-20 top-1/4 absolute 
+    z-20 mt-48 absolute 
     grid grid-cols-3 grid-rows-3 auto-rows-auto
     border-l-0 border-r-0
     bg-white
@@ -138,7 +138,8 @@
   }
 
   .carousel-card {
-    @apply w-full h-full  
+    @apply w-full h-full 
+      my-4 
       col-start-2 row-start-2
       flex flex-row justify-center items-center;
   }

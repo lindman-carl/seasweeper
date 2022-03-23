@@ -71,7 +71,7 @@ const GamemodeCarousel = ({
   return (
     <div className="carousel-container">
       <div className="carousel-header h-20 col-start-2 col-span-1 row-start-1 row-span-1">
-        <div className="w-full h-full flex justify-center items-center ">
+        <div className="w-full h-full flex justify-center items-center">
           {gamemodes[currentIndex].label}
         </div>
       </div>
