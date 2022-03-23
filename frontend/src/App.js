@@ -33,7 +33,7 @@ const gamemodes = [
     img: PacificoceanGamemode,
     w: 10,
     h: 10,
-    nBombs: 5,
+    nBombs: 10,
     nLighthouses: 0,
     nIslands: 0,
     clusterSpread: 2,

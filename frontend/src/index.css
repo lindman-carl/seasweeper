@@ -144,7 +144,8 @@
   }
 
   .carousel-image {
-    @apply hover:scale-90
+    @apply hover:scale-95
+    active:scale-90
     m-2
     shadow-lg
     cursor-pointer
