@@ -1,3 +1,4 @@
+import { RiArrowDownSLine } from "react-icons/ri";
 import { ClipLoader } from "react-spinners";
 import HighscoreHeaders from "./HighscoreHeaders";
 import HighscoreListRow from "./HighscoreListRow";
@@ -80,6 +81,9 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
         ) : (
           <div className="m-auto">Error fetching highscores.</div>
         )}
+      </div>
+      <div className="absolute -top-4 animate-bounce z-10">
+        <RiArrowDownSLine size={24} />
       </div>
     </div>
   );
