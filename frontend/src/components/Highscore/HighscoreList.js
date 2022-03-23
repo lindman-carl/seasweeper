@@ -20,7 +20,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
         return filteredByGamemode
           .filter(
             (el) =>
-              el.name
+              el.playerName
                 .toLowerCase()
                 .trim()
                 .includes(searchFilter.toLowerCase().trim()) && el
