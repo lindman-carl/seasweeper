@@ -24,6 +24,7 @@ const TextInput = ({
         return !!value.trim();
       },
     })}
+    defaultValue={localStorage.getItem("playerName") || ""}
   />
 );
 

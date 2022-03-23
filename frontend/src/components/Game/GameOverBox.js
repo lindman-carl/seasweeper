@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { ClipLoader, BarLoader } from "react-spinners";
 
