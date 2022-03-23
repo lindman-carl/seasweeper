@@ -174,8 +174,9 @@
     hidden lg:block;
   }
 
+  /* Highscore */
   .highscores-container {
-    @apply h-full w-full 
+    @apply h-min w-full
     bg-white
     my-4
     flex flex-col justify-around items-center

@@ -24,6 +24,9 @@ import HighscoreFilter from "./components/Highscore/HighscoreFilter";
 
 const fetchHighscores = async () => {
   const res = await axios.get("/api/highscores");
+  // const res = await axios.get(
+  //   "https://seasweeper.herokuapp.com/api/highscores"
+  // );
   const sortedData = res.data.sort((a, b) => a.time - b.time);
   return sortedData;
 };
@@ -177,10 +180,9 @@ const GameApp = ({ name, gamemodes }) => {
           <div
             className="flex flex-col items-center justify-center
             mt-4 lg:ml-16"
-            id="canvas-div"
           >
             {/* <canvas className="webgl"></canvas> */}
-            <div className="flex flex-col items-center justify-center w-screen lg:w-full lg:h-screen lg:overflow-y-scroll">
+            <div className="flex flex-col items-center justify-start lg:mt-32 w-screen lg:w-full lg:h-screen lg:overflow-y-scroll">
               <Logo />
               <div className="lg:ml-4">
                 <div className="max-w-fit mt-2 mb-6 text-base md:text-lg text-sky-900 font-light text-center">
@@ -199,7 +201,7 @@ const GameApp = ({ name, gamemodes }) => {
                       primaryColor={"#D6AF36"}
                     />
                   </div>
-                  <div className="flex flex-row items-center mb-4">
+                  <div className="flex flex-row items-center mb-4 ">
                     <HighscoreFilter onChange={handleSearchFilter} />
                     <select
                       className="highscores-select"

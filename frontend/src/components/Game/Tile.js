@@ -25,7 +25,7 @@ const Tile = ({ tile, onClick }) => {
         bg-yellow-100
         `}
         >
-          <div className="tile-icon-container text-black text-2xl font-bold">
+          <div className="tile-icon-container text-sky-900 text-2xl font-thin">
             {tile.bomb ? (
               <IconContext.Provider value={{ size: iconSize }}>
                 <FaBomb className="drop-shadow" />
@@ -45,7 +45,7 @@ const Tile = ({ tile, onClick }) => {
             bg-sky-50
     `}
         >
-          <div className="tile-icon-container text-black text-2xl font-bold">
+          <div className="tile-icon-container text-sky-900 text-2xl font-thin">
             {tile.bomb ? (
               <IconContext.Provider value={{ size: iconSize }}>
                 <FaBomb className="drop-shadow" />

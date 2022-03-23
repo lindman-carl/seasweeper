@@ -13,7 +13,10 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
    */
   const mapHighscores = () => {
     const filterHighscores = () => {
-      const filteredByGamemode = data.filter((el) => el.gameMode === mapFilter);
+      const filteredByGamemode = data
+        .filter((el) => el.gameMode === mapFilter)
+        .map((el, idx) => ({ ...el, rank: idx }));
+
       console.log(filteredByGamemode);
 
       if (searchFilter) {
@@ -28,32 +31,38 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
           .sort((a, b) => a.time - b.time);
       }
 
-      return filteredByGamemode.sort((a, b) => a.time - b.time);
+      const ranked = filteredByGamemode.sort((a, b) => a.time - b.time);
+
+      return ranked;
     };
 
     const filteredData = filterHighscores();
-    return filteredData.map((highscore, idx) => (
-      <div
-        key={idx}
-        className="
+    return filteredData.length > 0 ? (
+      filteredData.map((highscore) => (
+        <div
+          key={highscore.rank}
+          className="
         w-48 sm:w-64 
         flex flex-row justify-start items-center"
-      >
-        {idx < 3 ? (
-          <HighscoreListRow highscore={highscore} rank={idx} size={"xl"} />
-        ) : (
-          <HighscoreListRow highscore={highscore} rank={idx} size={"md"} />
-        )}
-      </div>
-    ));
+        >
+          {highscore.rank < 3 ? (
+            <HighscoreListRow highscore={highscore} size={"xl"} />
+          ) : (
+            <HighscoreListRow highscore={highscore} size={"md"} />
+          )}
+        </div>
+      ))
+    ) : (
+      <div className="text-sm mt-4">No matching entries</div>
+    );
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center bg-sky-50 py-6 ">
+    <div className="w-full h-full flex flex-col items-center bg-sky-50 py-6 ">
       {/* <HighscoreAppHeader /> */}
       <div
         className="
-              w-96 h-full max-h-96
+              w-96 max-h-96 min-h-min
               overflow-scroll
               flex flex-col justify-start items-center"
       >

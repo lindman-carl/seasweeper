@@ -1,7 +1,7 @@
 import { FaMedal } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
-const HighScoreRow = ({ highscore: { playerName, time }, rank, size }) => {
+const HighScoreRow = ({ highscore: { playerName, time, rank }, size }) => {
   const colors = {
     0: "#D6AF36",
     1: "#A7A7AD",
