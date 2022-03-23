@@ -15,15 +15,14 @@ import { RiArrowDownSLine } from "react-icons/ri";
 
 // data fetching functions
 const postHighscore = async (time, playerName, gameMode) => {
-  // const res = await axios.post("/api/highscores", {
-  const res = await axios.post(
-    "https://seasweaper.herokuapp.com/api/highscores",
-    {
-      time,
-      playerName: playerName.trim(),
-      gameMode,
-    }
-  );
+  const res = await axios.post("/api/highscores", {
+    // const res = await axios.post(
+    //   "https://seasweaper.herokuapp.com/api/highscores",
+    //   {
+    time,
+    playerName: playerName.trim(),
+    gameMode,
+  });
 
   return res.data;
 };
