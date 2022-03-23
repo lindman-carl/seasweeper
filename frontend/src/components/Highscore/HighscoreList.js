@@ -62,7 +62,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
       {/* <HighscoreAppHeader /> */}
       <div
         className="
-              w-96 max-h-96 min-h-min
+              w-96 max-h-72 min-h-min
               overflow-scroll
               flex flex-col justify-start items-center"
       >
