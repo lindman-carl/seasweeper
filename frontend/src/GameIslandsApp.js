@@ -113,6 +113,7 @@ const GameApp = ({ name, gamemodes }) => {
       id
     );
     setMappedGamemodes(newMappedGamemodes);
+    setCurrentMapFilter(current.name);
     console.log("done", current);
   };
 
@@ -193,16 +194,17 @@ const GameApp = ({ name, gamemodes }) => {
                     <IconCheckbox
                       icon={<GiTrophy size={28} />}
                       status={false}
-                      onClick={() => navigate("/highscores")}
-                      tooltip={"Browse highscores"}
+                      onClick={() => refetch()}
+                      tooltip={"Highscores"}
                       primaryColor={"#D6AF36"}
                     />
                   </div>
                   <div className="flex flex-row items-center mb-4">
                     <HighscoreFilter onChange={handleSearchFilter} />
                     <select
-                      className="highscores-select "
+                      className="highscores-select"
                       onChange={handleMapFilter}
+                      value={currentMapFilter}
                     >
                       {gamemodes.map((gm) => (
                         <option label={gm.label} value={gm.name} key={gm.id} />
