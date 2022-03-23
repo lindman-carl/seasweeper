@@ -82,7 +82,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
           <div className="m-auto">Error fetching highscores.</div>
         )}
       </div>
-      <div className="absolute -top-4 animate-bounce z-10">
+      <div className="m-auto animate-pulse z-10 text-sky-700">
         <RiArrowDownSLine size={24} />
       </div>
     </div>
