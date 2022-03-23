@@ -12,9 +12,9 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
    * @returns Array of HigscoreListRow objects
    */
   const mapHighscores = () => {
-    const filteredData = data.filter((e) => e.gameMode === filter);
-    const slicedData = inGame ? filteredData.slice(0, 10) : filteredData;
-    return slicedData.map((highscore, idx) => (
+    // const filteredData = data.filter((e) => e.gameMode === filter);
+    // const slicedData = inGame ? filteredData.slice(0, 10) : filteredData;
+    return data.map((highscore, idx) => (
       <div
         key={idx}
         className="
@@ -31,7 +31,7 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center bg-sky-50">
+    <div className="w-full h-full flex flex-col justify-start items-center bg-sky-50 py-6 ">
       {/* <HighscoreAppHeader /> */}
       <div
         className="
@@ -41,7 +41,7 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
       >
         {!error ? (
           isLoading ? (
-            <div className="mt-16">
+            <div className="m-auto">
               <ClipLoader />
             </div>
           ) : (
@@ -51,7 +51,7 @@ const HighScores = ({ data, isLoading, error, filter, inGame }) => {
             </>
           )
         ) : (
-          <div className="my-16">Error fetching highscores.</div>
+          <div className="m-auto">Error fetching highscores.</div>
         )}
       </div>
     </div>

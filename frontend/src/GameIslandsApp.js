@@ -137,7 +137,7 @@ const GameApp = ({ name, gamemodes }) => {
 
   const handleSearchFilter = ({ target }) => {
     setCurrentSearchFilter(target.value);
-    const filtered = filterHighscores();
+    const filtered = filterHighscores(target.value);
     setFilteredHighscoreData(filtered);
   };
   const handleMapFilter = ({ target }) => {
@@ -145,17 +145,17 @@ const GameApp = ({ name, gamemodes }) => {
     const filtered = filterHighscores();
     setFilteredHighscoreData(filtered);
   };
-  const filterHighscores = () => {
+  const filterHighscores = (searchString) => {
     const filteredByGamemode = highscoreData.filter(
       (el) => el.gameMode === currentMapFilter
     );
 
-    if (currentSearchFilter !== "") {
+    if (searchString) {
       return filteredByGamemode.filter((el) =>
         el.name
           .toLowerCase()
           .trim()
-          .includes(currentSearchFilter.toLowerCase().trim())
+          .includes(searchString.toLowerCase().trim())
           .sort((a, b) => a.time - b.time)
       );
     }
