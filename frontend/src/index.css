@@ -41,7 +41,7 @@
   }
 
   .icon-badge-base {
-    @apply w-20 h-8 mt-1
+    @apply w-12 h-8 mt-1
     sm:w-20 sm:h-8 sm:mt-0
     md:w-20
     flex justify-center items-center
@@ -126,7 +126,7 @@
   }
 
   .carousel-container {
-    @apply w-screen h-2/4
+    @apply w-screen h-96
     lg:w-[50%]
     z-20 top-1/4 absolute 
     grid grid-cols-3 grid-rows-3 auto-rows-auto
@@ -154,7 +154,10 @@
 
   .carousel-header {
     @apply w-full
-    text-4xl font-extrabold
+    text-center
+    text-xl
+    sm:text-4xl 
+    font-extrabold
     underline underline-offset-auto decoration-blue-300;
   }
 

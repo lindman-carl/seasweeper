@@ -75,7 +75,7 @@ const Hud = ({
             tooltip={"Select game mode"}
           />
         </div>
-        <div className="w-full flex flex-row mt-1 justify-between items-center">
+        <div className="w-full flex flex-row mt-1 mx-1 justify-between items-center">
           <div className="mr-1 grow">
             <IconBadge
               icon={<FaBomb size={22} className="mb-1" />}

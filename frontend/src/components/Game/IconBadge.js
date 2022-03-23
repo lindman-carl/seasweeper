@@ -5,7 +5,7 @@ const IconBadge = ({ icon, value, tooltip }) => {
     w-full h-full
     mx-4
     font-semibold
-    text-lg
+    text-sm sm:text-lg
     flex justify-between items-center"
       data-tip={tooltip}
       data-for="badgeInfo"
