@@ -6,9 +6,6 @@ import {
   MdOutlineClose,
 } from "react-icons/md";
 
-import gameUtils from "./gameUtils";
-import { generateValidMergedMap } from "./islandMapGenerator";
-
 // components
 import TileCarousel from "./TileCarousel";
 
@@ -49,20 +46,15 @@ const GamemodeCarousel = ({
   name,
   handleSelectGamemode,
   mappedGamemodes,
+  handleClose,
 }) => {
   const startIndex = gamemodes.findIndex((gamemode) => gamemode.name === name);
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
 
-  const [testBoard, setTestBoard] = useState(null);
-  useEffect(() => {
-    const generateBoard = async () => {
-      const tempMap = await generateValidMergedMap(20, 20, 12, 4);
-      const tempBoard = await gameUtils.populateGeneratedMap(32, tempMap);
-      setTestBoard(tempBoard);
-    };
-
-    generateBoard();
-  }, []);
+  // const generateBoard = async () => {
+  //   const tempMap = await generateValidMergedMap(20, 20, 12, 4);
+  //   const tempBoard = await gameUtils.populateGeneratedMap(32, tempMap);
+  // };
 
   const handleCarouselClick = (inc) => {
     const newIndex = currentIndex + inc;
@@ -78,14 +70,24 @@ const GamemodeCarousel = ({
 
   return (
     <div className="carousel-container">
-      <div className="carousel-header">{gamemodes[currentIndex].label}</div>
-      <div className="carousel-card">
-        <div
-          className="carousel-button h-32"
-          onClick={() => handleCarouselClick(-1)}
-        >
-          <MdArrowBackIos size={32} />
+      <div className="carousel-header h-20 col-start-2 col-span-1 row-start-1 row-span-1">
+        <div className="w-full h-full flex justify-center items-center ">
+          {gamemodes[currentIndex].label}
         </div>
+      </div>
+      <div
+        className="w-full h-20 flex justify-center items-center col-start-3 row-start-1 row-span-1 cursor-pointer"
+        onClick={handleClose}
+      >
+        <MdOutlineClose size={20} />
+      </div>
+      <div
+        className="carousel-button col-start-1 row-start-2"
+        onClick={() => handleCarouselClick(-1)}
+      >
+        <MdArrowBackIos size={32} />
+      </div>
+      <div className="carousel-card">
         <div
           className="carousel-image"
           onClick={() => handleSelectGamemode(currentIndex)}
@@ -95,9 +97,12 @@ const GamemodeCarousel = ({
             currentIndex={currentIndex}
           />
         </div>
-        <div className="carousel-button" onClick={() => handleCarouselClick(1)}>
-          <MdArrowForwardIos size={32} />
-        </div>
+      </div>
+      <div
+        className="carousel-button col-start-3 row-start-2"
+        onClick={() => handleCarouselClick(1)}
+      >
+        <MdArrowForwardIos size={32} />
       </div>
     </div>
   );

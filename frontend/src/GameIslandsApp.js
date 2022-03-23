@@ -172,7 +172,7 @@ const GameApp = ({ name, gamemodes }) => {
                 mappedGamemodes={mappedGamemodes}
                 gamemodes={gamemodes}
                 handleSelectGamemode={handleSelectGamemode}
-                handleCloseSelectGamemode={handleCloseSelectGamemode}
+                handleClose={handleToggleGamemodeCarousel}
                 showGamemodeCarousel={showGamemodeCarousel}
               />
             )}

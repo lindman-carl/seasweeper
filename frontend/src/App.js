@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import GameIslandsApp from "./GameIslandsApp";
-import HighscoreApp from "./HighscoreApp";
 
 // images
 import IslandsGamemode from "./assets/gamemodes/islandsGamemode.png";

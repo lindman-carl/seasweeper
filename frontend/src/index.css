@@ -126,11 +126,10 @@
   }
 
   .carousel-container {
-    @apply w-screen h-max
+    @apply w-screen h-2/4
     lg:w-[50%]
     z-20 top-1/4 absolute 
-    flex flex-col justify-start items-center
-    border-0 border-solid border-sky-900  
+    grid grid-cols-3 grid-rows-3 auto-rows-auto
     border-l-0 border-r-0
     bg-white
     text-sky-900
@@ -139,14 +138,14 @@
   }
 
   .carousel-card {
-    @apply w-full h-80  m-2
-      flex flex-row justify-between items-center;
+    @apply w-full h-full  
+      col-start-2 row-start-2
+      flex flex-row justify-center items-center;
   }
 
   .carousel-image {
     @apply hover:scale-95
     active:scale-90
-    m-2
     shadow-lg
     cursor-pointer
     select-none
@@ -154,15 +153,14 @@
   }
 
   .carousel-header {
-    @apply mt-2
+    @apply w-full
     text-4xl font-extrabold
     underline underline-offset-auto decoration-blue-300;
   }
 
   .carousel-button {
-    @apply w-4 max-w-[12rem] h-48
-    m-4
-    flex flex-row justify-center items-center grow justify-self-stretch
+    @apply w-full h-full
+    flex flex-row justify-center items-center 
     hover:scale-90
     active:scale-75
     transition-all duration-100
