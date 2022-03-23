@@ -6,8 +6,10 @@ const Timer = ({ time }) => {
 
     return (
       <>
-        <div className="w-min mt-1 text-left justify-self-end">{seconds}</div>
-        <div className="w-3 mt-1 pt-px text-right text-base font-medium">
+        <div className="w-min mt-2 text-left text-4xl justify-self-end">
+          {seconds}
+        </div>
+        <div className="w-3 mt-2 pt-px text-right text-lg font-medium">
           {hundreds}
         </div>
       </>
@@ -16,16 +18,16 @@ const Timer = ({ time }) => {
   return (
     <div
       className="w-full h-12
-            min-w-[6rem]
-            sm:min-w-[8rem]  
-            mx-auto
-            px-4
-            flex justify-center items-start
-            border border-sky-900 rounded-md
-            text-sky-900  
-            bg-white
-            cursor-default
-            select-none"
+      min-w-[6rem]
+      sm:min-w-[6rem]  
+      border-b-2 border-sky-900
+      mx-auto
+      px-4
+      font-mono
+      flex justify-center items-start
+      text-sky-900  
+      cursor-default
+      select-none"
     >
       {time ? formatTime() : " "}
     </div>

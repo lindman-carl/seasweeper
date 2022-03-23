@@ -15,11 +15,15 @@ import { RiArrowDownSLine } from "react-icons/ri";
 
 // data fetching functions
 const postHighscore = async (time, playerName, gameMode) => {
-  const res = await axios.post("/api/highscores", {
-    time,
-    playerName: playerName.trim(),
-    gameMode,
-  });
+  // const res = await axios.post("/api/highscores", {
+  const res = await axios.post(
+    "https://seasweaper.herokuapp.com/api/highscores",
+    {
+      time,
+      playerName: playerName.trim(),
+      gameMode,
+    }
+  );
 
   return res.data;
 };
@@ -49,6 +53,7 @@ const Game = ({
   const [intervalId, setIntervalId] = useState();
   const [win, setWin] = useState(false);
   const [nRevealed, setNRevealed] = useState(0);
+  const [nMarkers, setNMarkers] = useState(0);
   const [isSendingHighscore, setIsSendingHighscore] = useState(false);
   const [seaTiles, setSeaTiles] = useState(
     board?.filter ? board.filter((t) => t.type !== 1).length : null
@@ -184,6 +189,10 @@ const Game = ({
       return null;
     }
 
+    if (showGamemodeCarousel) {
+      return null;
+    }
+
     if (!lighthouseMode && tile.type === 1) {
       return null;
     }
@@ -192,6 +201,13 @@ const Game = ({
     if (markMode) {
       // if water, toggle marked
       if (tile.type === 2) {
+        if (!tile.revealed) {
+          if (!tile.marked) {
+            setNMarkers((prev) => prev + 1);
+          } else {
+            setNMarkers((prev) => prev - 1);
+          }
+        }
         tile.marked = !tile.marked;
       }
       // do nothing if land
@@ -369,6 +385,7 @@ const Game = ({
         {children}
         <Hud
           nBombs={nBombs}
+          nMarkers={nMarkers}
           seaTiles={seaTiles}
           nRevealed={nRevealed}
           gameStarted={gameStarted}

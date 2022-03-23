@@ -28,9 +28,9 @@ const Logo = ({ size }) => {
   return (
     <div
       className="
-                ml-8 
+                lg:pl-4
                 mt-4
-                flex flex-row justify-center 
+                flex flex-row justify-center items-center
                 text-5xl xl:text-6xl 
                 font-extrabold 
                 tracking-tighter

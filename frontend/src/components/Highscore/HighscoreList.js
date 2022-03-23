@@ -58,7 +58,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center bg-sky-50 py-6 ">
+    <div className="w-full h-full flex flex-col items-center bg-sky-50 py-6 shadow-inner">
       {/* <HighscoreAppHeader /> */}
       <div
         className="

@@ -95,7 +95,6 @@ function App() {
                 />
               }
             />
-            <Route path="/highscores" element={<HighscoreApp />} />
           </Routes>
         </BrowserRouter>
       </div>

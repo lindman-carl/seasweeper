@@ -17,6 +17,7 @@ import { IconContext } from "react-icons";
 
 const Hud = ({
   nBombs,
+  nMarkers,
   seaTiles,
   nRevealed,
   gameOver,
@@ -35,8 +36,8 @@ const Hud = ({
     return (
       <div className="flex justify-center items-center">
         <RiMapFill size={44} className="absolute text-sky-700" />
-        {/* <ImEarth size={28} className="absolute text-yellow-400" /> */}
-        <GiCompass size={26} className="absolute  text-yellow-400" />
+        {/* <ImEarth size={22} className="absolute text-white" /> */}
+        <GiCompass size={26} className="absolute  text-white" />
       </div>
     );
   };
@@ -80,6 +81,13 @@ const Hud = ({
               icon={<FaBomb size={22} className="mb-1" />}
               value={nBombs}
               tooltip={"Number of bombs remaining in the sea"}
+            />
+          </div>
+          <div className="grow">
+            <IconBadge
+              icon={<GiBuoy size={28} className="mb-1" />}
+              value={nMarkers}
+              tooltip={"Number of markers placed in the sea"}
             />
           </div>
           <div className="ml-1 grow">

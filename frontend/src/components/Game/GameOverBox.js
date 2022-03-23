@@ -8,8 +8,12 @@ import { ClipLoader, BarLoader } from "react-spinners";
 import SendHighscoreForm from "./SendHighscoreForm";
 
 const FormResponse = ({ isSendingHighscore }) => (
-  <div className="gameoverbox-response">
-    {isSendingHighscore ? <ClipLoader /> : <BsCheckCircle size={32} />}
+  <div className="gameoverbox-response text-sky-900">
+    {isSendingHighscore ? (
+      <ClipLoader color="text-sky-900" />
+    ) : (
+      <BsCheckCircle size={32} />
+    )}
   </div>
 );
 

@@ -4,14 +4,14 @@ const IconBadge = ({ icon, value, tooltip }) => {
       className="
     w-full h-full
     mx-4
+    font-semibold
+    text-lg
     flex justify-between items-center"
       data-tip={tooltip}
       data-for="badgeInfo"
     >
       {icon}
-      {value && (
-        <div className="ml-1 sm:ml-2 text-lg font-semibold">{value}</div>
-      )}
+      {value && <div className="ml-1 sm:ml-2">{value}</div>}
     </div>
   );
 

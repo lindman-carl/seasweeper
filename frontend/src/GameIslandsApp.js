@@ -23,10 +23,10 @@ import { GiCompass, GiTrophy } from "react-icons/gi";
 import HighscoreFilter from "./components/Highscore/HighscoreFilter";
 
 const fetchHighscores = async () => {
-  const res = await axios.get("/api/highscores");
-  // const res = await axios.get(
-  //   "https://seasweeper.herokuapp.com/api/highscores"
-  // );
+  // const res = await axios.get("/api/highscores");
+  const res = await axios.get(
+    "https://seasweeper.herokuapp.com/api/highscores"
+  );
   const sortedData = res.data.sort((a, b) => a.time - b.time);
   return sortedData;
 };
@@ -124,7 +124,7 @@ const GameApp = ({ name, gamemodes }) => {
     setShowGamemodeCarousel(false);
   };
 
-  const handleShowGamemodeCarousel = () => {
+  const handleToggleGamemodeCarousel = () => {
     setShowGamemodeCarousel(!showGamemodeCarousel);
   };
 
@@ -164,7 +164,7 @@ const GameApp = ({ name, gamemodes }) => {
             gamemodes={gamemodes}
             key={randomKey}
             showGamemodeCarousel={showGamemodeCarousel}
-            handleShowGamemodeCarousel={handleShowGamemodeCarousel}
+            handleShowGamemodeCarousel={handleToggleGamemodeCarousel}
           >
             {showGamemodeCarousel && (
               <GamemodeCarousel
@@ -179,10 +179,10 @@ const GameApp = ({ name, gamemodes }) => {
           </GameIslands>
           <div
             className="flex flex-col items-center justify-center
-            mt-4 lg:ml-16"
+            mt-4 lg:ml-16 lg:mx-0 mx-auto"
           >
             {/* <canvas className="webgl"></canvas> */}
-            <div className="flex flex-col items-center justify-start lg:mt-32 w-screen lg:w-full lg:h-screen lg:overflow-y-scroll">
+            <div className="flex flex-col items-center justify-start lg:mt-32 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
               <Logo />
               <div className="lg:ml-4">
                 <div className="max-w-fit mt-2 mb-6 text-base md:text-lg text-sky-900 font-light text-center">
@@ -208,9 +208,15 @@ const GameApp = ({ name, gamemodes }) => {
                       onChange={handleMapFilter}
                       value={currentMapFilter}
                     >
-                      {gamemodes.map((gm) => (
-                        <option label={gm.label} value={gm.name} key={gm.id} />
-                      ))}
+                      {gamemodes
+                        .sort((a, b) => a.name > b.name)
+                        .map((gm) => (
+                          <option
+                            label={gm.label}
+                            value={gm.name}
+                            key={gm.id}
+                          />
+                        ))}
                     </select>
                   </div>
                   <HighscoreList
