@@ -14,15 +14,18 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
   const mapHighscores = () => {
     const filterHighscores = () => {
       const filteredByGamemode = data.filter((el) => el.gameMode === mapFilter);
+      console.log(filteredByGamemode);
 
       if (searchFilter) {
-        return filteredByGamemode.filter((el) =>
-          el.name
-            .toLowerCase()
-            .trim()
-            .includes(searchFilter.toLowerCase().trim())
-            .sort((a, b) => a.time - b.time)
-        );
+        return filteredByGamemode
+          .filter(
+            (el) =>
+              el.name
+                .toLowerCase()
+                .trim()
+                .includes(searchFilter.toLowerCase().trim()) && el
+          )
+          .sort((a, b) => a.time - b.time);
       }
 
       return filteredByGamemode.sort((a, b) => a.time - b.time);
