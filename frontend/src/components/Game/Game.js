@@ -152,6 +152,7 @@ const GameBoard = ({
       bomb: false,
       marked: false,
       lighthouse: false,
+      lit: false,
       count: -1,
     }));
     return depopulated;
