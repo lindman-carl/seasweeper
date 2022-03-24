@@ -46,15 +46,10 @@ const GamemodeCarousel = ({
   name,
   handleSelectGamemode,
   mappedGamemodes,
-  handleClose,
+  handleToggleGamemodeCarousel,
 }) => {
   const startIndex = gamemodes.findIndex((gamemode) => gamemode.name === name);
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
-
-  // const generateBoard = async () => {
-  //   const tempMap = await generateValidMergedMap(20, 20, 12, 4);
-  //   const tempBoard = await gameUtils.populateGeneratedMap(32, tempMap);
-  // };
 
   const handleCarouselClick = (inc) => {
     const newIndex = currentIndex + inc;
@@ -77,7 +72,7 @@ const GamemodeCarousel = ({
       </div>
       <div
         className="w-full h-20 flex justify-center items-center col-start-3 row-start-1 row-span-1 cursor-pointer"
-        onClick={handleClose}
+        onClick={handleToggleGamemodeCarousel}
       >
         <MdOutlineClose size={20} />
       </div>

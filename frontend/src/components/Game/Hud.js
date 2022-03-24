@@ -5,21 +5,18 @@ import Logo from "../Logo";
 
 // icons & animations
 import { BiSquare } from "react-icons/bi";
-import { BsMap } from "react-icons/bs";
-import { FaBomb, FaMap } from "react-icons/fa";
+import { FaBomb } from "react-icons/fa";
 import { RiMapFill } from "react-icons/ri";
-import { ImEarth } from "react-icons/im";
-import { GiBroom, GiBuoy, GiCompass, GiTreasureMap } from "react-icons/gi";
+import { GiBroom, GiBuoy, GiCompass } from "react-icons/gi";
 import { SiLighthouse } from "react-icons/si";
 import IconBadge from "./IconBadge";
 import ReactTooltip from "react-tooltip";
-import { IconContext } from "react-icons";
 
 const Hud = ({
-  nBombs,
-  nMarkers,
-  seaTiles,
-  nRevealed,
+  numBombs,
+  numMarkers,
+  numWaterTiles,
+  numRevealed,
   gameOver,
   gameTime,
   gameStarted,
@@ -30,7 +27,7 @@ const Hud = ({
   markMode,
   handleMarkMode,
   showGamemodeCarousel,
-  handleShowGamemodeCarousel,
+  handleToggleGamemodeCarousel,
 }) => {
   const doubleIcon = () => {
     return (
@@ -71,7 +68,7 @@ const Hud = ({
           <IconCheckbox
             icon={doubleIcon()}
             status={showGamemodeCarousel}
-            onClick={handleShowGamemodeCarousel}
+            onClick={handleToggleGamemodeCarousel}
             tooltip={"Select game mode"}
           />
         </div>
@@ -79,21 +76,21 @@ const Hud = ({
           <div className="mr-1 grow">
             <IconBadge
               icon={<FaBomb size={22} className="mb-1" />}
-              value={nBombs}
+              value={numBombs}
               tooltip={"Number of bombs remaining in the sea"}
             />
           </div>
           <div className="grow">
             <IconBadge
               icon={<GiBuoy size={28} className="mb-1" />}
-              value={nMarkers}
+              value={numMarkers}
               tooltip={"Number of markers placed in the sea"}
             />
           </div>
           <div className="ml-1 grow">
             <IconBadge
               icon={<BiSquare size={24} />}
-              value={seaTiles - nRevealed - nBombs}
+              value={numWaterTiles - numRevealed - numBombs}
               tooltip={"Number of tiles left to clear"}
             />
           </div>

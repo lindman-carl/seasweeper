@@ -16,9 +16,9 @@ const FormResponse = ({ isSendingHighscore }) => (
   </div>
 );
 
-const RetryButton = ({ handleRestartGame }) => (
-  <button className="gameoverbox-button" onClick={handleRestartGame}>
-    Retry
+const NewGameButton = ({ handleNewGame }) => (
+  <button className="gameoverbox-button" onClick={handleNewGame}>
+    New Game
   </button>
 );
 
@@ -27,7 +27,7 @@ const GameOverBox = ({
   win,
   handleSendHighscore,
   isSendingHighscore,
-  handleRestartGame,
+  handleNewGame,
 }) => {
   const {
     register,
@@ -82,15 +82,9 @@ const GameOverBox = ({
           <BarLoader />
         ) : (
           <div className="flex flex-col">
-            {/* <RetryButton
-              handleRestartGame={() => {
-                handleRestartGame();
-                setIsGeneratingMap(true);
-              }}
-            /> */}
-            <RetryButton
-              handleRestartGame={() => {
-                handleRestartGame();
+            <NewGameButton
+              handleNewGame={() => {
+                handleNewGame();
                 setIsGeneratingMap(true);
               }}
             />
