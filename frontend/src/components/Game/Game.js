@@ -57,7 +57,6 @@ const mapGamemodes = async (gamemodes) => {
       })
       .sort((a, b) => a.id - b.id)
   );
-  console.log("hakkkkkkkooo", mappedGamemodes);
   return mappedGamemodes;
 };
 
@@ -168,6 +167,8 @@ const GameBoard = ({
     console.log("depop", depopulatedBoard);
     const repopulatedBoard = gameUtils.populateBombs({
       board: depopulatedBoard,
+      w,
+      h,
       nBombs: numBombs,
     });
     const countWaterTiles = repopulatedBoard.filter((t) => t.type !== 1).length;

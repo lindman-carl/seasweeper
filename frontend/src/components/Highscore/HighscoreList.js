@@ -64,8 +64,8 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
       >
         {!error ? (
           isLoading ? (
-            <div className="m-auto">
-              <ClipLoader />
+            <div className="m-auto text-sky-800">
+              <ClipLoader color="text-sky-800" />
             </div>
           ) : (
             <>
