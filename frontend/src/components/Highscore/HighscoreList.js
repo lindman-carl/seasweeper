@@ -39,7 +39,8 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
           key={highscore.rank}
           className="
         w-48 sm:w-64 
-        flex flex-row justify-start items-center"
+        flex flex-row justify-start items-center
+        text-sky-800"
         >
           {highscore.rank < 3 ? (
             <HighscoreListRow highscore={highscore} size={"xl"} />
