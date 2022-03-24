@@ -32,7 +32,7 @@ const Hud = ({
   const doubleIcon = () => {
     return (
       <div className="flex justify-center items-center">
-        <RiMapFill size={44} className="absolute text-sky-700" />
+        <RiMapFill size={44} className="absolute text-sky-800" />
         {/* <ImEarth size={22} className="absolute text-white" /> */}
         <GiCompass size={26} className="absolute  text-white" />
       </div>
@@ -46,9 +46,9 @@ const Hud = ({
             !gameOver ? (
               <Timer time={gameTime} />
             ) : win ? (
-              "You win!"
+              <div className="pt-2">You win!</div>
             ) : (
-              "Game over!"
+              <div className="pt-2">Game over!</div>
             )
           ) : (
             <div className="mb-3">

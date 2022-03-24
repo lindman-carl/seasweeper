@@ -6,7 +6,6 @@ const populateGeneratedMap = (nBombs, mapToPopulate) => {
 
   let id = 0;
   let board = [];
-  const bombIds = [];
 
   // create all tiles
   for (let y = 0; y < height; y++) {
@@ -26,11 +25,28 @@ const populateGeneratedMap = (nBombs, mapToPopulate) => {
     }
   }
 
+  const populatedBoard = populateBombs({
+    board,
+    width,
+    height,
+    nBombs,
+  });
+
+  return populatedBoard;
+};
+
+const populateBombs = ({ board, width, height, nBombs, bombIds = [] }) => {
   // get bomb positions
-  const getRandomId = () => Math.floor(Math.random() * (width * height));
+  let getRandomId;
+  if (width && height) {
+    getRandomId = () => Math.floor(Math.random() * (width * height));
+  } else {
+    getRandomId = () => Math.floor(Math.random() * board.length);
+  }
   const isWater = (id) => board.find((t) => t.id === id && t.type === 2);
   for (let i = 0; i < nBombs; i++) {
     let randomId = getRandomId();
+
     while (true) {
       randomId = getRandomId();
       if (!bombIds.includes(randomId) && isWater(randomId)) {
@@ -76,9 +92,7 @@ const populateGeneratedMap = (nBombs, mapToPopulate) => {
   }
 
   // sort board
-  board.sort((a, b) => a.id - b.id);
-
-  return board;
+  return board.sort((a, b) => a.id - b.id);
 };
 
 // FOR REGULAR GAMES
@@ -191,6 +205,11 @@ const startFloodFill = (tile, board, tilesToReveal) => {
   return tilesToReveal;
 };
 
-const gameUtils = { populateBoard, populateGeneratedMap, startFloodFill };
+const gameUtils = {
+  populateBoard,
+  populateGeneratedMap,
+  populateBombs,
+  startFloodFill,
+};
 
 export default gameUtils;

@@ -74,7 +74,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
             </>
           )
         ) : (
-          <div className="m-auto">Error fetching highscores.</div>
+          <div className="m-auto text-sky-800">Error fetching highscores.</div>
         )}
       </div>
     </div>

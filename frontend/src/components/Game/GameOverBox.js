@@ -16,9 +16,9 @@ const FormResponse = ({ isSendingHighscore }) => (
   </div>
 );
 
-const NewGameButton = ({ handleNewGame }) => (
-  <button className="gameoverbox-button" onClick={handleNewGame}>
-    New Game
+const GameOverBoxButton = ({ label, onClick }) => (
+  <button className="gameoverbox-button" onClick={onClick}>
+    {label}
   </button>
 );
 
@@ -28,6 +28,8 @@ const GameOverBox = ({
   handleSendHighscore,
   isSendingHighscore,
   handleNewGame,
+  handleRetry,
+  newAvailable,
 }) => {
   const {
     register,
@@ -77,20 +79,32 @@ const GameOverBox = ({
     <div className="gameoverbox-container">
       {gameoverMode()}
 
-      <div className="gameoverbox-item">
-        {isGeneratingMap ? (
-          <BarLoader />
-        ) : (
-          <div className="flex flex-col">
-            <NewGameButton
-              handleNewGame={() => {
-                handleNewGame();
+      {isGeneratingMap ? (
+        <BarLoader />
+      ) : (
+        <div className="flex flex-col">
+          <div className="gameoverbox-item">
+            <GameOverBoxButton
+              label="Retry Map"
+              onClick={() => {
+                handleRetry();
                 setIsGeneratingMap(true);
               }}
             />
           </div>
-        )}
-      </div>
+          {newAvailable && (
+            <div className="gameoverbox-item">
+              <GameOverBoxButton
+                label="Generate New Map"
+                onClick={() => {
+                  handleNewGame();
+                  setIsGeneratingMap(true);
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="gameoverbox-item h-12 lg:h-4">
         <button
@@ -100,7 +114,7 @@ const GameOverBox = ({
               behavior: "smooth",
             })
           }
-          className="lg:hidden"
+          className="lg:hidden text-sky-800"
         >
           View highscores
         </button>

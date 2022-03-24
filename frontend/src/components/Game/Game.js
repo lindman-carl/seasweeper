@@ -134,6 +134,7 @@ const GameBoard = ({
     const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;
     console.log("countWaterTiles", countWaterTiles);
     // set states
+
     setCurrentBoard(tempBoard);
     setNumWaterTiles(countWaterTiles);
   };
@@ -143,6 +144,36 @@ const GameBoard = ({
     const countWaterTiles = w * h;
     // states
     setCurrentBoard(blankMap);
+    setNumWaterTiles(countWaterTiles);
+  };
+
+  const depopulateBoard = (boardToDepopulate) => {
+    const depopulated = boardToDepopulate.map((tile) => ({
+      ...tile,
+      bomb: false,
+      marked: false,
+      lighthouse: false,
+      count: -1,
+    }));
+    return depopulated;
+  };
+
+  const repopulateMap = async () => {
+    // dont generate islands on open sea
+    if (nIslands < 0) {
+      generateOpenseaMap();
+      return;
+    }
+    const depopulatedBoard = depopulateBoard(currentBoard);
+    console.log("depop", depopulatedBoard);
+    const repopulatedBoard = gameUtils.populateBombs({
+      board: depopulatedBoard,
+      nBombs: numBombs,
+    });
+    const countWaterTiles = repopulatedBoard.filter((t) => t.type !== 1).length;
+    const unrevealedBoard = unrevealAll(repopulatedBoard);
+    // states
+    setCurrentBoard(unrevealedBoard);
     setNumWaterTiles(countWaterTiles);
   };
 
@@ -203,6 +234,11 @@ const GameBoard = ({
     restartGame();
   };
 
+  const retryGame = async () => {
+    await repopulateMap();
+    restartGame();
+  };
+
   // counts number of revealed
   const countRevealed = (boardToCount) => {
     // filter for non-land tiles that are revealed and not a bomb
@@ -220,6 +256,14 @@ const GameBoard = ({
       t.type === 2 ? { ...t, revealed: true } : t
     );
     return revealedBoard;
+  };
+
+  // reveals all water tiles on board
+  const unrevealAll = (boardToUnreveal) => {
+    const unrevealedBoard = boardToUnreveal.map((t) =>
+      t.type === 2 ? { ...t, revealed: false } : t
+    );
+    return unrevealedBoard;
   };
 
   // check for win conditions on current board
@@ -366,8 +410,9 @@ const GameBoard = ({
       if (tile.bomb) {
         console.log("boom");
         // repopulate board
-        newGame();
-        startGame();
+        retryGame();
+
+        tile.revealed = true;
         return null;
       }
 
@@ -375,7 +420,7 @@ const GameBoard = ({
     }
 
     // if bomb is clicked setGameOver
-    if (tile.bomb) {
+    if (tile.bomb && gameStarted) {
       setGameOver(true);
       // reveal all
       setCurrentBoard(revealAll());
@@ -474,6 +519,8 @@ const GameBoard = ({
     handleSendHighscore,
     isSendingHighscore,
     handleNewGame: newGame,
+    handleRetry: retryGame,
+    newAvailable: nIslands > 0,
   };
 
   // render
