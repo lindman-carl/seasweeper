@@ -687,7 +687,9 @@ const GameApp = ({ name, gamemodes }) => {
                     {gamemodes
                       .sort((a, b) => a.name > b.name)
                       .map((gm) => (
-                        <option label={gm.label} value={gm.name} key={gm.id} />
+                        <option value={gm.name} key={gm.id}>
+                          {gm.label}
+                        </option>
                       ))}
                   </select>
                 </div>
