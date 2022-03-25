@@ -14,7 +14,7 @@ const SendHighscoreForm = ({ handleSubmit, onSubmit, register, errors }) => (
       minLength={3}
       maxLength={20}
     />
-    <div className="font-thin text-red-400 text-sm">
+    <div className="font-light text-red-600 text-sm">
       {errors.playerName?.type === "required" &&
         "Player name is required to submit highscore"}
       {errors.playerName?.type === "minLength" &&

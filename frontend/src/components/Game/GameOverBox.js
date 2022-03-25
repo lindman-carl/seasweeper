@@ -10,9 +10,11 @@ import GameOverBoxButton from "./GameOverBoxButton";
 const FormResponse = ({ isSendingHighscore }) => (
   // displays ClipLoader until server response
   // then display checkmark, it doesn't matter if it was succesful or not
-  <div className="gameoverbox-response text-sky-900">
+  <div className="gameoverbox-item text-sky-800">
     {isSendingHighscore ? (
-      <ClipLoader color="text-sky-900" />
+      // for some reason coloring does not work with only tailwind text-sky-800
+      // nor only prop color="text-sky-800", but with both it does, and then it is from tailwind
+      <ClipLoader color="text-sky-800" />
     ) : (
       <BsCheckCircle size={32} />
     )}
@@ -86,7 +88,8 @@ const GameOverBox = ({
       {newAvailable && (
         <GameOverBoxButton
           label="Generate New Map"
-          bgColor="bg-green-200"
+          textColor="text-green-600"
+          borderColor="border-green-700"
           onClick={handleNewGame}
         />
       )}

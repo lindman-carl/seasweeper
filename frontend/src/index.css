@@ -69,10 +69,6 @@
     @apply my-2 text-2xl text-sky-900 font-semibold;
   }
 
-  .gameoverbox-response {
-    @apply m-2 h-8 text-sky-900;
-  }
-
   .icon-badge-base {
     @apply w-12 h-8 mt-1
     sm:w-20 sm:h-8 sm:mt-0

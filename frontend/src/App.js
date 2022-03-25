@@ -19,7 +19,7 @@ const gamemodes = [
     img: IslandsGamemode,
     w: 20,
     h: 20,
-    numBombs: 10,
+    numBombs: 32,
     nLighthouses: 2,
     nIslands: 12,
     clusterSpread: 4,
