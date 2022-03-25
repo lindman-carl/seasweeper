@@ -10,20 +10,14 @@ import { fetchHighscores, postHighscore } from "./apiUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
 
 // components
-import HighScoresContainer from "../Highscore/HighscoreContainer";
-import HighscoreList from "../Highscore/HighscoreList";
 import Logo from "../Logo";
 import GamemodeCarousel from "./GamemodeCarousel";
-import IconCheckbox from "./IconCheckbox";
 import Hud from "./Hud";
 import Tile from "./Tile";
 import GameOverBox from "./GameOverBox";
 import ScrollDownArrow from "./ScrollDownArrow";
-import TutorialCarousel from "./TutorialCarousel";
-
-// icons
-import { GiTrophy } from "react-icons/gi";
-import HighscoreFilter from "../Highscore/HighscoreFilter";
+import HighscoresApp from "./HighscoresApp";
+// import TutorialCarousel from "./TutorialCarousel";
 
 // spinner
 import { ClipLoader } from "react-spinners";
@@ -548,7 +542,7 @@ const GameApp = ({ name, gamemodes }) => {
   const [currentGamemodeId, setCurrentGamemodeId] = useState(0);
   const [currentGamemodeObject, setCurrentGamemodeObject] = useState(null);
   const [showGamemodeCarousel, setShowGamemodeCarousel] = useState(false);
-  const [showTutorial, setShowTutorial] = useState(false);
+  // const [showTutorial, setShowTutorial] = useState(false);
   // still necessary
   const [randomKey, setRandomKey] = useState(
     Math.floor(Math.random() * 100000)
@@ -657,7 +651,7 @@ const GameApp = ({ name, gamemodes }) => {
           {showGamemodeCarousel && (
             <GamemodeCarousel {...gamemodeCarouselProps} />
           )}
-          {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />}
+          {/* {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />} */}
         </GameBoard>
         <div className="game-info-container">
           <div className="flex flex-col items-center justify-start lg:mt-24 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
@@ -678,41 +672,17 @@ const GameApp = ({ name, gamemodes }) => {
                   Learn more
                 </a>
               </div>
-              <HighScoresContainer>
-                <div className="relative -top-4">
-                  <IconCheckbox
-                    icon={<GiTrophy size={28} />}
-                    status={false}
-                    onClick={handleRefetchHighscore}
-                    tooltip={"Refresh highscores"}
-                    iconColor={"#D6AF36"}
-                  />
-                </div>
-                <div className="flex flex-row items-center mb-4 ">
-                  <HighscoreFilter onChange={handleSearchFilter} />
-                  <select
-                    className="highscores-select"
-                    onChange={handleMapFilter}
-                    value={currentMapFilter}
-                  >
-                    {gamemodes
-                      .sort((a, b) => a.name > b.name)
-                      .map((gm) => (
-                        <option value={gm.name} key={gm.id}>
-                          {gm.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <HighscoreList
-                  data={highscoreData}
-                  isLoading={isLoading}
-                  error={error}
-                  mapFilter={currentMapFilter}
-                  searchFilter={currentSearchFilter}
-                  inGame={false}
-                />
-              </HighScoresContainer>
+              <HighscoresApp
+                handleRefetchHighscore={handleRefetchHighscore}
+                handleSearchFilter={handleSearchFilter}
+                handleMapFilter={handleMapFilter}
+                currentMapFilter={currentMapFilter}
+                gamemodes={gamemodes}
+                highscoreData={highscoreData}
+                isLoading={isLoading}
+                error={error}
+                currentSearchFilter={currentSearchFilter}
+              />
             </div>
           </div>
         </div>
