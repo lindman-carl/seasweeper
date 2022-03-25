@@ -21,13 +21,13 @@
   }
 
   .game-info-container {
-    @apply flex flex-col items-center justify-center
+    @apply flex flex-col items-center justify-start
     mt-4 mx-auto
-    lg:ml-16 lg:mr-0 lg:my-auto;
+    lg:ml-16 lg:mr-0 lg:mt-16;
   }
 
   .game-text-container {
-    @apply max-w-fit 
+    @apply max-w-sm
     mt-2 mb-6 
     px-4 sm:px-2
     text-base text-sky-900 font-light text-center 

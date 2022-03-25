@@ -51,10 +51,10 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
   };
 
   return (
-    <div className="w-96 h-full flex flex-col items-center bg-sky-50 py-6 shadow-inner">
+    <div className="w-96 flex flex-col items-center bg-sky-50 py-6 shadow-inner">
       <div
         className="
-              w-80 max-h-[18rem] min-h-min 
+              w-80 max-h-80 
               overflow-scroll
               flex flex-col justify-start items-center"
       >
