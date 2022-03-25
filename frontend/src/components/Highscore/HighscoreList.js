@@ -1,5 +1,5 @@
 import { ClipLoader } from "react-spinners";
-import HighscoreHeaders from "./HighscoreHeaders";
+import HighscoreListHeaders from "./HighscoreListHeaders";
 import HighscoreListRow from "./HighscoreListRow";
 
 const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
@@ -31,6 +31,8 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
     };
 
     const filteredData = filterHighscores();
+
+    // render list
     return filteredData.length > 0 ? (
       filteredData.map((highscore) => (
         <div
@@ -53,11 +55,10 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center bg-sky-50 py-6 shadow-inner">
-      {/* <HighscoreAppHeader /> */}
+    <div className="w-96 h-full flex flex-col items-center bg-sky-50 py-6 shadow-inner">
       <div
         className="
-              w-96 max-h-72 min-h-min
+              w-80 max-h-[20rem] min-h-min 
               overflow-scroll
               flex flex-col justify-start items-center"
       >
@@ -68,7 +69,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
             </div>
           ) : (
             <>
-              <HighscoreHeaders />
+              <HighscoreListHeaders />
               {mapHighscores()}
             </>
           )

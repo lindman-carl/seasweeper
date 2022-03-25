@@ -220,6 +220,15 @@
     shadow-lg;
   }
 
+  /* Highscore list */
+  .highscores-list-headers {
+    @apply w-64 
+    mb-2 
+    flex flex-row justify-start items-center 
+    text-sky-900 font-semibold text-base
+    underline underline-offset-auto decoration-blue-300 decoration-2;
+  }
+
   /* Highscore filter */
   .highscores-input-container {
     @apply flex flex-row items-center mb-4;
@@ -263,6 +272,9 @@
     text-sky-900 
     underline underline-offset-auto decoration-blue-300
     select-none;
+  }
+  .logo-text {
+    @apply flex flex-row whitespace-nowrap;
   }
   .logo-small {
     @apply w-full h-12

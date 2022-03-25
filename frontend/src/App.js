@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import GameApp from "./components/Game";
+import HighscoresApp from "./components/Highscore/HighscoresApp";
 
 // images
 import IslandsGamemode from "./assets/gamemodes/islandsGamemode.png";
@@ -90,6 +91,10 @@ function App() {
               element={
                 <GameApp name={gamemodes[0].name} gamemodes={gamemodes} />
               }
+            />
+            <Route
+              path="/highscores"
+              element={<HighscoresApp gamemodes={gamemodes} />}
             />
           </Routes>
         </BrowserRouter>
