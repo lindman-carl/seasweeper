@@ -665,8 +665,8 @@ const GameApp = ({ name, gamemodes }) => {
             <div className="lg:ml-4">
               <div className="game-text-container">
                 Click to reveal tile. Flags are for slow players, try to mark
-                the mines in your head. Place lighthouses on shoreline to reveal
-                adjacent water tiles.
+                the mines in your head. Place lighthouses on shoreline to safely
+                reveal adjacent water tiles.
                 {/* <button
                   // onClick={() => setShowTutorial(!showTutorial)}
                   onClick={() =>
@@ -691,7 +691,7 @@ const GameApp = ({ name, gamemodes }) => {
                   data-tip={"Show tutorial"}
                   data-for="checkboxInfo"
                 >
-                  More help
+                  Learn more
                 </a>
               </div>
               <HighScoresContainer>

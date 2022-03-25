@@ -5,6 +5,17 @@ import { FaBomb } from "react-icons/fa";
 import { SiLighthouse } from "react-icons/si";
 import { GiBuoy } from "react-icons/gi";
 
+const numberColors = {
+  1: "text-sky-700",
+  2: "text-green-600",
+  3: "text-red-500",
+  4: "text-purple-600",
+  5: "text-red-800",
+  6: "text-teal-400",
+  7: "text-sky-900",
+  8: "text-gray-500",
+};
+
 const Tile = ({ tile, onClick }) => {
   let iconSize = "1.5em";
 
@@ -16,6 +27,7 @@ const Tile = ({ tile, onClick }) => {
   };
 
   const renderRevealed = () => {
+    const numberColor = numberColors[tile.count] || "text-sky-900";
     if (tile.lit) {
       return (
         <div
@@ -25,7 +37,9 @@ const Tile = ({ tile, onClick }) => {
         bg-yellow-100
         `}
         >
-          <div className="tile-icon-container text-sky-900 text-2xl font-thin">
+          <div
+            className={`tile-icon-container ${numberColor} text-2xl font-thin`}
+          >
             {tile.bomb ? (
               <IconContext.Provider value={{ size: iconSize }}>
                 <FaBomb className="drop-shadow" />
@@ -45,7 +59,10 @@ const Tile = ({ tile, onClick }) => {
             bg-sky-50
     `}
         >
-          <div className="tile-icon-container text-sky-900 text-2xl font-thin">
+          <div
+            className={`tile-icon-container ${numberColor} text-2xl font-thin`}
+            // style={{ color: "text-red-900" }}
+          >
             {tile.bomb ? (
               <IconContext.Provider value={{ size: iconSize }}>
                 <FaBomb className="drop-shadow" />
