@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { useForm } from "react-hook-form";
-import { ClipLoader, BarLoader } from "react-spinners";
+import { ClipLoader } from "react-spinners";
 
 // components
 import SendHighscoreForm from "./SendHighscoreForm";
+import GameOverBoxButton from "./GameOverBoxButton";
 
 const FormResponse = ({ isSendingHighscore }) => (
+  // displays ClipLoader until server response
+  // then display checkmark, it doesn't matter if it was succesful or not
   <div className="gameoverbox-response text-sky-900">
     {isSendingHighscore ? (
       <ClipLoader color="text-sky-900" />
@@ -14,12 +17,6 @@ const FormResponse = ({ isSendingHighscore }) => (
       <BsCheckCircle size={32} />
     )}
   </div>
-);
-
-const GameOverBoxButton = ({ label, onClick }) => (
-  <button className="gameoverbox-button" onClick={onClick}>
-    {label}
-  </button>
 );
 
 const GameOverBox = ({
@@ -31,13 +28,14 @@ const GameOverBox = ({
   handleRetry,
   newAvailable,
 }) => {
+  // react-hook-form
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm({ reValidateMode: "onSubmit" });
+
   const [hasSubmit, setHasSubmit] = useState(false);
-  const [isGeneratingMap, setIsGeneratingMap] = useState(false);
 
   const onSubmit = (data) => {
     handleSendHighscore(data);
@@ -45,6 +43,8 @@ const GameOverBox = ({
   };
 
   const renderForm = () =>
+    // displays submit form if user has not submit yet
+    // otherwise display FormResponse
     !hasSubmit ? (
       <>
         <SendHighscoreForm
@@ -58,54 +58,40 @@ const GameOverBox = ({
       <FormResponse isSendingHighscore={isSendingHighscore} />
     );
 
-  const gameoverMode = () =>
+  const displayForm = () =>
+    // display submit form if win, else lose statement
     win ? (
       <>
-        <div className="gameoverbox-header font-bold">
+        <div className="gameoverbox-item gameoverbox-header">
           {(gameTime / 1000).toFixed(2)}s
         </div>
 
         {renderForm()}
       </>
     ) : (
-      <div className="gameoverbox-item">
-        <div className="gameoverbox-header font-semibold">
-          Failure achieved in {(gameTime / 1000).toFixed(2)}s
-        </div>
+      <div className="gameoverbox-item gameoverbox-header">
+        Failure achieved in {(gameTime / 1000).toFixed(2)}s
       </div>
     );
 
+  // render
   return (
     <div className="gameoverbox-container">
-      {gameoverMode()}
+      {/* show submit form if win */}
+      {displayForm()}
 
-      {isGeneratingMap ? (
-        <BarLoader />
-      ) : (
-        <div className="flex flex-col">
-          <div className="gameoverbox-item">
-            <GameOverBoxButton
-              label="Retry Map"
-              onClick={() => {
-                handleRetry();
-                setIsGeneratingMap(true);
-              }}
-            />
-          </div>
-          {newAvailable && (
-            <div className="gameoverbox-item">
-              <GameOverBoxButton
-                label="Generate New Map"
-                onClick={() => {
-                  handleNewGame();
-                  setIsGeneratingMap(true);
-                }}
-              />
-            </div>
-          )}
-        </div>
+      <GameOverBoxButton label="Retry Map" onClick={handleRetry} />
+
+      {/* displays Generate New Map button if islands map */}
+      {newAvailable && (
+        <GameOverBoxButton
+          label="Generate New Map"
+          bgColor="bg-green-200"
+          onClick={handleNewGame}
+        />
       )}
 
+      {/* view highscore scroll to link */}
       <div className="gameoverbox-item h-12 lg:h-4">
         <button
           onClick={() =>

@@ -667,22 +667,6 @@ const GameApp = ({ name, gamemodes }) => {
                 Click to reveal tile. Flags are for slow players, try to mark
                 the mines in your head. Place lighthouses on shoreline to safely
                 reveal adjacent water tiles.
-                {/* <button
-                  // onClick={() => setShowTutorial(!showTutorial)}
-                  onClick={() =>
-                    window
-                      .open(
-                        "https://minesweepergame.com/strategy.php",
-                        "_blank"
-                      )
-                      .focus()
-                  }
-                  className="text-sky-900 font-semibold mx-2 underline decoration-2 underline-offset-auto decoration-blue-300"
-                  data-tip={"Show tutorial"}
-                  data-for="checkboxInfo"
-                >
-                  More help
-                </button> */}
                 <a
                   href="https://minesweepergame.com/strategy.php"
                   target="_blank"

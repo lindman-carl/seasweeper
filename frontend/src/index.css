@@ -44,6 +44,9 @@
         text-sky-900
         shadow-2xl;
   }
+  .gameoverbox-buttons-container {
+    @apply flex flex-col;
+  }
   .gameoverbox-item {
     @apply w-full h-12 flex justify-center items-center;
   }
@@ -63,7 +66,7 @@
   }
 
   .gameoverbox-header {
-    @apply my-2 text-2xl text-sky-900;
+    @apply my-2 text-2xl text-sky-900 font-semibold;
   }
 
   .gameoverbox-response {
@@ -140,6 +143,10 @@
     cursor-pointer
     transition-all duration-100
     select-none;
+  }
+
+  .tile-number {
+    @apply text-base font-semibold sm:text-lg sm:font-bold;
   }
 
   .tile-clickable {

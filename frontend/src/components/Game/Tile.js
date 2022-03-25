@@ -45,7 +45,7 @@ const Tile = ({ tile, onClick }) => {
                 <FaBomb className="drop-shadow" />
               </IconContext.Provider>
             ) : (
-              <div className="text-lg font-semibold ">{formatCount()}</div>
+              <div className="tile-number">{formatCount()}</div>
             )}
           </div>
         </div>
@@ -61,14 +61,13 @@ const Tile = ({ tile, onClick }) => {
         >
           <div
             className={`tile-icon-container ${numberColor} text-2xl font-thin`}
-            // style={{ color: "text-red-900" }}
           >
             {tile.bomb ? (
               <IconContext.Provider value={{ size: iconSize }}>
                 <FaBomb className="drop-shadow" />
               </IconContext.Provider>
             ) : (
-              <div className="text-lg font-semibold ">{formatCount()}</div>
+              <div className="tile-number">{formatCount()}</div>
             )}
           </div>
         </div>

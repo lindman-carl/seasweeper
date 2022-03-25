@@ -1,3 +1,4 @@
+import GameOverBoxButton from "./GameOverBoxButton";
 import TextInput from "./TextInput";
 
 const SendHighscoreForm = ({ handleSubmit, onSubmit, register, errors }) => (
@@ -21,11 +22,12 @@ const SendHighscoreForm = ({ handleSubmit, onSubmit, register, errors }) => (
       {errors.playerName?.type === "maxLength" &&
         "Player name length must be shorter than 21 characters"}
     </div>
-    <div className="gameoverbox-item">
+    {/* <div className="gameoverbox-item">
       <button type="submit" className="gameoverbox-button">
         Submit highscore
       </button>
-    </div>
+    </div> */}
+    <GameOverBoxButton label={"Submit highscore"} type="submit" />
   </form>
 );
 
