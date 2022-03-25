@@ -175,7 +175,7 @@ const GameBoard = ({
   useEffect(() => {
     // logging
     console.log("starting", gamemodeObject.name);
-    console.log(board);
+    // console.log(board);
 
     // clear interval on unmount
     return () => {
@@ -543,7 +543,7 @@ const GameApp = ({ name, gamemodes }) => {
   const [currentGamemodeObject, setCurrentGamemodeObject] = useState(null);
   const [showGamemodeCarousel, setShowGamemodeCarousel] = useState(false);
   // const [showTutorial, setShowTutorial] = useState(false);
-  // still necessary
+  // still necessary to force re-render
   const [randomKey, setRandomKey] = useState(
     Math.floor(Math.random() * 100000)
   );
@@ -607,16 +607,6 @@ const GameApp = ({ name, gamemodes }) => {
     highscoresRef.current.refetchHighscores();
   };
 
-  // // handles and updates search names filter
-  // const handleSearchFilter = ({ target }) => {
-  //   setCurrentSearchFilter(target.value.trim());
-  // };
-
-  // // handles map filter by selection of select input
-  // const handleMapFilter = ({ target }) => {
-  //   setCurrentMapFilter(target.value);
-  // };
-
   // props
   const gameBoardProps = {
     gamemodeObject: currentGamemodeObject,
@@ -649,7 +639,7 @@ const GameApp = ({ name, gamemodes }) => {
         </GameBoard>
         <div className="game-info-container">
           <div className="flex flex-col items-center justify-start lg:mt-24 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
-            <Logo />
+            <Logo variant={"logo-large"} />
             <div className="lg:ml-4">
               <div className="game-text-container">
                 Click to reveal tile. Flags are for slow players, try to mark

@@ -52,7 +52,7 @@ const Hud = ({
             )
           ) : (
             <div className="mb-3">
-              <Logo size={"sm"} />
+              <Logo variant={"logo-small"} />
             </div>
           )}
         </div>

@@ -13,8 +13,6 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
         .filter((el) => el.gameMode === mapFilter)
         .map((el, idx) => ({ ...el, rank: idx }));
 
-      console.log(filteredByGamemode);
-
       if (searchFilter) {
         return filteredByGamemode
           .filter(

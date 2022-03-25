@@ -254,4 +254,26 @@
     shadow-sm
     focus:outline-none;
   }
+
+  /* Logo */
+  .logo-base {
+    @apply flex flex-row justify-center items-center
+    font-extrabold 
+    tracking-tighter
+    text-sky-900 
+    underline underline-offset-auto decoration-blue-300
+    select-none;
+  }
+  .logo-small {
+    @apply w-full h-12
+    max-w-[6rem]
+    sm:max-w-xs
+    text-3xl;
+  }
+  .logo-large {
+    @apply mt-4
+    lg:pl-4
+    text-5xl 
+    xl:text-6xl;
+  }
 }
