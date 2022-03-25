@@ -38,15 +38,11 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
         <div
           key={highscore.rank}
           className="
-        w-48 sm:w-64 
-        flex flex-row justify-start items-center
-        text-sky-900"
+            w-64 
+            flex flex-row justify-start items-center
+          text-sky-900"
         >
-          {highscore.rank < 3 ? (
-            <HighscoreListRow highscore={highscore} size={"xl"} />
-          ) : (
-            <HighscoreListRow highscore={highscore} size={"md"} />
-          )}
+          <HighscoreListRow highscore={highscore} />
         </div>
       ))
     ) : (
@@ -58,7 +54,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
     <div className="w-96 h-full flex flex-col items-center bg-sky-50 py-6 shadow-inner">
       <div
         className="
-              w-80 max-h-[20rem] min-h-min 
+              w-80 max-h-[18rem] min-h-min 
               overflow-scroll
               flex flex-col justify-start items-center"
       >

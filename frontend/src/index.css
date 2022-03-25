@@ -228,6 +228,21 @@
     text-sky-900 font-semibold text-base
     underline underline-offset-auto decoration-blue-300 decoration-2;
   }
+  .highscores-list-rank {
+    @apply w-10 
+    mr-2
+    font-semibold
+    flex justify-center;
+  }
+  .highscores-list-name {
+    @apply ml-1
+    grow 
+    font-medium;
+  }
+  .highscores-list-time {
+    @apply mr-1 
+    text-right font-medium;
+  }
 
   /* Highscore filter */
   .highscores-input-container {
