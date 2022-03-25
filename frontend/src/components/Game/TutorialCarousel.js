@@ -10,7 +10,7 @@ import {
 // components
 import CarouselBoard from "./CarouselBoard";
 
-const GamemodeCarousel = ({
+const TutorialCarousel = ({
   gamemodes,
   name,
   handleSelectGamemode,
@@ -77,4 +77,4 @@ const GamemodeCarousel = ({
   );
 };
 
-export default GamemodeCarousel;
+export default TutorialCarousel;

@@ -19,6 +19,7 @@ import Hud from "./Hud";
 import Tile from "./Tile";
 import GameOverBox from "./GameOverBox";
 import ScrollDownArrow from "./ScrollDownArrow";
+import TutorialCarousel from "./TutorialCarousel";
 
 // icons
 import { GiTrophy } from "react-icons/gi";
@@ -93,10 +94,9 @@ const GameBoard = ({
   const [currentBoard, setCurrentBoard] = useState(board);
   const [numRevealed, setNumRevealed] = useState(0);
   const [numMarkers, setNumMarkers] = useState(0);
-  // calculates number of water tiles
   const [numWaterTiles, setNumWaterTiles] = useState(
     board?.filter ? board.filter((t) => t.type !== 1).length : null
-  );
+  ); // calculates number of water tiles
 
   // game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -548,6 +548,7 @@ const GameApp = ({ name, gamemodes }) => {
   const [currentGamemodeId, setCurrentGamemodeId] = useState(0);
   const [currentGamemodeObject, setCurrentGamemodeObject] = useState(null);
   const [showGamemodeCarousel, setShowGamemodeCarousel] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   // still necessary
   const [randomKey, setRandomKey] = useState(
     Math.floor(Math.random() * 100000)
@@ -656,6 +657,7 @@ const GameApp = ({ name, gamemodes }) => {
           {showGamemodeCarousel && (
             <GamemodeCarousel {...gamemodeCarouselProps} />
           )}
+          {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />}
         </GameBoard>
         <div className="game-info-container">
           <div className="flex flex-col items-center justify-start lg:mt-24 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
@@ -665,6 +667,32 @@ const GameApp = ({ name, gamemodes }) => {
                 Click to reveal tile. Flags are for slow players, try to mark
                 the mines in your head. Place lighthouses on shoreline to reveal
                 adjacent water tiles.
+                {/* <button
+                  // onClick={() => setShowTutorial(!showTutorial)}
+                  onClick={() =>
+                    window
+                      .open(
+                        "https://minesweepergame.com/strategy.php",
+                        "_blank"
+                      )
+                      .focus()
+                  }
+                  className="text-sky-900 font-semibold mx-2 underline decoration-2 underline-offset-auto decoration-blue-300"
+                  data-tip={"Show tutorial"}
+                  data-for="checkboxInfo"
+                >
+                  More help
+                </button> */}
+                <a
+                  href="https://minesweepergame.com/strategy.php"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sky-900 font-semibold mx-2 underline decoration-2 underline-offset-auto decoration-blue-300"
+                  data-tip={"Show tutorial"}
+                  data-for="checkboxInfo"
+                >
+                  More help
+                </a>
               </div>
               <HighScoresContainer>
                 <div className="relative -top-4">
