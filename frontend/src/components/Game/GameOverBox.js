@@ -29,6 +29,7 @@ const GameOverBox = ({
   handleNewGame,
   handleRetry,
   newAvailable,
+  refetchHighscores,
 }) => {
   // react-hook-form
   const {
@@ -42,6 +43,7 @@ const GameOverBox = ({
   const onSubmit = (data) => {
     handleSendHighscore(data);
     setHasSubmit(true);
+    refetchHighscores();
   };
 
   const renderForm = () =>

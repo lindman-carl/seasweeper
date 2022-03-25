@@ -221,6 +221,9 @@
   }
 
   /* Highscore filter */
+  .highscores-input-container {
+    @apply flex flex-row items-center mb-4;
+  }
   .highscores-filter-container {
     @apply h-full w-full
     flex flex-row justify-center items-center 

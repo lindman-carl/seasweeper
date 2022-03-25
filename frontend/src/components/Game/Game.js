@@ -1,12 +1,7 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-// 3d
-// import * as THREE from "three";
-// import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-// import boatModel from "./assets/models3d/speedboat.glb";
+import { useEffect, useState, useRef } from "react";
 
 import gameUtils from "./gameUtils";
-import { fetchHighscores, postHighscore } from "./apiUtils";
+import { postHighscore } from "./apiUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
 
 // components
@@ -16,7 +11,7 @@ import Hud from "./Hud";
 import Tile from "./Tile";
 import GameOverBox from "./GameOverBox";
 import ScrollDownArrow from "./ScrollDownArrow";
-import HighscoresApp from "./HighscoresApp";
+import HighscoresApp from "../Highscore";
 // import TutorialCarousel from "./TutorialCarousel";
 
 // spinner
@@ -81,7 +76,7 @@ const GameBoard = ({
     showGamemodeCarousel,
   },
   handleToggleGamemodeCarousel,
-  handleRefetchHighscore,
+  handleRefetchHighscores,
   children,
 }) => {
   // map state
@@ -126,8 +121,8 @@ const GameBoard = ({
     const tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
     const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;
     console.log("countWaterTiles", countWaterTiles);
-    // set states
 
+    // set states
     setCurrentBoard(tempBoard);
     setNumWaterTiles(countWaterTiles);
   };
@@ -135,12 +130,14 @@ const GameBoard = ({
   const generateOpenseaMap = () => {
     const blankMap = gameUtils.populateBoard(w, h, numBombs);
     const countWaterTiles = w * h;
+
     // states
     setCurrentBoard(blankMap);
     setNumWaterTiles(countWaterTiles);
   };
 
   const depopulateBoard = (boardToDepopulate) => {
+    // remove all bombs and player interactions from board
     const depopulated = boardToDepopulate.map((tile) => ({
       ...tile,
       bomb: false,
@@ -152,14 +149,16 @@ const GameBoard = ({
     return depopulated;
   };
 
-  const repopulateMap = async () => {
+  const repopulateBoard = async () => {
+    // generate new bombs on board
     // dont generate islands on open sea
     if (nIslands < 0) {
       generateOpenseaMap();
       return;
     }
+    // remove all bombs from board
     const depopulatedBoard = depopulateBoard(currentBoard);
-    console.log("depop", depopulatedBoard);
+    // generate new bombs to board
     const repopulatedBoard = gameUtils.populateBombs({
       board: depopulatedBoard,
       w,
@@ -231,7 +230,7 @@ const GameBoard = ({
   };
 
   const retryGame = async () => {
-    await repopulateMap();
+    await repopulateBoard();
     restartGame();
   };
 
@@ -285,7 +284,7 @@ const GameBoard = ({
 
     setIsSendingHighscore(false); // untrigger loading animation
 
-    handleRefetchHighscore(); // refetch highscore list
+    handleRefetchHighscores(); // refetch highscore list
   };
 
   // eventhandler for clicking lighthouse mode button
@@ -516,6 +515,7 @@ const GameBoard = ({
     handleNewGame: newGame,
     handleRetry: retryGame,
     newAvailable: nIslands > 0,
+    refetchHighscores: handleRefetchHighscores,
   };
 
   // render
@@ -548,19 +548,8 @@ const GameApp = ({ name, gamemodes }) => {
     Math.floor(Math.random() * 100000)
   );
 
-  // highscore filtering states
-  const [currentMapFilter, setCurrentMapFilter] = useState(gamemodes[0].name);
-  const [currentSearchFilter, setCurrentSearchFilter] = useState("");
-
-  // fetch highscores on mount
-  const {
-    data: highscoreData,
-    isLoading,
-    error,
-    refetch: handleRefetchHighscore,
-  } = useQuery("highscores", fetchHighscores, {
-    refetchOnWindowFocus: false,
-  });
+  // refs
+  const highscoresRef = useRef();
 
   useEffect(() => {
     // generates initial maps for gamemodes
@@ -603,7 +592,7 @@ const GameApp = ({ name, gamemodes }) => {
     setCurrentGamemodeObject(current);
     setMappedGamemodes(newMappedGamemodes);
     // update highscore filtering to match the selected gamemode
-    setCurrentMapFilter(current.name);
+    highscoresRef.current.setMapFilter(current.name);
     // closes carousel
     setShowGamemodeCarousel(false);
     setRandomKey(Math.floor(Math.random() * 100000)); // forces update, why i dont know, but it is needed
@@ -614,24 +603,29 @@ const GameApp = ({ name, gamemodes }) => {
     setShowGamemodeCarousel(!showGamemodeCarousel);
   };
 
-  // handles and updates search names filter
-  const handleSearchFilter = ({ target }) => {
-    setCurrentSearchFilter(target.value.trim());
+  const handleRefetchHighscores = () => {
+    highscoresRef.current.refetchHighscores();
   };
 
-  // handles map filter by selection of select input
-  const handleMapFilter = ({ target }) => {
-    setCurrentMapFilter(target.value);
-  };
+  // // handles and updates search names filter
+  // const handleSearchFilter = ({ target }) => {
+  //   setCurrentSearchFilter(target.value.trim());
+  // };
+
+  // // handles map filter by selection of select input
+  // const handleMapFilter = ({ target }) => {
+  //   setCurrentMapFilter(target.value);
+  // };
 
   // props
   const gameBoardProps = {
     gamemodeObject: currentGamemodeObject,
-    handleRefetchHighscore,
+    //handleRefetchHighscore,
     gamemodes,
     key: randomKey,
     showGamemodeCarousel,
     handleToggleGamemodeCarousel,
+    handleRefetchHighscores,
   };
 
   const gamemodeCarouselProps = {
@@ -672,17 +666,7 @@ const GameApp = ({ name, gamemodes }) => {
                   Learn more
                 </a>
               </div>
-              <HighscoresApp
-                handleRefetchHighscore={handleRefetchHighscore}
-                handleSearchFilter={handleSearchFilter}
-                handleMapFilter={handleMapFilter}
-                currentMapFilter={currentMapFilter}
-                gamemodes={gamemodes}
-                highscoreData={highscoreData}
-                isLoading={isLoading}
-                error={error}
-                currentSearchFilter={currentSearchFilter}
-              />
+              <HighscoresApp gamemodes={gamemodes} ref={highscoresRef} />
             </div>
           </div>
         </div>
