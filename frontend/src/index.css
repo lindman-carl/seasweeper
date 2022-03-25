@@ -22,8 +22,8 @@
 
   .game-info-container {
     @apply flex flex-col items-center justify-center
-    mt-4  mx-auto
-    lg:ml-16 lg:mx-0;
+    mt-4 mx-auto
+    lg:ml-16 lg:mr-0 lg:my-auto;
   }
 
   .game-text-container {
@@ -32,6 +32,11 @@
     px-4 sm:px-2
     text-base text-sky-900 font-light text-center 
     md:text-lg;
+  }
+  .game-text-link {
+    @apply mx-2 
+    text-sky-900 font-semibold 
+    underline decoration-2 underline-offset-auto decoration-blue-300;
   }
 
   .gameoverbox-container {

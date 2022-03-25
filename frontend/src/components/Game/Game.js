@@ -1,43 +1,33 @@
 import { useEffect, useState, useRef } from "react";
 
 import gameUtils from "./gameUtils";
-import { postHighscore } from "./apiUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
 
 // components
 import Logo from "../Logo";
 import GamemodeCarousel from "./GamemodeCarousel";
-import Hud from "./Hud";
-import Tile from "./Tile";
-import GameOverBox from "./GameOverBox";
-import ScrollDownArrow from "./ScrollDownArrow";
 import HighscoresApp from "../Highscore";
+import GameBoard from "./GameBoard";
 // import TutorialCarousel from "./TutorialCarousel";
 
-// spinner
-import { ClipLoader } from "react-spinners";
-
-const GeneratingMapSpinner = () => {
-  return (
-    <div className="w-full min-h-[50vh] flex flex-column items-center justify-center">
-      <div className="font-thin">Generating map...</div>
-      <ClipLoader size={20} />
-    </div>
-  );
-};
-
 const generateBoard = async ({ w, h, numBombs, nIslands, clusterSpread }) => {
+  // generates a new board
   let tempBoard;
+
   if (nIslands > 0) {
+    // generate map with islands
     const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
+    // populate map with bombs
     tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
   } else {
+    // generates map without islands
     tempBoard = gameUtils.populateBoard(w, h, numBombs);
   }
   return tempBoard;
 };
 
 const mapGamemodes = async (gamemodes) => {
+  // generates maps for each gamemode asynchronously
   const mappedGamemodes = await Promise.all(
     gamemodes
       .map(async (gm) => {
@@ -45,12 +35,13 @@ const mapGamemodes = async (gamemodes) => {
         const mapped = { ...gm, board: newBoard };
         return mapped;
       })
-      .sort((a, b) => a.id - b.id)
+      .sort((a, b) => a.id - b.id) // sort array by object id
   );
   return mappedGamemodes;
 };
 
 const regenerateSingleMappedGamemode = async (mappedGamemodes, id) => {
+  // generates one new board by id
   const oldMappedGamemode = mappedGamemodes.find((gm) => gm.id === id);
   const newBoard = await generateBoard(oldMappedGamemode);
   const newMappedGamemode = { ...oldMappedGamemode, board: newBoard };
@@ -62,487 +53,15 @@ const regenerateSingleMappedGamemode = async (mappedGamemodes, id) => {
   return newMappedGamemodes.sort((a, b) => a.id - b.id);
 };
 
-const GameBoard = ({
-  gamemodeObject,
-  gamemodeObject: {
-    board,
-    nLighthouses,
-    w,
-    h,
-    name,
-    nIslands,
-    clusterSpread,
-    numBombs,
-    showGamemodeCarousel,
-  },
-  handleToggleGamemodeCarousel,
-  handleRefetchHighscores,
-  children,
-}) => {
-  // map state
-  const [currentBoard, setCurrentBoard] = useState(board);
-  const [numRevealed, setNumRevealed] = useState(0);
-  const [numMarkers, setNumMarkers] = useState(0);
-  const [numWaterTiles, setNumWaterTiles] = useState(
-    board?.filter ? board.filter((t) => t.type !== 1).length : null
-  ); // calculates number of water tiles
-
-  // game state
-  const [gameStarted, setGameStarted] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [win, setWin] = useState(false);
-  const [gameTime, setGameTime] = useState(0);
-
-  const [lighthouseMode, setLighthouseMode] = useState(false);
-  const [markMode, setMarkMode] = useState(false);
-  const [availableLighthouses, setAvailableLighthouses] =
-    useState(nLighthouses);
-
-  // etc, states
-  const [intervalId, setIntervalId] = useState();
-  const [isSendingHighscore, setIsSendingHighscore] = useState(false);
-
-  const refreshRate = 100; // sets timer accuracy
-
-  // generate a new map, for restarting
-  const generateMap = () => {
-    // call correct map generation
-    if (nIslands > 0) {
-      generateNewIslandMap();
-    } else {
-      generateOpenseaMap();
-    }
-  };
-
-  const generateNewIslandMap = async () => {
-    // generate a map and make a game board out of it
-    // creates the map async, to keep the app responsive
-    const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
-    const tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
-    const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;
-    console.log("countWaterTiles", countWaterTiles);
-
-    // set states
-    setCurrentBoard(tempBoard);
-    setNumWaterTiles(countWaterTiles);
-  };
-
-  const generateOpenseaMap = () => {
-    const blankMap = gameUtils.populateBoard(w, h, numBombs);
-    const countWaterTiles = w * h;
-
-    // states
-    setCurrentBoard(blankMap);
-    setNumWaterTiles(countWaterTiles);
-  };
-
-  const depopulateBoard = (boardToDepopulate) => {
-    // remove all bombs and player interactions from board
-    const depopulated = boardToDepopulate.map((tile) => ({
-      ...tile,
-      bomb: false,
-      marked: false,
-      lighthouse: false,
-      lit: false,
-      count: -1,
-    }));
-    return depopulated;
-  };
-
-  const repopulateBoard = async () => {
-    // generate new bombs on board
-    // dont generate islands on open sea
-    if (nIslands < 0) {
-      generateOpenseaMap();
-      return;
-    }
-    // remove all bombs from board
-    const depopulatedBoard = depopulateBoard(currentBoard);
-    // generate new bombs to board
-    const repopulatedBoard = gameUtils.populateBombs({
-      board: depopulatedBoard,
-      w,
-      h,
-      nBombs: numBombs,
-    });
-    const countWaterTiles = repopulatedBoard.filter((t) => t.type !== 1).length;
-    const unrevealedBoard = unrevealAll(repopulatedBoard);
-    // states
-    setCurrentBoard(unrevealedBoard);
-    setNumWaterTiles(countWaterTiles);
-  };
-
-  useEffect(() => {
-    // logging
-    console.log("starting", gamemodeObject.name);
-    // console.log(board);
-
-    // clear interval on unmount
-    return () => {
-      clearInterval(intervalId);
-    };
-
-    // why if I only want on mount???
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // restart game
-  const restartGame = async () => {
-    console.log("restartGame");
-
-    // resets game states
-    setGameStarted(false);
-    setGameOver(false);
-    setWin(false);
-    setGameTime(0);
-    setNumMarkers(0);
-    setAvailableLighthouses(nLighthouses);
-
-    // clear timer
-    clearInterval(intervalId);
-  };
-
-  // start game
-  const startGame = () => {
-    console.log("startGame");
-    setNumRevealed(0);
-    setGameStarted(true);
-
-    // set timer
-    clearInterval(intervalId); // clear timer first
-
-    // get timestamp for calculating game time
-    const tempTime = Date.now();
-
-    // set game timer interval
-    const gameInterval = setInterval(() => {
-      setGameTime(Date.now() - tempTime);
-    }, refreshRate);
-
-    // store intervalId
-    setIntervalId(gameInterval);
-  };
-
-  // generate new map and restart game
-  const newGame = async () => {
-    await generateMap();
-    restartGame();
-  };
-
-  const retryGame = async () => {
-    await repopulateBoard();
-    restartGame();
-  };
-
-  // counts number of revealed
-  const countRevealed = (boardToCount) => {
-    // filter for non-land tiles that are revealed and not a bomb
-    const revealed = boardToCount.filter(
-      (t) => t.type !== 1 && t.revealed && !t.bomb
-    ).length;
-
-    return revealed;
-  };
-
-  // reveals all water tiles on board
-  const revealAll = () => {
-    // map { revealed: true } to all water tiles
-    const revealedBoard = currentBoard.map((t) =>
-      t.type === 2 ? { ...t, revealed: true } : t
-    );
-    return revealedBoard;
-  };
-
-  // reveals all water tiles on board
-  const unrevealAll = (boardToUnreveal) => {
-    const unrevealedBoard = boardToUnreveal.map((t) =>
-      t.type === 2 ? { ...t, revealed: false } : t
-    );
-    return unrevealedBoard;
-  };
-
-  // check for win conditions on current board
-  const checkWinConditions = (boardToCheck) => {
-    const revealed = countRevealed(boardToCheck);
-    setNumRevealed(revealed);
-
-    // win
-    if (revealed >= numWaterTiles - numBombs) {
-      console.log("win");
-      setWin(true);
-      setGameOver(true);
-      clearInterval(intervalId);
-    }
-  };
-
-  // event handlers
-  const handleSendHighscore = async ({ playerName }) => {
-    setIsSendingHighscore(true); // trigger loading animation
-
-    const postedHighscore = await postHighscore(gameTime, playerName, name);
-    console.log("posted highscore", postedHighscore);
-
-    setIsSendingHighscore(false); // untrigger loading animation
-
-    handleRefetchHighscores(); // refetch highscore list
-  };
-
-  // eventhandler for clicking lighthouse mode button
-  const handleLighthouseMode = () => {
-    // available lighthouses
-    if (availableLighthouses > 0) {
-      setLighthouseMode(!lighthouseMode);
-      // disable mark mode
-      setMarkMode(false);
-    }
-  };
-
-  // eventhandler for clicking mark mode button
-  const handleMarkMode = () => {
-    setMarkMode(!markMode);
-    // disable lighthouse mode
-    setLighthouseMode(false);
-  };
-
-  /**
-   * Click tile eventhandler
-   * @param {Tile} Tile clicked on
-   */
-  const handleClick = (tile) => {
-    // dont handle clicks if the game is over
-    if (gameOver) {
-      clearInterval(intervalId);
-      return null;
-    }
-
-    if (showGamemodeCarousel) {
-      return null;
-    }
-
-    if (!lighthouseMode && tile.type === 1) {
-      return null;
-    }
-
-    // markMode
-    if (markMode) {
-      // if water, toggle marked
-      if (tile.type === 2) {
-        if (!tile.revealed) {
-          if (!tile.marked) {
-            setNumMarkers((prev) => prev + 1);
-          } else {
-            setNumMarkers((prev) => prev - 1);
-          }
-        }
-        tile.marked = !tile.marked;
-      }
-      // do nothing if land
-      return null;
-    } else if (tile.marked) {
-      return null;
-    }
-
-    // lighthouse mode
-    if (lighthouseMode) {
-      // check if on land
-      if (tile.type === 1 && availableLighthouses > 0) {
-        console.log("placing lighthouse");
-        // set lighthouse
-        // filters and map ids of the tiles directly surrounding the lighthouse,
-        // max 8 ignore self
-        const litTiles = currentBoard
-          .filter(
-            (t) =>
-              t.x >= tile.x - 1 &&
-              t.x <= tile.x + 1 &&
-              t.y >= tile.y - 1 &&
-              t.y <= tile.y + 1 &&
-              t.id !== tile.id &&
-              t
-          )
-          .map((t) => t.id);
-
-        console.log("lit tiles", litTiles);
-
-        // maps lighthouse to tile
-        const newMap = currentBoard.map((t) =>
-          t.id === tile.id ? { ...t, lighthouse: true } : t
-        );
-        // maps lit tiles
-        const litMap = newMap.map((t) =>
-          litTiles.includes(t.id) ? { ...t, revealed: true, lit: true } : t
-        );
-
-        console.log("lit map", litMap);
-
-        // decrement available lighthouses
-        setAvailableLighthouses((prev) => prev - 1);
-
-        // toggles lighthouse mode if no more lighthouses are available
-        if (availableLighthouses < 1) {
-          setLighthouseMode(false);
-        }
-
-        // check if the placed lighthouse has won the game
-        checkWinConditions(litMap);
-
-        // update board
-        setCurrentBoard(litMap);
-        setNumRevealed(countRevealed(litMap)); // update number of revealed tile
-
-        return null;
-      } else {
-        // toggle lighthouseMode
-        setLighthouseMode(false);
-      }
-    } else if (tile.type === 1) {
-      return null;
-    }
-
-    // start game if not already started
-    if (!gameStarted) {
-      // never start on bomb
-      if (tile.bomb) {
-        // repopulate board
-        retryGame();
-
-        tile.revealed = true;
-        return null;
-      }
-
-      startGame();
-    }
-
-    // if bomb is clicked setGameOver
-    if (tile.bomb && gameStarted) {
-      setGameOver(true);
-      // reveal all
-      setCurrentBoard(revealAll());
-      clearInterval(intervalId);
-      return null;
-    }
-
-    // handle reveal and floodfill
-    const copiedBoard = [...currentBoard];
-    // use array to reveal all tiles at the same time
-    let tilesToReveal = [];
-
-    // reveal this tile
-    tilesToReveal.push(tile.id);
-
-    if (tile.count === 0) {
-      // start flood fill algo if the tile has no neighbouring bombs
-      tilesToReveal = gameUtils.startFloodFill(
-        tile,
-        currentBoard,
-        tilesToReveal
-      );
-    }
-
-    // reveal tiles and update board
-    const updatedBoard = copiedBoard.map((t) =>
-      tilesToReveal.includes(t.id) ? { ...t, revealed: true } : t
-    );
-
-    // sort board by id
-    const sortedUpdatedBoard = updatedBoard.sort((a, b) => a.id - b.id);
-
-    // check win
-    checkWinConditions(sortedUpdatedBoard);
-
-    // update board
-    setCurrentBoard(sortedUpdatedBoard);
-
-    // rerender map after click
-    // renderMap();
-  };
-
-  /**
-   *
-   * @returns map rendered as flex box
-   */
-  const renderMap = () => {
-    const rows = [];
-    for (let y = 0; y < h; y++) {
-      // iterate y axis
-      const row = currentBoard
-        .filter((t) => t.y === y)
-        .sort((a, b) => a.x - b.x);
-      const mappedRow = row.map((tile, idx) => (
-        <Tile
-          key={idx}
-          tile={tile}
-          onClick={() => handleClick(tile)}
-          board={currentBoard}
-          markMode={markMode}
-        />
-      ));
-      rows.push(mappedRow);
-    }
-
-    const rowsMapped = rows.map((row, idx) => (
-      <div key={idx} className="flex flex-row justify-start items-start shrink">
-        {row}
-      </div>
-    ));
-    return rowsMapped;
-  };
-
-  // props
-  const hudProps = {
-    numBombs,
-    numMarkers,
-    numWaterTiles,
-    numRevealed,
-    gameStarted,
-    gameOver,
-    gameTime,
-    win,
-    lighthouseMode,
-    availableLighthouses,
-    handleLighthouseMode,
-    markMode,
-    handleMarkMode,
-    showGamemodeCarousel,
-    handleToggleGamemodeCarousel,
-  };
-
-  const gameOverBoxProps = {
-    gameTime,
-    win,
-    handleSendHighscore,
-    isSendingHighscore,
-    handleNewGame: newGame,
-    handleRetry: retryGame,
-    newAvailable: nIslands > 0,
-    refetchHighscores: handleRefetchHighscores,
-  };
-
-  // render
-  if (currentBoard) {
-    // render game if finished generating maps
-    return (
-      <div className="game-board-container">
-        {children}
-        <Hud {...hudProps} />
-        {currentBoard && <div className="flex flex-col ">{renderMap()}</div>}
-        {gameOver && <GameOverBox {...gameOverBoxProps} />}
-        <ScrollDownArrow />
-      </div>
-    );
-  }
-
-  // render loading spinner while generating maps
-  return <GeneratingMapSpinner />;
-};
-
 const GameApp = ({ name, gamemodes }) => {
   // states
   const [mappedGamemodes, setMappedGamemodes] = useState(null);
   const [currentGamemodeId, setCurrentGamemodeId] = useState(0);
   const [currentGamemodeObject, setCurrentGamemodeObject] = useState(null);
+
   const [showGamemodeCarousel, setShowGamemodeCarousel] = useState(false);
   // const [showTutorial, setShowTutorial] = useState(false);
+
   // still necessary to force re-render
   const [randomKey, setRandomKey] = useState(
     Math.floor(Math.random() * 100000)
@@ -603,6 +122,7 @@ const GameApp = ({ name, gamemodes }) => {
     setShowGamemodeCarousel(!showGamemodeCarousel);
   };
 
+  // calls highscoreApp refetch method
   const handleRefetchHighscores = () => {
     highscoresRef.current.refetchHighscores();
   };
@@ -638,26 +158,26 @@ const GameApp = ({ name, gamemodes }) => {
           {/* {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />} */}
         </GameBoard>
         <div className="game-info-container">
-          <div className="flex flex-col items-center justify-start lg:mt-24 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
-            <Logo variant={"logo-large"} />
-            <div className="lg:ml-4">
-              <div className="game-text-container">
-                Click to reveal tile. Flags are for slow players, try to mark
-                the mines in your head. Place lighthouses on shoreline to safely
-                reveal adjacent water tiles.
-                <a
-                  href="https://minesweepergame.com/strategy.php"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sky-900 font-semibold mx-2 underline decoration-2 underline-offset-auto decoration-blue-300"
-                  data-tip={"Show tutorial"}
-                  data-for="checkboxInfo"
-                >
-                  Learn more
-                </a>
-              </div>
-              <HighscoresApp gamemodes={gamemodes} ref={highscoresRef} />
+          <Logo variant={"logo-large"} />
+
+          <div className="lg:ml-3">
+            <div className="game-text-container">
+              Click to reveal tile. Flags are for slow players, try to mark the
+              mines in your head. Place lighthouses on shoreline to safely
+              reveal adjacent water tiles.
+              <a
+                className="game-text-link"
+                href="https://minesweepergame.com/strategy.php"
+                target="_blank"
+                rel="noreferrer"
+                data-tip="Show tutorial"
+                data-for="checkboxInfo"
+              >
+                Learn more
+              </a>
             </div>
+
+            <HighscoresApp gamemodes={gamemodes} ref={highscoresRef} />
           </div>
         </div>
       </div>
