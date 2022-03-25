@@ -65,7 +65,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
       >
         {!error ? (
           isLoading ? (
-            <div className="m-auto text-sky-800">
+            <div className="m-auto text-sky-800 h-12 flex items-center">
               <ClipLoader color="text-sky-800" />
             </div>
           ) : (
@@ -75,7 +75,9 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
             </>
           )
         ) : (
-          <div className="m-auto text-sky-800">Error fetching highscores.</div>
+          <div className="m-auto text-sky-800 h-12 flex items-center">
+            Error fetching highscores.
+          </div>
         )}
       </div>
     </div>

@@ -673,7 +673,7 @@ const GameApp = ({ name, gamemodes }) => {
                     icon={<GiTrophy size={28} />}
                     status={false}
                     onClick={handleRefetchHighscore}
-                    tooltip={"Highscores"}
+                    tooltip={"Refresh highscores"}
                     primaryColor={"#D6AF36"}
                   />
                 </div>
