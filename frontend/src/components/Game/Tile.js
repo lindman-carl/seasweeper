@@ -80,13 +80,17 @@ const Tile = ({ tile, onClick }) => {
     const markedIcon = () => (
       <div className="tile-icon-container text-yellow-300 drop-shadow-lg animate-wiggle ">
         <IconContext.Provider value={{ size: "1.5em" }}>
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full hidden sm:block">
             <GiBuoy className=" scale-y-100 scale-x-50 rotate-3 absolute bottom-1.5 z-50 text-red-300 opacity-80" />
             <GiBuoy className=" scale-y-110 scale-x-75 absolute bottom-1.5 z-40 text-red-400 opacity-80 " />
             <GiBuoy className=" scale-y-110 scale-x-90 absolute bottom-1.5 z-20 text-red-500 opacity-80" />
             <GiBuoy className=" scale-y-125 scale-x-95 absolute bottom-1.5 z-30 text-sky-800 opacity-80" />
             <GiBuoy className=" scale-y-150 scale-x-105 absolute bottom-2 z-10 text-red-500 opacity-80" />
             <GiBuoy className=" scale-y-150 scale-x-125 absolute bottom-2 z-0 text-sky-800 opacity-" />
+          </div>
+          {/* Small screen no cool bouy */}
+          <div className="w-full h-full sm:hidden flex justify-center items-center">
+            <GiBuoy className=" rotate-3 z-10 text-red-500" />
           </div>
         </IconContext.Provider>
       </div>
