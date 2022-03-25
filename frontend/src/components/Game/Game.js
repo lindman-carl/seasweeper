@@ -410,7 +410,6 @@ const GameBoard = ({
     if (!gameStarted) {
       // never start on bomb
       if (tile.bomb) {
-        console.log("boom");
         // repopulate board
         retryGame();
 
@@ -659,13 +658,13 @@ const GameApp = ({ name, gamemodes }) => {
           )}
         </GameBoard>
         <div className="game-info-container">
-          <div className="flex flex-col items-center justify-start lg:mt-32 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
+          <div className="flex flex-col items-center justify-start lg:mt-24 w-screen lg:w-full lg:h-full lg:overflow-y-scroll max-w-[436px]">
             <Logo />
             <div className="lg:ml-4">
               <div className="game-text-container">
-                Click to reveal tile. Place lighthouses on shoreline to reveal
-                water tiles. Flags are for slow players, try to mark the mines
-                in your head!
+                Click to reveal tile. Flags are for slow players, try to mark
+                the mines in your head. Place lighthouses on shoreline to reveal
+                adjacent water tiles.
               </div>
               <HighScoresContainer>
                 <div className="relative -top-4">
@@ -674,7 +673,7 @@ const GameApp = ({ name, gamemodes }) => {
                     status={false}
                     onClick={handleRefetchHighscore}
                     tooltip={"Refresh highscores"}
-                    primaryColor={"#D6AF36"}
+                    iconColor={"#D6AF36"}
                   />
                 </div>
                 <div className="flex flex-row items-center mb-4 ">

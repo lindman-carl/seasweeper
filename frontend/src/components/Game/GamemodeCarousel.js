@@ -7,39 +7,7 @@ import {
 } from "react-icons/md";
 
 // components
-import TileCarousel from "./TileCarousel";
-
-const CarouselBoard = ({ mappedGamemodes, currentIndex }) => {
-  const renderBoard = (board) => {
-    const rows = [];
-    for (let y = 0; y < board.length; y++) {
-      // iterate y axis
-      const row = board.filter((t) => t.y === y).sort((a, b) => a.x - b.x);
-      const mappedRow = row.map((tile, idx) => (
-        <TileCarousel key={idx} tile={tile} board={board} />
-      ));
-      rows.push(mappedRow);
-    }
-
-    const rowsMapped = rows.map((row, idx) => (
-      <div key={idx} className="flex flex-row justify-start items-start shrink">
-        {row}
-      </div>
-    ));
-    return rowsMapped;
-  };
-
-  const renderCurrentBoard = (currentIndex) => {
-    const board = mappedGamemodes.find((gm) => gm.id === currentIndex).board;
-    return renderBoard(board);
-  };
-
-  return (
-    mappedGamemodes && (
-      <div className="flex flex-col">{renderCurrentBoard(currentIndex)}</div>
-    )
-  );
-};
+import CarouselBoard from "./CarouselBoard";
 
 const GamemodeCarousel = ({
   gamemodes,
@@ -48,12 +16,14 @@ const GamemodeCarousel = ({
   mappedGamemodes,
   handleToggleGamemodeCarousel,
 }) => {
-  const startIndex = gamemodes.findIndex((gamemode) => gamemode.name === name);
+  const startIndex = gamemodes.findIndex((gm) => gm.name === name);
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
 
-  const handleCarouselClick = (inc) => {
+  const handleCarouselNavigationClick = (inc) => {
+    // handles click right and left navigation buttons
     const newIndex = currentIndex + inc;
 
+    // loops if index goes out of range
     if (newIndex < 0) {
       setCurrentIndex(gamemodes.length - 1);
     } else if (newIndex >= gamemodes.length) {
@@ -65,37 +35,40 @@ const GamemodeCarousel = ({
 
   return (
     <div className="carousel-container">
-      <div className="carousel-header h-20 col-start-2 col-span-1 row-start-1 row-span-1">
-        <div className="w-full h-full flex justify-center items-center">
-          {mappedGamemodes[currentIndex].label}
-        </div>
+      {/* header */}
+      <div className="carousel-header ">
+        {mappedGamemodes[currentIndex].label}
       </div>
+      {/* close button */}
       <div
-        className="w-full h-20 flex justify-center items-center col-start-3 row-start-1 row-span-1 cursor-pointer"
+        className="carousel-close-button"
         onClick={handleToggleGamemodeCarousel}
       >
         <MdOutlineClose size={20} />
       </div>
+      {/* left button */}
       <div
-        className="carousel-button col-start-1 row-start-2"
-        onClick={() => handleCarouselClick(-1)}
+        className="carousel-navigation-button 
+                  col-start-1 row-start-2"
+        onClick={() => handleCarouselNavigationClick(-1)}
       >
         <MdArrowBackIos size={32} />
       </div>
-      <div className="carousel-card">
-        <div
-          className="carousel-image"
-          onClick={() => handleSelectGamemode(currentIndex)}
-        >
-          <CarouselBoard
-            mappedGamemodes={mappedGamemodes}
-            currentIndex={currentIndex}
-          />
-        </div>
-      </div>
+      {/* carousel main element */}
       <div
-        className="carousel-button col-start-3 row-start-2"
-        onClick={() => handleCarouselClick(1)}
+        className="carousel-card"
+        onClick={() => handleSelectGamemode(currentIndex)}
+      >
+        <CarouselBoard
+          mappedGamemodes={mappedGamemodes}
+          currentIndex={currentIndex}
+        />
+      </div>
+      {/* right button */}
+      <div
+        className="carousel-navigation-button 
+                  col-start-3 row-start-2"
+        onClick={() => handleCarouselNavigationClick(1)}
       >
         <MdArrowForwardIos size={32} />
       </div>

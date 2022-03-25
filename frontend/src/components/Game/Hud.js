@@ -91,7 +91,7 @@ const Hud = ({
             <IconBadge
               icon={<BiSquare size={24} />}
               value={numWaterTiles - numRevealed - numBombs}
-              tooltip={"Number of tiles left to clear"}
+              tooltip={"Number of sea tiles left to clear"}
             />
           </div>
         </div>

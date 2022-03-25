@@ -158,7 +158,8 @@
   .carousel-container {
     @apply w-screen h-96
     lg:w-[50%]
-    z-30 mt-48 absolute 
+    mt-48
+    z-30 my-auto absolute 
     grid grid-cols-3 grid-rows-3 auto-rows-auto
     border-l-0 border-r-0
     bg-white
@@ -166,39 +167,38 @@
     shadow-2xl
     select-none;
   }
-
   .carousel-card {
     @apply w-full h-full 
-      my-4 
-      col-start-2 row-start-2
-      flex flex-row justify-center items-center;
-  }
-
-  .carousel-image {
-    @apply hover:scale-95
+    my-4 
+    col-start-2 row-start-2
+    flex flex-row justify-center items-center
+    hover:scale-95
     active:scale-90
-    shadow-lg
     cursor-pointer
     select-none
     transition-all duration-100;
   }
 
   .carousel-header {
-    @apply w-full
-    text-center
-    text-xl
+    @apply w-full h-20
+    text-center text-xl font-extrabold
     sm:text-4xl 
-    font-extrabold
+    col-start-2 col-span-1 row-start-1 row-span-1
+    flex items-center justify-center
     underline underline-offset-auto decoration-blue-300;
   }
 
-  .carousel-button {
+  .carousel-navigation-button {
     @apply w-full h-full
     flex flex-row justify-center items-center 
     hover:scale-90
     active:scale-75
     transition-all duration-100
     cursor-pointer;
+  }
+
+  .carousel-close-button {
+    @apply w-full h-20 flex justify-center items-center col-start-3 row-start-1 row-span-1 cursor-pointer;
   }
 
   .webgl {

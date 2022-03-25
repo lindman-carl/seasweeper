@@ -8,7 +8,7 @@ const IconCheckbox = ({
   onClick,
   tooltip,
   activeTooltip,
-  primaryColor,
+  iconColor,
 }) => {
   const checkboxContent = (iconToDisplay = icon) => (
     <div
@@ -16,7 +16,7 @@ const IconCheckbox = ({
             w-full h-full
             flex justify-center items-center"
     >
-      <IconContext.Provider value={{ color: primaryColor }}>
+      <IconContext.Provider value={{ color: iconColor }}>
         {iconToDisplay}
       </IconContext.Provider>
       {value !== undefined && (
