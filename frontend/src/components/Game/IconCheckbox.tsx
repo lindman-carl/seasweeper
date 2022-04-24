@@ -1,4 +1,16 @@
+import React from "react";
 import { IconContext } from "react-icons";
+
+type Props = {
+  icon: JSX.Element;
+  alternateIcon?: JSX.Element;
+  status: boolean;
+  onClick: () => void;
+  value?: number;
+  tooltip?: string;
+  activeTooltip?: string;
+  iconColor?: string;
+};
 
 const IconCheckbox = ({
   icon,
@@ -9,15 +21,15 @@ const IconCheckbox = ({
   tooltip,
   activeTooltip,
   iconColor,
-}) => {
-  const checkboxContent = (iconToDisplay = icon) => (
+}: Props) => {
+  const checkboxContent = (iconToDisplay: JSX.Element | undefined = icon) => (
     <div
       className="
-            w-full h-full
-            flex justify-center items-center"
+        w-full h-full
+        flex justify-center items-center"
     >
       <IconContext.Provider value={{ color: iconColor }}>
-        {iconToDisplay}
+        <>{iconToDisplay}</>
       </IconContext.Provider>
       {value !== undefined && (
         <div className="ml-0 sm:ml-2 font-semibold">
@@ -26,20 +38,21 @@ const IconCheckbox = ({
       )}
     </div>
   );
+
   const inactiveState = () => {
     return (
       <div
         onClick={onClick}
         className={`
-        icon-checkbox-base
-        icon-checkbox-animation
-        text-sky-800
-        border-sky-800
-        shadow-lg`}
+          icon-checkbox-base
+          icon-checkbox-animation
+          text-sky-800
+          border-sky-800
+          shadow-lg`}
         data-tip={tooltip}
         data-for="checkboxInfo"
       >
-        {checkboxContent()}
+        {checkboxContent(icon)}
       </div>
     );
   };
@@ -49,13 +62,12 @@ const IconCheckbox = ({
       <div
         onClick={onClick}
         className={`
-        icon-checkbox-base
-        icon-checkbox-animation
-        text-red-600 
-        border-red-600
-        shadow-lg
-        border-2
-        `}
+          icon-checkbox-base
+          icon-checkbox-animation
+          text-red-600 
+          border-red-600
+          shadow-lg
+          border-2`}
         data-tip={activeTooltip ? activeTooltip : tooltip}
         data-for="checkboxInfo"
       >
@@ -69,21 +81,21 @@ const IconCheckbox = ({
       <div
         onClick={onClick}
         className="
-              icon-checkbox-base
-              text-slate-300
-              border-slate-300
-              bg-gray-50
-              shadow-none
-              cursor-not-allowed"
+          icon-checkbox-base
+          text-slate-300
+          border-slate-300
+          bg-gray-50
+          shadow-none
+          cursor-not-allowed"
         data-tip={tooltip}
         data-for="checkboxInfo"
       >
-        {checkboxContent()}
+        {checkboxContent(icon)}
       </div>
     );
   };
 
-  return value > 0 || value === undefined
+  return value === undefined || value > 0
     ? status
       ? activeState()
       : inactiveState()

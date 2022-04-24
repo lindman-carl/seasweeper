@@ -1,7 +1,11 @@
+import React from "react";
+import ReactTooltip from "react-tooltip";
+
 // components
-import Timer from "./Timer";
+import IconBadge from "./IconBadge";
 import IconCheckbox from "./IconCheckbox";
 import Logo from "../Logo";
+import Timer from "./Timer";
 
 // icons & animations
 import { BiSquare } from "react-icons/bi";
@@ -9,8 +13,24 @@ import { FaBomb } from "react-icons/fa";
 import { RiMapFill } from "react-icons/ri";
 import { GiBroom, GiBuoy, GiCompass } from "react-icons/gi";
 import { SiLighthouse } from "react-icons/si";
-import IconBadge from "./IconBadge";
-import ReactTooltip from "react-tooltip";
+
+type Props = {
+  numBombs: number;
+  numMarkers: number;
+  numWaterTiles: number;
+  numRevealed: number;
+  gameTime: number;
+  availableLighthouses: number;
+  gameOver: boolean;
+  gameStarted: boolean;
+  win: boolean;
+  lighthouseMode: boolean;
+  showGamemodeCarousel: boolean;
+  markMode: boolean;
+  handleLighthouseMode: () => void;
+  handleMarkMode: () => void;
+  handleToggleGamemodeCarousel: () => void;
+};
 
 const Hud = ({
   numBombs,
@@ -28,7 +48,7 @@ const Hud = ({
   handleMarkMode,
   showGamemodeCarousel,
   handleToggleGamemodeCarousel,
-}) => {
+}: Props) => {
   const doubleIcon = () => {
     return (
       <div className="flex justify-center items-center">

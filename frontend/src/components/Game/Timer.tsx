@@ -1,8 +1,13 @@
-const Timer = ({ time }) => {
+import React from "react";
+
+type Props = {
+  time: number;
+};
+
+const Timer = ({ time }: Props) => {
   const formatTime = () => {
     const seconds = Math.floor(time / 1000);
     const hundreds = Math.floor((time % 1000) / 100);
-    // console.log(time, seconds, hundreds);
 
     return (
       <>
@@ -17,17 +22,16 @@ const Timer = ({ time }) => {
   };
   return (
     <div
-      className="w-full h-12
-      min-w-[6rem]
-      sm:min-w-[6rem]  
-      border-b-2 border-sky-900
-      mx-auto
-      px-4
-      font-mono
-      flex justify-center items-start
-      text-sky-900  
-      cursor-default
-      select-none"
+      className="
+        w-full h-12 min-w-[6rem] 
+        border-b-2 border-sky-800
+        mx-auto
+        px-4
+        text-sky-900  
+        font-mono
+        flex justify-center items-start
+        cursor-default
+        select-none"
     >
       {time ? formatTime() : " "}
     </div>

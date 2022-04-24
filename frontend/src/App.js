@@ -54,7 +54,7 @@ const gamemodes = [
   },
   {
     name: "pacificocean2032",
-    label: "Pacific Ocean",
+    label: "Pacific Islands",
     link: "/pacificocean",
     img: PacificoceanGamemode,
     w: 20,
