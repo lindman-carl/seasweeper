@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.2f3c8290.css",
+    "main.css": "/static/css/main.170b11ef.css",
     "main.js": "/static/js/main.b9e1e94e.js",
     "static/js/787.06dac2cd.chunk.js": "/static/js/787.06dac2cd.chunk.js",
     "static/media/islandsGamemode.png": "/static/media/islandsGamemode.22b40a0c392695f4296c.png",
@@ -8,12 +8,12 @@
     "static/media/openseaGamemode.png": "/static/media/openseaGamemode.8ccb5d6bb62c0c1936a7.png",
     "static/media/pacificoceanGamemode.webp": "/static/media/pacificoceanGamemode.bbdb7d3ea5288a72ca8d.webp",
     "index.html": "/index.html",
-    "main.2f3c8290.css.map": "/static/css/main.2f3c8290.css.map",
+    "main.170b11ef.css.map": "/static/css/main.170b11ef.css.map",
     "main.b9e1e94e.js.map": "/static/js/main.b9e1e94e.js.map",
     "787.06dac2cd.chunk.js.map": "/static/js/787.06dac2cd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2f3c8290.css",
+    "static/css/main.170b11ef.css",
     "static/js/main.b9e1e94e.js"
   ]
 }
