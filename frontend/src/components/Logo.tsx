@@ -6,8 +6,10 @@ type Props = {
 };
 
 const Logo = ({ variant = "logo-large" }: Props) => {
+  const wrapperClassName = `logo-base ${variant}`;
+
   return (
-    <div className={`logo-base ${variant}`}>
+    <div className={wrapperClassName}>
       <div className="logo-text">
         Sea Sweeper
         <GiBroom />
