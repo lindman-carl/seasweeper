@@ -16,7 +16,13 @@ const generateBoard = async ({ w, h, numBombs, nIslands, clusterSpread }) => {
 
   if (nIslands > 0) {
     // generate map with islands
-    const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
+    const tempMap = await generateValidMergedMap(
+      w,
+      h,
+      nIslands,
+      clusterSpread,
+      0.6
+    );
     // populate map with bombs
     tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
   } else {

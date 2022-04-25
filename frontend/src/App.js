@@ -22,7 +22,7 @@ const gamemodes = [
     h: 20,
     numBombs: 32,
     nLighthouses: 2,
-    nIslands: 12,
+    nIslands: 10,
     clusterSpread: 4,
     id: 0,
   },

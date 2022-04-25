@@ -76,7 +76,13 @@ const GameBoard = ({
   const generateNewIslandMap = async () => {
     // generate a map and make a game board out of it
     // creates the map async, to keep the app responsive
-    const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
+    const tempMap = await generateValidMergedMap(
+      w,
+      h,
+      nIslands,
+      clusterSpread,
+      0.6
+    );
     const tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
     const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;
     console.log("countWaterTiles", countWaterTiles);
