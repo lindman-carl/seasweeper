@@ -1,6 +1,6 @@
 # Sea Sweeper
 
-[Sea Sweeper live demo](https://www.seasweeper.herokuapp.com)
+[Sea Sweeper live demo](https://seasweeper.herokuapp.com)
 
 A modern take on the classic Minesweeper with island generation.
 
