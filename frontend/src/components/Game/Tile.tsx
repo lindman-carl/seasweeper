@@ -1,12 +1,16 @@
 import React from "react";
 
+// types
+import { TileType } from "../../types";
+
 // icons
 import { IconContext } from "react-icons";
 import { FaBomb } from "react-icons/fa";
 import { SiLighthouse } from "react-icons/si";
 import { GiBuoy } from "react-icons/gi";
 
-const numberColors = {
+// text color for number
+const numberColors: { [key: number]: string } = {
   1: "text-sky-700",
   2: "text-green-600",
   3: "text-red-500",
@@ -17,7 +21,12 @@ const numberColors = {
   8: "text-gray-500",
 };
 
-const Tile = ({ tile, onClick }) => {
+type Props = {
+  tile: TileType;
+  onClick: () => void;
+};
+
+const Tile = ({ tile, onClick }: Props) => {
   let iconSize = "1.5em";
 
   const formatCount = () => {

@@ -4,7 +4,7 @@ import React from "react";
 import { TileType } from "../../types";
 
 type Props = {
-  tile: any | TileType;
+  tile: TileType;
 };
 
 const Tile = React.memo(({ tile }: Props) => {

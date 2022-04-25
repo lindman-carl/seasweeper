@@ -22,4 +22,15 @@ export type Gamemode = {
   board?: any;
 };
 
-export type TileType = {};
+export type TileType = {
+  id: number;
+  x: number;
+  y: number;
+  count: number;
+  type: number;
+  marked: boolean;
+  bomb: boolean;
+  revealed: boolean;
+  lit?: boolean;
+  lighthouse?: boolean;
+};

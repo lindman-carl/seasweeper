@@ -136,7 +136,7 @@ const GameBoard = ({
   useEffect(() => {
     // logging
     console.log("starting", name);
-    // console.log(board);
+    console.log(board);
 
     // clear interval on unmount
     return () => {
