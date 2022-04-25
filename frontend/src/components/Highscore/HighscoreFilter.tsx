@@ -1,6 +1,13 @@
+import React from "react";
+
+// icons
 import { MdSearch } from "react-icons/md";
 
-const HighscoreFilter = ({ onChange }) => {
+type Props = {
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+};
+
+const HighscoreFilter = ({ onChange }: Props) => {
   return (
     <div className="highscores-filter-container">
       <MdSearch size={16} />

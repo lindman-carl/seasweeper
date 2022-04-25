@@ -1,8 +1,30 @@
-import { ClipLoader } from "react-spinners";
+import React from "react";
+
+// types
+import { HighscoreEntry } from "../../types";
+
+// components
 import HighscoreListHeaders from "./HighscoreListHeaders";
 import HighscoreListRow from "./HighscoreListRow";
 
-const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
+// icons and spinners
+import { ClipLoader } from "react-spinners";
+
+type Props = {
+  data: [HighscoreEntry] | [];
+  isLoading: boolean;
+  error: any;
+  mapFilter: string;
+  searchFilter: string;
+};
+
+const HighScores = ({
+  data,
+  isLoading,
+  error,
+  mapFilter,
+  searchFilter,
+}: Props) => {
   /**
    * Maps data to HighscoreListRow objects
    * @returns Array of HigscoreListRow objects
@@ -51,16 +73,23 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
   };
 
   return (
-    <div className="w-96 flex flex-col items-center bg-sky-50 py-6 shadow-inner">
+    <div
+      className="
+        w-96 
+        py-6 
+        flex flex-col items-center 
+        bg-sky-50 
+        shadow-inner"
+    >
       <div
         className="
-              w-80 max-h-80 
-              overflow-scroll
-              flex flex-col justify-start items-center"
+          w-80 max-h-80 
+          overflow-scroll
+          flex flex-col justify-start items-center"
       >
         {!error ? (
           isLoading ? (
-            <div className="m-auto text-sky-800 h-12 flex items-center">
+            <div className="h-12 m-auto text-sky-800 flex items-center">
               <ClipLoader color="text-sky-800" />
             </div>
           ) : (
@@ -70,7 +99,7 @@ const HighScores = ({ data, isLoading, error, mapFilter, searchFilter }) => {
             </>
           )
         ) : (
-          <div className="m-auto text-sky-800 h-12 flex items-center">
+          <div className="h-12 m-auto text-sky-800 flex items-center">
             Error fetching highscores.
           </div>
         )}
