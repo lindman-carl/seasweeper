@@ -11,7 +11,6 @@ export type Gamemode = {
   name: string;
   label: string;
   link: string;
-  img: any;
   w: number;
   h: number;
   numBombs: number;

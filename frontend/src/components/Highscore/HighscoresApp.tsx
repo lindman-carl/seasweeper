@@ -15,7 +15,7 @@ import { fetchHighscores } from "../Game/apiUtils";
 import { GiTrophy } from "react-icons/gi";
 
 type Props = {
-  gamemodes: [Gamemode];
+  gamemodes: Gamemode[];
 };
 
 const HighscoresApp = forwardRef(({ gamemodes }: Props, ref) => {

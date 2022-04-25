@@ -1,23 +1,21 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+// types
+import { Gamemode } from "./types";
+
+// components
 import GameApp from "./components/Game";
 import HighscoresApp from "./components/Highscore/HighscoresApp";
 
-// images
-import IslandsGamemode from "./assets/gamemodes/islandsGamemode.png";
-import OpenseaGamemode from "./assets/gamemodes/openseaGamemode.png";
-import ArchipelagoGamemode from "./assets/gamemodes/archipelagoGamemode.png";
-import PacificoceanGamemode from "./assets/gamemodes/pacificoceanGamemode.webp";
-
 const queryClient = new QueryClient();
 
-const gamemodes = [
+const gamemodes: Gamemode[] = [
   {
     name: "islands2032",
     label: "Islands",
     link: "/islands",
-    img: IslandsGamemode,
     w: 20,
     h: 20,
     numBombs: 32,
@@ -30,7 +28,6 @@ const gamemodes = [
     name: "kidspool1010",
     label: "Kiddie pool",
     link: "/kidspool",
-    img: PacificoceanGamemode,
     w: 10,
     h: 10,
     numBombs: 10,
@@ -43,7 +40,6 @@ const gamemodes = [
     name: "archipelago2032",
     label: "Archipelago",
     link: "/archipelago",
-    img: ArchipelagoGamemode,
     w: 20,
     h: 20,
     numBombs: 32,
@@ -56,7 +52,6 @@ const gamemodes = [
     name: "pacificocean2032",
     label: "Pacific Islands",
     link: "/pacificocean",
-    img: PacificoceanGamemode,
     w: 20,
     h: 20,
     numBombs: 32,
@@ -69,7 +64,6 @@ const gamemodes = [
     name: "opensea2032",
     label: "Open sea",
     link: "/opensea",
-    img: OpenseaGamemode,
     w: 20,
     h: 20,
     numBombs: 32,

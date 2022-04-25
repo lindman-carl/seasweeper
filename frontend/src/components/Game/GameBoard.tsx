@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 
+// types
+import { TileType } from "../../types";
+
+// utils
 import gameUtils from "./gameUtils";
 import { postHighscore } from "./apiUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
@@ -9,17 +13,13 @@ import Hud from "./Hud";
 import Tile from "./Tile";
 import GameOverBox from "./GameOverBox";
 import ScrollDownArrow from "./ScrollDownArrow";
+import GeneratingMapSpinner from "./GeneratingMapSpinner";
 
-// spinner
-import { ClipLoader } from "react-spinners";
-
-const GeneratingMapSpinner = () => {
-  return (
-    <div className="w-full min-h-[50vh] flex flex-column items-center justify-center">
-      <div className="font-thin">Generating map...</div>
-      <ClipLoader size={20} />
-    </div>
-  );
+type Props = {
+  gamemodeObject: any;
+  handleToggleGamemodeCarousel: () => void;
+  handleRefetchHighscores: () => void;
+  children: JSX.Element | JSX.Element[];
 };
 
 const GameBoard = ({
@@ -37,29 +37,29 @@ const GameBoard = ({
   handleToggleGamemodeCarousel,
   handleRefetchHighscores,
   children,
-}) => {
+}: Props) => {
   // map state
-  const [currentBoard, setCurrentBoard] = useState(board);
-  const [numRevealed, setNumRevealed] = useState(0);
-  const [numMarkers, setNumMarkers] = useState(0);
-  const [numWaterTiles, setNumWaterTiles] = useState(
-    board?.filter ? board.filter((t) => t.type !== 1).length : null
+  const [currentBoard, setCurrentBoard] = useState<TileType[]>(board);
+  const [numRevealed, setNumRevealed] = useState<number>(0);
+  const [numMarkers, setNumMarkers] = useState<number>(0);
+  const [numWaterTiles, setNumWaterTiles] = useState<number>(
+    board?.filter ? board.filter((t: TileType) => t.type !== 1).length : 0
   ); // calculates number of water tiles
 
   // game state
-  const [gameStarted, setGameStarted] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [win, setWin] = useState(false);
-  const [gameTime, setGameTime] = useState(0);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [win, setWin] = useState<boolean>(false);
+  const [gameTime, setGameTime] = useState<number>(0);
 
-  const [lighthouseMode, setLighthouseMode] = useState(false);
-  const [markMode, setMarkMode] = useState(false);
+  const [lighthouseMode, setLighthouseMode] = useState<boolean>(false);
+  const [markMode, setMarkMode] = useState<boolean>(false);
   const [availableLighthouses, setAvailableLighthouses] =
-    useState(nLighthouses);
+    useState<number>(nLighthouses);
 
   // etc, states
-  const [intervalId, setIntervalId] = useState();
-  const [isSendingHighscore, setIsSendingHighscore] = useState(false);
+  const [intervalId, setIntervalId] = useState<any>();
+  const [isSendingHighscore, setIsSendingHighscore] = useState<boolean>(false);
 
   const refreshRate = 100; // sets timer accuracy
 
@@ -101,7 +101,7 @@ const GameBoard = ({
     setNumWaterTiles(countWaterTiles);
   };
 
-  const depopulateBoard = (boardToDepopulate) => {
+  const depopulateBoard = (boardToDepopulate: TileType[]) => {
     // remove all bombs and player interactions from board
     const depopulated = boardToDepopulate.map((tile) => ({
       ...tile,
@@ -126,8 +126,8 @@ const GameBoard = ({
     // generate new bombs to board
     const repopulatedBoard = gameUtils.populateBombs({
       board: depopulatedBoard,
-      w,
-      h,
+      width: w,
+      height: h,
       nBombs: numBombs,
     });
     // reset the water tiles count
@@ -203,7 +203,7 @@ const GameBoard = ({
   };
 
   // counts number of revealed
-  const countRevealed = (boardToCount) => {
+  const countRevealed = (boardToCount: TileType[]) => {
     // filter for non-land tiles that are revealed and not a bomb
     const revealed = boardToCount.filter(
       (t) => t.type !== 1 && t.revealed && !t.bomb
@@ -222,7 +222,7 @@ const GameBoard = ({
   };
 
   // reveals all water tiles on board
-  const unrevealAll = (boardToUnreveal) => {
+  const unrevealAll = (boardToUnreveal: TileType[]) => {
     const unrevealedBoard = boardToUnreveal.map((t) =>
       t.type === 2 ? { ...t, revealed: false } : t
     );
@@ -230,7 +230,7 @@ const GameBoard = ({
   };
 
   // check for win conditions on current board
-  const checkWinConditions = (boardToCheck) => {
+  const checkWinConditions = (boardToCheck: TileType[]) => {
     const revealed = countRevealed(boardToCheck);
     setNumRevealed(revealed);
 
@@ -244,7 +244,7 @@ const GameBoard = ({
   };
 
   // event handlers
-  const handleSendHighscore = async ({ playerName }) => {
+  const handleSendHighscore = async ({ playerName }: any) => {
     setIsSendingHighscore(true); // trigger loading animation
 
     await postHighscore(gameTime, playerName, name);
@@ -275,9 +275,9 @@ const GameBoard = ({
 
   /**
    * Click tile eventhandler
-   * @param {Tile} Tile clicked on
+   * @param {TileType} Tile clicked on
    */
-  const handleClick = (tile) => {
+  const handleClick = (tile: TileType) => {
     // dont handle clicks if the game is over
     if (gameOver) {
       clearInterval(intervalId);
@@ -396,7 +396,7 @@ const GameBoard = ({
     // handle reveal and floodfill
     const copiedBoard = [...currentBoard];
     // use array to reveal all tiles at the same time
-    let tilesToReveal = [];
+    let tilesToReveal: number[] = [];
 
     // reveal this tile
     tilesToReveal.push(tile.id);
@@ -440,13 +440,7 @@ const GameBoard = ({
         .filter((t) => t.y === y)
         .sort((a, b) => a.x - b.x);
       const mappedRow = row.map((tile, idx) => (
-        <Tile
-          key={idx}
-          tile={tile}
-          onClick={() => handleClick(tile)}
-          board={currentBoard}
-          markMode={markMode}
-        />
+        <Tile key={idx} tile={tile} onClick={() => handleClick(tile)} />
       ));
       rows.push(mappedRow);
     }

@@ -1,7 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
+// utils
 import gameUtils from "./gameUtils";
 import { generateValidMergedMap } from "./islandMapGenerator";
+
+// types
+import { Gamemode } from "../../types";
 
 // components
 import Logo from "../Logo";
@@ -10,7 +14,13 @@ import HighscoresApp from "../Highscore";
 import GameBoard from "./GameBoard";
 // import TutorialCarousel from "./TutorialCarousel";
 
-const generateBoard = async ({ w, h, numBombs, nIslands, clusterSpread }) => {
+const generateBoard = async ({
+  w,
+  h,
+  numBombs,
+  nIslands,
+  clusterSpread,
+}: Gamemode) => {
   // generates a new board
   let tempBoard;
 
@@ -32,7 +42,7 @@ const generateBoard = async ({ w, h, numBombs, nIslands, clusterSpread }) => {
   return tempBoard;
 };
 
-const mapGamemodes = async (gamemodes) => {
+const mapGamemodes = async (gamemodes: Gamemode[]): Promise<Gamemode[]> => {
   // generates maps for each gamemode asynchronously
   const mappedGamemodes = await Promise.all(
     gamemodes.map(async (gm) => {
@@ -44,26 +54,41 @@ const mapGamemodes = async (gamemodes) => {
   return mappedGamemodes;
 };
 
-const regenerateSingleMappedGamemode = async (mappedGamemodes, id) => {
+const regenerateSingleMappedGamemode = async (
+  mappedGamemodes: Gamemode[],
+  id: number
+): Promise<Gamemode[]> => {
   // generates one new board by id
   const oldMappedGamemode = mappedGamemodes.find((gm) => gm.id === id);
-  const newBoard = await generateBoard(oldMappedGamemode);
-  const newMappedGamemode = { ...oldMappedGamemode, board: newBoard };
-  const newMappedGamemodes = [
-    ...mappedGamemodes.filter((gm) => gm.id !== id),
-    newMappedGamemode,
-  ];
+  if (oldMappedGamemode) {
+    const newBoard = await generateBoard(oldMappedGamemode);
+    const newMappedGamemode = { ...oldMappedGamemode, board: newBoard };
+    const newMappedGamemodes = [
+      ...mappedGamemodes.filter((gm) => gm.id !== id),
+      newMappedGamemode,
+    ];
 
-  return newMappedGamemodes.sort((a, b) => a.id - b.id);
+    return newMappedGamemodes.sort((a, b) => a.id - b.id);
+  }
+
+  // if failed
+  return mappedGamemodes;
 };
 
-const GameApp = ({ name, gamemodes }) => {
+const GameApp = ({
+  name,
+  gamemodes,
+}: {
+  name: string;
+  gamemodes: Gamemode[];
+}) => {
   // states
-  const [mappedGamemodes, setMappedGamemodes] = useState(null);
-  const [currentGamemodeId, setCurrentGamemodeId] = useState(0);
-  const [currentGamemodeObject, setCurrentGamemodeObject] = useState(null);
+  const [mappedGamemodes, setMappedGamemodes] = useState<any>();
+  const [currentGamemodeId, setCurrentGamemodeId] = useState<number>(0);
+  const [currentGamemodeObject, setCurrentGamemodeObject] = useState<any>();
 
-  const [showGamemodeCarousel, setShowGamemodeCarousel] = useState(false);
+  const [showGamemodeCarousel, setShowGamemodeCarousel] =
+    useState<boolean>(false);
   // const [showTutorial, setShowTutorial] = useState(false);
 
   // still necessary to force re-render
@@ -72,7 +97,7 @@ const GameApp = ({ name, gamemodes }) => {
   );
 
   // refs
-  const highscoresRef = useRef();
+  const highscoresRef = useRef<any>();
 
   useEffect(() => {
     // generates initial maps for gamemodes
@@ -95,8 +120,12 @@ const GameApp = ({ name, gamemodes }) => {
   }, []);
 
   // get gamemode objet by id
-  const getGamemodeObject = (id) => {
-    return mappedGamemodes.find((gm) => gm.id === id);
+  const getGamemodeObject = (id: number) => {
+    if (mappedGamemodes) {
+      return mappedGamemodes.find((gm: Gamemode) => gm.id === id);
+    }
+
+    // if failure we are doomed
   };
 
   /**
@@ -104,7 +133,7 @@ const GameApp = ({ name, gamemodes }) => {
    * Also creates a new map for gamemode selection
    * @param {number} id
    */
-  const handleSelectGamemode = async (id) => {
+  const handleSelectGamemode = async (id: number) => {
     const current = getGamemodeObject(id);
     // generate a new map for the selected gamemode
     const newMappedGamemodes = await regenerateSingleMappedGamemode(
@@ -117,6 +146,7 @@ const GameApp = ({ name, gamemodes }) => {
     setMappedGamemodes(newMappedGamemodes);
     // update highscore filtering to match the selected gamemode
     highscoresRef.current.setMapFilter(current.name);
+
     // closes carousel
     setShowGamemodeCarousel(false);
     setRandomKey(Math.floor(Math.random() * 100000)); // forces update, why i dont know, but it is needed
@@ -152,41 +182,41 @@ const GameApp = ({ name, gamemodes }) => {
   };
 
   // render
-  return (
-    currentGamemodeObject && (
-      <div className="game-app-container">
-        <GameBoard {...gameBoardProps}>
+  return currentGamemodeObject ? (
+    <div className="game-app-container">
+      <GameBoard {...gameBoardProps}>
+        <>
           {showGamemodeCarousel && (
             <GamemodeCarousel {...gamemodeCarouselProps} />
           )}
           {/* {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />} */}
-        </GameBoard>
-        <div className="game-info-container">
-          <Logo variant={"logo-large"} />
+        </>
+      </GameBoard>
+      <div className="game-info-container">
+        <Logo variant={"logo-large"} />
 
-          <div className="lg:ml-3">
-            <div className="game-text-container">
-              Click to reveal tile. Flags are for slow players, try to mark the
-              mines in your head. Place lighthouses on shoreline to safely
-              reveal adjacent water tiles.
-              <a
-                className="game-text-link"
-                href="https://minesweepergame.com/strategy.php"
-                target="_blank"
-                rel="noreferrer"
-                data-tip="Show tutorial"
-                data-for="checkboxInfo"
-              >
-                Learn more
-              </a>
-            </div>
-
-            <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
+        <div className="lg:ml-3">
+          <div className="game-text-container">
+            Click to reveal tile. Flags are for slow players, try to mark the
+            mines in your head. Place lighthouses on shoreline to safely reveal
+            adjacent water tiles.
+            <a
+              className="game-text-link"
+              href="https://minesweepergame.com/strategy.php"
+              target="_blank"
+              rel="noreferrer"
+              data-tip="Show tutorial"
+              data-for="checkboxInfo"
+            >
+              Learn more
+            </a>
           </div>
+
+          <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
         </div>
       </div>
-    )
-  );
+    </div>
+  ) : null;
 };
 
 export default GameApp;
