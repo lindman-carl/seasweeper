@@ -308,4 +308,13 @@
     text-5xl 
     xl:text-6xl;
   }
+
+  .text-input {
+    @apply mb-2 
+    border-b-2 
+    bg-white
+    text-sky-900
+    font-semibold text-center text-lg 
+    focus:outline;
+  }
 }

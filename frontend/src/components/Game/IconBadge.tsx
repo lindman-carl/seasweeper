@@ -8,16 +8,7 @@ type Props = {
 
 const IconBadge = ({ icon, value, tooltip }: Props) => {
   return (
-    // <div className="icon-badge-base">
-    <div
-      className="
-        w-12 h-8 mt-1
-        sm:w-20 sm:h-8 sm:mt-0
-        md:w-20
-        flex justify-center items-center
-        select-none
-        cursor-default"
-    >
+    <div className="icon-badge-base">
       <div
         className="
           w-full h-full
