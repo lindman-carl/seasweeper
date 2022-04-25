@@ -11,13 +11,13 @@ import {
 import CarouselBoard from "./CarouselBoard";
 
 const GamemodeCarousel = ({
-  gamemodes,
   name,
   handleSelectGamemode,
   mappedGamemodes,
   handleToggleGamemodeCarousel,
 }) => {
-  const startIndex = gamemodes.findIndex((gm) => gm.name === name);
+  const sortedGamemodes = [...mappedGamemodes].sort((a, z) => a.id - z.id);
+  const startIndex = sortedGamemodes.findIndex((gm) => gm.name === name);
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
 
   const handleCarouselNavigationClick = (inc) => {
@@ -26,8 +26,8 @@ const GamemodeCarousel = ({
 
     // loops if index goes out of range
     if (newIndex < 0) {
-      setCurrentIndex(gamemodes.length - 1);
-    } else if (newIndex >= gamemodes.length) {
+      setCurrentIndex(sortedGamemodes.length - 1);
+    } else if (newIndex >= sortedGamemodes.length) {
       setCurrentIndex(0);
     } else {
       setCurrentIndex(newIndex);
@@ -38,7 +38,7 @@ const GamemodeCarousel = ({
     <div className="carousel-container">
       {/* header */}
       <div className="carousel-header ">
-        {mappedGamemodes[currentIndex].label}
+        {sortedGamemodes[currentIndex].label}
       </div>
       {/* close button */}
       <div
@@ -61,7 +61,7 @@ const GamemodeCarousel = ({
         onClick={() => handleSelectGamemode(currentIndex)}
       >
         <CarouselBoard
-          mappedGamemodes={mappedGamemodes}
+          mappedGamemodes={sortedGamemodes}
           currentIndex={currentIndex}
         />
       </div>

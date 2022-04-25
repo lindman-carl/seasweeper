@@ -19,7 +19,8 @@ type Props = {
 };
 
 const HighscoresApp = forwardRef(({ gamemodes }: Props, ref) => {
-  const [mapFilter, setMapFilter] = useState<string>(gamemodes[0].name); // init on first gamemode
+  const sortedGamemodes = [...gamemodes].sort((a, z) => a.id - z.id);
+  const [mapFilter, setMapFilter] = useState<string>(sortedGamemodes[0].name); // init on first gamemode
   const [searchFilter, setSearchFilter] = useState<string>("");
 
   // fetch highscores on mount

@@ -84,7 +84,7 @@ const HighScores = ({
       <div
         className="
           w-80 max-h-80 
-          overflow-scroll
+          overflow-auto
           flex flex-col justify-start items-center"
       >
         {!error ? (

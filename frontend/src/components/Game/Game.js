@@ -29,13 +29,11 @@ const generateBoard = async ({ w, h, numBombs, nIslands, clusterSpread }) => {
 const mapGamemodes = async (gamemodes) => {
   // generates maps for each gamemode asynchronously
   const mappedGamemodes = await Promise.all(
-    gamemodes
-      .map(async (gm) => {
-        const newBoard = await generateBoard(gm);
-        const mapped = { ...gm, board: newBoard };
-        return mapped;
-      })
-      .sort((a, b) => a.id - b.id) // sort array by object id
+    gamemodes.map(async (gm) => {
+      const newBoard = await generateBoard(gm);
+      const mapped = { ...gm, board: newBoard };
+      return mapped;
+    })
   );
   return mappedGamemodes;
 };
@@ -75,6 +73,7 @@ const GameApp = ({ name, gamemodes }) => {
     const start = async () => {
       // generates maps for gamemodes
       const mapped = await mapGamemodes(gamemodes);
+
       // get ref to current gamemode
       const current = mapped.find((gm) => gm.id === currentGamemodeId);
 
@@ -97,7 +96,7 @@ const GameApp = ({ name, gamemodes }) => {
   /**
    * Eventhandler for selecting gamemode by id
    * Also creates a new map for gamemode selection
-   * @param {Number} id
+   * @param {number} id
    */
   const handleSelectGamemode = async (id) => {
     const current = getGamemodeObject(id);
@@ -141,7 +140,6 @@ const GameApp = ({ name, gamemodes }) => {
   const gamemodeCarouselProps = {
     name,
     mappedGamemodes,
-    gamemodes,
     handleSelectGamemode,
     handleToggleGamemodeCarousel,
     showGamemodeCarousel,
@@ -177,7 +175,7 @@ const GameApp = ({ name, gamemodes }) => {
               </a>
             </div>
 
-            <HighscoresApp gamemodes={gamemodes} ref={highscoresRef} />
+            <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
           </div>
         </div>
       </div>
