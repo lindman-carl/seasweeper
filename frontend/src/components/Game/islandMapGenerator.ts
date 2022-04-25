@@ -1,9 +1,4 @@
-type Point = {
-  x: number;
-  y: number;
-};
-
-type MapArray = number[][];
+import { MapArray, Point } from "../../types";
 
 const generateBlankMap = (w: number, h: number): MapArray => {
   // generates an MapArray of 0 with size w x h

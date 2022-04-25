@@ -34,3 +34,18 @@ export type TileType = {
   lit?: boolean;
   lighthouse?: boolean;
 };
+
+export type Point = {
+  x: number;
+  y: number;
+};
+
+export type MapArray = number[][];
+
+export type Board = {
+  board: TileType[];
+  width: number;
+  height: number;
+  nBombs: number;
+  bombIds?: number[];
+};
