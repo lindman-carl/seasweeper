@@ -1,3 +1,101 @@
+// ISLAND GAMES
+const populateGeneratedMap = (nBombs, mapToPopulate) => {
+  const map = [...mapToPopulate];
+  const height = map.length;
+  const width = map[0].length;
+
+  let id = 0;
+  let board = [];
+
+  // create all tiles
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const newTile = {
+        x,
+        y,
+        id,
+        marked: false,
+        bomb: false,
+        revealed: false,
+        count: -1,
+        type: map[y][x],
+      };
+      board.push(newTile);
+      id++;
+    }
+  }
+
+  const populatedBoard = populateBombs({
+    board,
+    width,
+    height,
+    nBombs,
+  });
+
+  return populatedBoard;
+};
+
+const populateBombs = ({ board, width, height, nBombs, bombIds = [] }) => {
+  // get bomb positions
+  let getRandomId;
+  if (width && height) {
+    getRandomId = () => Math.floor(Math.random() * (width * height));
+  } else {
+    getRandomId = () => Math.floor(Math.random() * board.length);
+  }
+  const isWater = (id) => board.find((t) => t.id === id && t.type === 2);
+  for (let i = 0; i < nBombs; i++) {
+    let randomId = getRandomId();
+
+    while (true) {
+      randomId = getRandomId();
+      if (!bombIds.includes(randomId) && isWater(randomId)) {
+        break;
+      }
+    }
+    bombIds.push(randomId);
+  }
+
+  // add bombs to board
+  for (let bombId of bombIds) {
+    const newTile = board.find((t) => t.id === bombId);
+    newTile.bomb = true;
+    const newBoard = board.filter((t) => t.id !== bombId);
+    board = [...newBoard, newTile];
+  }
+
+  const countNeighbourBombs = (tile) => {
+    let count = 0;
+
+    if (tile.bomb) {
+      return -1;
+    } else {
+      for (let yoff = -1; yoff <= 1; yoff++) {
+        for (let xoff = -1; xoff <= 1; xoff++) {
+          const neighbour = board.find(
+            (t) => t.x === tile.x + xoff && t.y === tile.y + yoff
+          );
+          if (neighbour && neighbour.id !== tile.id && neighbour.bomb) {
+            count++;
+          }
+        }
+      }
+    }
+
+    return count;
+  };
+
+  // count neighbouring bombs to get the cell number
+  for (let tile of board) {
+    const count = countNeighbourBombs(tile);
+    tile.count = count;
+  }
+
+  // sort board
+  return board.sort((a, b) => a.id - b.id);
+};
+
+// FOR REGULAR GAMES
 const populateBoard = (width, height, nBombs) => {
   let id = 0;
   let board = [];
@@ -16,13 +114,16 @@ const populateBoard = (width, height, nBombs) => {
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const newTile = {
+        id,
+        count: -1,
+        type: 2,
         x,
         y,
-        id,
-        flag: false,
         bomb: false,
+        flag: false,
+        lighthouse: false,
+        lit: false,
         revealed: false,
-        count: -1,
       };
       if (bombIds.includes(newTile.id)) {
         // add bomb
@@ -82,6 +183,7 @@ const recFloodFill = (tile, copiedBoard, tilesToReveal) => {
 
       if (
         neighbour &&
+        neighbour.type === 2 &&
         neighbour.id !== tile.id &&
         !neighbour.bomb &&
         !tilesToReveal.includes(neighbour.id)
@@ -103,6 +205,11 @@ const startFloodFill = (tile, board, tilesToReveal) => {
   return tilesToReveal;
 };
 
-const gameUtils = { populateBoard, startFloodFill };
+const gameUtils = {
+  populateBoard,
+  populateGeneratedMap,
+  populateBombs,
+  startFloodFill,
+};
 
 export default gameUtils;

@@ -24,12 +24,14 @@ highscoresRouter.get("/:id", async (req, res) => {
 
 // create highscore
 highscoresRouter.post("/", async (req, res) => {
-  const { time, playerName } = req.body; // destructure request body
+  const { time, playerName, gameMode } = req.body; // destructure request body
 
   // create new highscore object
   const newHighscoreObject = new Highscore({
     time,
     playerName,
+    gameMode,
+    timestamp: Date.now(),
   });
 
   // save to db

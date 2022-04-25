@@ -1,183 +1,186 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useRef } from "react";
 
 import gameUtils from "./gameUtils";
+import { generateValidMergedMap } from "./islandMapGenerator";
 
 // components
-import Timer from "./Timer";
-import Tile from "./Tile";
-import GameOverBox from "./GameOverBox";
+import Logo from "../Logo";
+import GamemodeCarousel from "./GamemodeCarousel";
+import HighscoresApp from "../Highscore";
+import GameBoard from "./GameBoard";
+// import TutorialCarousel from "./TutorialCarousel";
 
-// data fetching functions
-const postHighscore = async (time, playerName) => {
-  const res = await axios.post("http://localhost:3001/api/highscores", {
-    time,
-    playerName: playerName.trim(),
-  });
+const generateBoard = async ({ w, h, numBombs, nIslands, clusterSpread }) => {
+  // generates a new board
+  let tempBoard;
 
-  return res.data;
+  if (nIslands > 0) {
+    // generate map with islands
+    const tempMap = await generateValidMergedMap(w, h, nIslands, clusterSpread);
+    // populate map with bombs
+    tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
+  } else {
+    // generates map without islands
+    tempBoard = gameUtils.populateBoard(w, h, numBombs);
+  }
+  return tempBoard;
 };
 
-function Game() {
-  // states, should use useReducer
-  const [board, setBoard] = useState(gameUtils.populateBoard(10, 10, 10));
-  const [gameStarted, setGameStarted] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [gameTime, setGameTime] = useState(0);
-  const [intervalId, setIntervalId] = useState();
-  const [win, setWin] = useState(false);
-  const [nRevealed, setNRevealed] = useState(0);
-  const [isSendingHighscore, setIsSendingHighscore] = useState(false);
-
-  const countRevealed = (boardToCount) => {
-    const revealed = boardToCount.filter((t) => t.revealed).length;
-    return revealed;
-  };
-
-  const revealAll = () => {
-    const revealedBoard = board.map((t) => ({ ...t, revealed: true }));
-    return revealedBoard;
-  };
-
-  const flagAllBombs = (currentBoard) => {
-    const flaggedBoard = currentBoard.map((t) =>
-      t.bomb ? { ...t, flag: true } : t
-    );
-    return flaggedBoard;
-  };
-
-  const restartGame = () => {
-    setBoard(gameUtils.populateBoard(10, 10, 10));
-    setGameStarted(false);
-    setGameOver(false);
-    setGameTime(0);
-    setNRevealed(0);
-    clearInterval(intervalId);
-    setWin(false);
-  };
-
-  const startGame = () => {
-    setGameStarted(true);
-    const gameInterval = setInterval(() => {
-      setGameTime((prev) => prev + 10);
-    }, 10);
-    setIntervalId(gameInterval);
-  };
-
-  // event handlers
-  const handlePlayerNameChange = ({ target }) => {
-    // setPlayerName(target.value);
-  };
-
-  const handleSendHighscore = async ({ playerName }) => {
-    setIsSendingHighscore(true); // trigger loading animation
-
-    const postedHighscore = await postHighscore(gameTime, playerName);
-    console.log("posted highscore", postedHighscore);
-
-    setIsSendingHighscore(false); // untrigger loading animation
-  };
-
-  const handleClick = (tile) => {
-    // dont handle clicks if the game is over
-    if (gameOver) {
-      return null;
-    }
-
-    // start game if not already started
-    if (!gameStarted) {
-      // never start on bomb
-      if (tile.bomb) {
-        console.log("boom");
-        // repopulate board
-        restartGame();
-        return;
-      }
-      console.log("starting game");
-      startGame();
-    }
-
-    // if bomb is clicked setGameOver
-    if (tile.bomb) {
-      setGameOver(true);
-      // reveal all
-      setBoard(revealAll());
-      clearInterval(intervalId);
-      return null;
-    }
-
-    const copiedBoard = [...board];
-    let tilesToReveal = [];
-
-    tilesToReveal.push(tile.id);
-
-    if (tile.count === 0) {
-      tilesToReveal = gameUtils.startFloodFill(tile, board, tilesToReveal);
-    }
-
-    const updatedBoard = copiedBoard.map((t) =>
-      tilesToReveal.includes(t.id) ? { ...t, revealed: true } : t
-    );
-
-    const sortedUpdatedBoard = updatedBoard.sort((a, b) => a.id - b.id);
-    const revealed = countRevealed(sortedUpdatedBoard);
-
-    if (revealed === 90) {
-      console.log("win");
-      setWin(true);
-      setGameOver(true);
-      setBoard(flagAllBombs(sortedUpdatedBoard));
-      clearInterval(intervalId);
-    }
-
-    setBoard(sortedUpdatedBoard);
-    setNRevealed(revealed);
-  };
-
-  return (
-    <div
-      className="
-            w-screen h-max 
-            sm:h-full 
-            lg:w-full
-            flex flex-col justify-start items-center"
-    >
-      <div className="mt-2 mb-2 text-2xl text-slate-700 font-bold">
-        <Timer time={gameTime} />
-      </div>
-      <div className=" text-2xl text-slate-700 font-bold">
-        {!gameOver
-          ? `Tiles left to clear: ${90 - nRevealed}`
-          : win
-          ? "You win!"
-          : "Game over!"}
-      </div>
-      <div className="grid gap-0 grid-cols-10 grid-rows-10 grid-flow-row">
-        {board.map((tile, idx) => (
-          <Tile
-            key={idx}
-            tile={tile}
-            onClick={() => handleClick(tile)}
-            board={board}
-          />
-        ))}
-      </div>
-      {gameOver && (
-        <GameOverBox
-          gameTime={gameTime}
-          win={win}
-          handlePlayerNameChange={handlePlayerNameChange}
-          handleSendHighscore={handleSendHighscore}
-          isSendingHighscore={isSendingHighscore}
-          handleRestartGame={restartGame}
-        />
-      )}
-      <div className="mt-2 text-base md:text-lg text-slate-700 font-thin text-center">
-        Click to reveal tile. Flags are for slow players, mark the mines in your
-        head!
-      </div>
-    </div>
+const mapGamemodes = async (gamemodes) => {
+  // generates maps for each gamemode asynchronously
+  const mappedGamemodes = await Promise.all(
+    gamemodes.map(async (gm) => {
+      const newBoard = await generateBoard(gm);
+      const mapped = { ...gm, board: newBoard };
+      return mapped;
+    })
   );
-}
+  return mappedGamemodes;
+};
 
-export default Game;
+const regenerateSingleMappedGamemode = async (mappedGamemodes, id) => {
+  // generates one new board by id
+  const oldMappedGamemode = mappedGamemodes.find((gm) => gm.id === id);
+  const newBoard = await generateBoard(oldMappedGamemode);
+  const newMappedGamemode = { ...oldMappedGamemode, board: newBoard };
+  const newMappedGamemodes = [
+    ...mappedGamemodes.filter((gm) => gm.id !== id),
+    newMappedGamemode,
+  ];
+
+  return newMappedGamemodes.sort((a, b) => a.id - b.id);
+};
+
+const GameApp = ({ name, gamemodes }) => {
+  // states
+  const [mappedGamemodes, setMappedGamemodes] = useState(null);
+  const [currentGamemodeId, setCurrentGamemodeId] = useState(0);
+  const [currentGamemodeObject, setCurrentGamemodeObject] = useState(null);
+
+  const [showGamemodeCarousel, setShowGamemodeCarousel] = useState(false);
+  // const [showTutorial, setShowTutorial] = useState(false);
+
+  // still necessary to force re-render
+  const [randomKey, setRandomKey] = useState(
+    Math.floor(Math.random() * 100000)
+  );
+
+  // refs
+  const highscoresRef = useRef();
+
+  useEffect(() => {
+    // generates initial maps for gamemodes
+    const start = async () => {
+      // generates maps for gamemodes
+      const mapped = await mapGamemodes(gamemodes);
+
+      // get ref to current gamemode
+      const current = mapped.find((gm) => gm.id === currentGamemodeId);
+
+      // states
+      setMappedGamemodes(mapped);
+      setCurrentGamemodeObject(current);
+    };
+
+    start();
+
+    // why if I only want on mount???
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // get gamemode objet by id
+  const getGamemodeObject = (id) => {
+    return mappedGamemodes.find((gm) => gm.id === id);
+  };
+
+  /**
+   * Eventhandler for selecting gamemode by id
+   * Also creates a new map for gamemode selection
+   * @param {number} id
+   */
+  const handleSelectGamemode = async (id) => {
+    const current = getGamemodeObject(id);
+    // generate a new map for the selected gamemode
+    const newMappedGamemodes = await regenerateSingleMappedGamemode(
+      mappedGamemodes,
+      id
+    );
+    // update states
+    setCurrentGamemodeId(id);
+    setCurrentGamemodeObject(current);
+    setMappedGamemodes(newMappedGamemodes);
+    // update highscore filtering to match the selected gamemode
+    highscoresRef.current.setMapFilter(current.name);
+    // closes carousel
+    setShowGamemodeCarousel(false);
+    setRandomKey(Math.floor(Math.random() * 100000)); // forces update, why i dont know, but it is needed
+  };
+
+  // toggles gamemode carousel show state
+  const handleToggleGamemodeCarousel = () => {
+    setShowGamemodeCarousel(!showGamemodeCarousel);
+  };
+
+  // calls highscoreApp refetch method
+  const handleRefetchHighscores = () => {
+    highscoresRef.current.refetchHighscores();
+  };
+
+  // props
+  const gameBoardProps = {
+    gamemodeObject: currentGamemodeObject,
+    //handleRefetchHighscore,
+    gamemodes,
+    key: randomKey,
+    showGamemodeCarousel,
+    handleToggleGamemodeCarousel,
+    handleRefetchHighscores,
+  };
+
+  const gamemodeCarouselProps = {
+    name,
+    mappedGamemodes,
+    handleSelectGamemode,
+    handleToggleGamemodeCarousel,
+    showGamemodeCarousel,
+  };
+
+  // render
+  return (
+    currentGamemodeObject && (
+      <div className="game-app-container">
+        <GameBoard {...gameBoardProps}>
+          {showGamemodeCarousel && (
+            <GamemodeCarousel {...gamemodeCarouselProps} />
+          )}
+          {/* {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />} */}
+        </GameBoard>
+        <div className="game-info-container">
+          <Logo variant={"logo-large"} />
+
+          <div className="lg:ml-3">
+            <div className="game-text-container">
+              Click to reveal tile. Flags are for slow players, try to mark the
+              mines in your head. Place lighthouses on shoreline to safely
+              reveal adjacent water tiles.
+              <a
+                className="game-text-link"
+                href="https://minesweepergame.com/strategy.php"
+                target="_blank"
+                rel="noreferrer"
+                data-tip="Show tutorial"
+                data-for="checkboxInfo"
+              >
+                Learn more
+              </a>
+            </div>
+
+            <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
+          </div>
+        </div>
+      </div>
+    )
+  );
+};
+
+export default GameApp;

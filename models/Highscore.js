@@ -9,6 +9,13 @@ const highscoreSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  gameMode: {
+    type: String,
+  },
+  timestamp: {
+    type: Number,
+    required: true,
+  },
 });
 
 highscoreSchema.set("toJSON", {
