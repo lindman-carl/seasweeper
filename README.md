@@ -1,5 +1,7 @@
 # Sea Sweeper
 
+[Sea Sweeper live demo](https://www.seasweeper.herokuapp.com)
+
 A modern take on the classic Minesweeper with island generation.
 
 ## New gameplay mechanics
