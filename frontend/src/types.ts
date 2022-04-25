@@ -19,4 +19,7 @@ export type Gamemode = {
   nIslands: number;
   clusterSpread: number;
   id: number;
+  board?: any;
 };
+
+export type TileType = {};

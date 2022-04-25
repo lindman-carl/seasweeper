@@ -1,16 +1,29 @@
+import React from "react";
+
+// types
+import { Gamemode, TileType } from "../../types";
+
 // components
 import TileCarousel from "./TileCarousel";
 
+type Props = {
+  mappedGamemodes: Gamemode[];
+  currentIndex: number;
+};
+
 // render game board in carousel format
-const CarouselBoard = ({ mappedGamemodes, currentIndex }) => {
-  const renderBoard = (board) => {
+const CarouselBoard = ({ mappedGamemodes, currentIndex }: Props) => {
+  const renderBoard = (board: any) => {
     const rows = [];
 
     // map each row with tile objects
     for (let y = 0; y < board.length; y++) {
-      const row = board.filter((t) => t.y === y).sort((a, b) => a.x - b.x);
-      const mappedRow = row.map((tile, idx) => (
-        <TileCarousel key={idx} tile={tile} board={board} />
+      const row = board
+        .filter((tile: any) => tile.y === y)
+        .sort((a: any, z: any) => a.x - z.x);
+
+      const mappedRow = row.map((tile: TileType, idx: number) => (
+        <TileCarousel key={idx} tile={tile} />
       ));
       rows.push(mappedRow);
     }
@@ -25,9 +38,10 @@ const CarouselBoard = ({ mappedGamemodes, currentIndex }) => {
   };
 
   // render board by index
-  const renderCurrentBoard = (currentIndex) => {
-    const board = mappedGamemodes.find((gm) => gm.id === currentIndex).board;
-    return renderBoard(board);
+  const renderCurrentBoard = (currentIndex: number) => {
+    const currentBoard = mappedGamemodes[currentIndex].board;
+
+    return renderBoard(currentBoard);
   };
 
   // render board

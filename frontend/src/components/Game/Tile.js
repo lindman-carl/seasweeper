@@ -1,6 +1,7 @@
 import React from "react";
+
+// icons
 import { IconContext } from "react-icons";
-// import { BsFlagFill } from "react-icons/bs";
 import { FaBomb } from "react-icons/fa";
 import { SiLighthouse } from "react-icons/si";
 import { GiBuoy } from "react-icons/gi";

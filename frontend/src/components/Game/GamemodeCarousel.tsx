@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 
+// types
+import { Gamemode } from "../../types";
+
+// components
+import CarouselBoard from "./CarouselBoard";
+
 // icons
 import {
   MdArrowForwardIos,
@@ -7,20 +13,24 @@ import {
   MdOutlineClose,
 } from "react-icons/md";
 
-// components
-import CarouselBoard from "./CarouselBoard";
+type Props = {
+  name: string;
+  handleSelectGamemode: (index: number) => void;
+  handleToggleGamemodeCarousel: () => void;
+  mappedGamemodes: Gamemode[];
+};
 
 const GamemodeCarousel = ({
   name,
   handleSelectGamemode,
   mappedGamemodes,
   handleToggleGamemodeCarousel,
-}) => {
+}: Props) => {
   const sortedGamemodes = [...mappedGamemodes].sort((a, z) => a.id - z.id);
   const startIndex = sortedGamemodes.findIndex((gm) => gm.name === name);
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
 
-  const handleCarouselNavigationClick = (inc) => {
+  const handleCarouselNavigationClick = (inc: number) => {
     // handles click right and left navigation buttons
     const newIndex = currentIndex + inc;
 
