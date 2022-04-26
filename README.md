@@ -2,15 +2,16 @@
 
 [Sea Sweeper live demo](https://seasweeper.herokuapp.com)
 
-A modern take on the classic Minesweeper with island generation.
+a modern take on the classic Minesweeper with island generation.
 
 ## New gameplay mechanics
 
-- Randomly generated maps
+- Randomly generated island maps
 - Lighthouses
 
 ## Technologies used
 
+- typescript
 - javascript
 
 ### MERN Stack
@@ -32,4 +33,4 @@ A modern take on the classic Minesweeper with island generation.
 
 ### Other
 
-- .webp
+- tailwindcss
