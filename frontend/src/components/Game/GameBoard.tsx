@@ -85,7 +85,6 @@ const GameBoard = ({
     );
     const tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
     const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;
-    console.log("countWaterTiles", countWaterTiles);
 
     // set states
     setCurrentBoard(tempBoard);
@@ -140,10 +139,6 @@ const GameBoard = ({
   };
 
   useEffect(() => {
-    // logging
-    console.log("starting", name);
-    console.log(board);
-
     // clear interval on unmount
     return () => {
       clearInterval(intervalId);
@@ -155,8 +150,6 @@ const GameBoard = ({
 
   // restart game
   const restartGame = async () => {
-    console.log("restartGame");
-
     // resets game states
     setGameStarted(false);
     setGameOver(false);
@@ -171,7 +164,6 @@ const GameBoard = ({
 
   // start game
   const startGame = () => {
-    console.log("startGame");
     setNumRevealed(0);
     setGameStarted(true);
 
@@ -236,7 +228,6 @@ const GameBoard = ({
 
     // win
     if (revealed >= numWaterTiles - numBombs) {
-      console.log("win");
       setWin(true);
       setGameOver(true);
       clearInterval(intervalId);
@@ -317,7 +308,6 @@ const GameBoard = ({
     if (lighthouseMode) {
       // check if on land
       if (tile.type === 1 && availableLighthouses > 0) {
-        console.log("placing lighthouse");
         // set lighthouse
         // filters and map ids of the tiles directly surrounding the lighthouse,
         // max 8 ignore self
@@ -333,8 +323,6 @@ const GameBoard = ({
           )
           .map((t) => t.id);
 
-        console.log("lit tiles", litTiles);
-
         // maps lighthouse to tile
         const newMap = currentBoard.map((t) =>
           t.id === tile.id ? { ...t, lighthouse: true } : t
@@ -343,8 +331,6 @@ const GameBoard = ({
         const litMap = newMap.map((t) =>
           litTiles.includes(t.id) ? { ...t, revealed: true, lit: true } : t
         );
-
-        console.log("lit map", litMap);
 
         // decrement available lighthouses
         setAvailableLighthouses((prev) => prev - 1);
