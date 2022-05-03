@@ -1,3 +1,7 @@
+export type GameState = {
+  currentGamemode: Gamemode;
+};
+
 export type HighscoreEntry = {
   playerName: string;
   time: number;
