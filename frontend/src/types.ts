@@ -1,5 +1,19 @@
 export type GameState = {
+  gamemodes: Gamemode[];
   currentGamemode: Gamemode;
+  currentGameBoard: Board;
+  mappedGamemodes?: any;
+  showGamemodeCarousel: boolean;
+  gameStarted: boolean;
+  gameOver: boolean;
+  gameWin: boolean;
+  gameTime: number;
+  lighthouseMode: boolean;
+  availableLighthouses: number;
+  markMode: boolean;
+  numMarkers: number;
+  numRevealed: number;
+  isSendingHighscore: boolean;
 };
 
 export type HighscoreEntry = {

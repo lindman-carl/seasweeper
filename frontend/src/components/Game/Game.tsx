@@ -6,12 +6,15 @@ import { generateValidMergedMap } from "./islandMapGenerator";
 
 // types
 import { Gamemode } from "../../types";
+import { GameStateActionType } from "../../hooks/gameStateContext";
 
 // components
-import Logo from "../Logo";
 import GamemodeCarousel from "./GamemodeCarousel";
 import HighscoresApp from "../Highscore";
 import GameBoard from "./GameBoard";
+import { useGameState } from "../../hooks/gameStateContext";
+import GameInfo from "./GameInfo";
+import GeneratingMapSpinner from "./GeneratingMapSpinner";
 // import TutorialCarousel from "./TutorialCarousel";
 
 const generateBoard = async ({
@@ -82,14 +85,13 @@ const GameApp = ({
   name: string;
   gamemodes: Gamemode[];
 }) => {
+  const { state, dispatch } = useGameState();
   // states
-  const [mappedGamemodes, setMappedGamemodes] = useState<any>();
-  const [currentGamemodeId, setCurrentGamemodeId] = useState<number>(0);
-  const [currentGamemodeObject, setCurrentGamemodeObject] = useState<any>();
+  // const [mappedGamemodes, setMappedGamemodes] = useState<any>();
+  // const [currentGamemodeObject, setCurrentGamemodeObject] = useState<any>();
 
-  const [showGamemodeCarousel, setShowGamemodeCarousel] =
-    useState<boolean>(false);
-  // const [showTutorial, setShowTutorial] = useState(false);
+  // const [showGamemodeCarousel, setShowGamemodeCarousel] =
+  //   useState<boolean>(false);
 
   // still necessary to force re-render
   const [randomKey, setRandomKey] = useState(
@@ -106,11 +108,17 @@ const GameApp = ({
       const mapped = await mapGamemodes(gamemodes);
 
       // get ref to current gamemode
-      const current = mapped.find((gm) => gm.id === currentGamemodeId);
+      const currentGamemode = mapped.find((gm) => gm.id === 0);
 
       // states
-      setMappedGamemodes(mapped);
-      setCurrentGamemodeObject(current);
+      dispatch({
+        type: GameStateActionType.SET_MAPPED_GAMEMODES,
+        payload: mapped,
+      });
+      dispatch({
+        type: GameStateActionType.SET_CURRENT_GAMEMODE,
+        payload: currentGamemode,
+      });
     };
 
     start();
@@ -119,10 +127,10 @@ const GameApp = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // get gamemode objet by id
+  // get gamemode object by id
   const getGamemodeObject = (id: number) => {
-    if (mappedGamemodes) {
-      return mappedGamemodes.find((gm: Gamemode) => gm.id === id);
+    if (state.mappedGamemodes) {
+      return state.mappedGamemodes.find((gm: Gamemode) => gm.id === id);
     }
 
     // if failure we are doomed
@@ -134,27 +142,38 @@ const GameApp = ({
    * @param {number} id
    */
   const handleSelectGamemode = async (id: number) => {
-    const current = getGamemodeObject(id);
+    const currentGamemode = getGamemodeObject(id);
     // generate a new map for the selected gamemode
     const newMappedGamemodes = await regenerateSingleMappedGamemode(
-      mappedGamemodes,
+      state.mappedGamemodes,
       id
     );
     // update states
-    setCurrentGamemodeId(id);
-    setCurrentGamemodeObject(current);
-    setMappedGamemodes(newMappedGamemodes);
+    dispatch({
+      type: GameStateActionType.SET_CURRENT_GAMEMODE,
+      payload: currentGamemode,
+    });
+    dispatch({
+      type: GameStateActionType.SET_MAPPED_GAMEMODES,
+      payload: newMappedGamemodes,
+    });
     // update highscore filtering to match the selected gamemode
-    highscoresRef.current.setMapFilter(current.name);
+    highscoresRef.current.setMapFilter(currentGamemode.name);
 
     // closes carousel
-    setShowGamemodeCarousel(false);
+    dispatch({
+      type: GameStateActionType.SET_SHOW_GAMEMODE_CAROUSEL,
+      payload: false,
+    });
     setRandomKey(Math.floor(Math.random() * 100000)); // forces update, why i dont know, but it is needed
   };
 
   // toggles gamemode carousel show state
   const handleToggleGamemodeCarousel = () => {
-    setShowGamemodeCarousel(!showGamemodeCarousel);
+    dispatch({
+      type: GameStateActionType.SET_SHOW_GAMEMODE_CAROUSEL,
+      payload: !state.showGamemodeCarousel,
+    });
   };
 
   // calls highscoreApp refetch method
@@ -164,59 +183,33 @@ const GameApp = ({
 
   // props
   const gameBoardProps = {
-    gamemodeObject: currentGamemodeObject,
-    //handleRefetchHighscore,
-    gamemodes,
     key: randomKey,
-    showGamemodeCarousel,
     handleToggleGamemodeCarousel,
     handleRefetchHighscores,
   };
 
   const gamemodeCarouselProps = {
     name,
-    mappedGamemodes,
     handleSelectGamemode,
     handleToggleGamemodeCarousel,
-    showGamemodeCarousel,
   };
 
+  console.log(state.currentGamemode.board);
   // render
-  return currentGamemodeObject ? (
+  return state.currentGamemode.board !== undefined ? (
     <div className="game-app-container">
       <GameBoard {...gameBoardProps}>
-        <>
-          {showGamemodeCarousel && (
-            <GamemodeCarousel {...gamemodeCarouselProps} />
-          )}
-          {/* {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />} */}
-        </>
+        {state.showGamemodeCarousel && (
+          <GamemodeCarousel {...gamemodeCarouselProps} />
+        )}
       </GameBoard>
-      <div className="game-info-container">
-        <Logo variant={"logo-large"} />
-
-        <div className="lg:ml-3">
-          <div className="game-text-container">
-            Click to reveal tile. Flags are for slow players, try to mark the
-            mines in your head. Place lighthouses on shoreline to safely reveal
-            adjacent water tiles.
-            <a
-              className="game-text-link"
-              href="https://minesweepergame.com/strategy.php"
-              target="_blank"
-              rel="noreferrer"
-              data-tip="Show tutorial"
-              data-for="checkboxInfo"
-            >
-              Learn more
-            </a>
-          </div>
-
-          <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
-        </div>
-      </div>
+      <GameInfo>
+        <HighscoresApp gamemodes={state.gamemodes} ref={highscoresRef} />
+      </GameInfo>
     </div>
-  ) : null;
+  ) : (
+    <GeneratingMapSpinner />
+  );
 };
 
 export default GameApp;

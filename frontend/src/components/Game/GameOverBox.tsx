@@ -9,6 +9,9 @@ import { ClipLoader } from "react-spinners";
 import SendHighscoreForm from "./SendHighscoreForm";
 import GameOverBoxButton from "./GameOverBoxButton";
 
+// hooks
+import { useGameState } from "../../hooks/gameStateContext";
+
 type FormResponseProps = {
   isSendingHighscore: boolean;
 };
@@ -28,10 +31,7 @@ const FormResponse = ({ isSendingHighscore }: FormResponseProps) => (
 );
 
 type GameOverBoxProps = {
-  gameTime: number;
-  win: boolean;
   newAvailable: boolean;
-  isSendingHighscore: boolean;
   handleSendHighscore: (data: string) => void;
   handleNewGame: () => void;
   handleRetry: () => void;
@@ -39,15 +39,14 @@ type GameOverBoxProps = {
 };
 
 const GameOverBox = ({
-  gameTime,
-  win,
   handleSendHighscore,
-  isSendingHighscore,
   handleNewGame,
   handleRetry,
   newAvailable,
   refetchHighscores,
 }: GameOverBoxProps) => {
+  // state
+  const { state } = useGameState();
   // react-hook-form
   const {
     register,
@@ -76,22 +75,22 @@ const GameOverBox = ({
         />
       </>
     ) : (
-      <FormResponse isSendingHighscore={isSendingHighscore} />
+      <FormResponse isSendingHighscore={state.isSendingHighscore} />
     );
 
   const displayForm = () =>
     // display submit form if win, else lose statement
-    win ? (
+    state.gameWin ? (
       <>
         <div className="gameoverbox-item gameoverbox-header">
-          {(gameTime / 1000).toFixed(2)}s
+          {(state.gameTime / 1000).toFixed(2)}s
         </div>
 
         {renderForm()}
       </>
     ) : (
       <div className="gameoverbox-item gameoverbox-header">
-        Failure achieved in {(gameTime / 1000).toFixed(2)}s
+        Failure achieved in {(state.gameTime / 1000).toFixed(2)}s
       </div>
     );
 

@@ -13,53 +13,39 @@ import Hud from "./Hud";
 import Tile from "./Tile";
 import GameOverBox from "./GameOverBox";
 import ScrollDownArrow from "./ScrollDownArrow";
-import GeneratingMapSpinner from "./GeneratingMapSpinner";
+
+// hooks
+import {
+  GameStateActionType,
+  useGameState,
+} from "../../hooks/gameStateContext";
 
 type Props = {
-  gamemodeObject: any;
   handleToggleGamemodeCarousel: () => void;
   handleRefetchHighscores: () => void;
   children: JSX.Element | JSX.Element[];
 };
 
 const GameBoard = ({
-  gamemodeObject: {
-    board,
-    nLighthouses,
-    w,
-    h,
-    name,
-    nIslands,
-    clusterSpread,
-    numBombs,
-    showGamemodeCarousel,
-  },
   handleToggleGamemodeCarousel,
   handleRefetchHighscores,
   children,
 }: Props) => {
-  // map state
-  const [currentBoard, setCurrentBoard] = useState<TileType[]>(board);
-  const [numRevealed, setNumRevealed] = useState<number>(0);
-  const [numMarkers, setNumMarkers] = useState<number>(0);
+  const { state, dispatch } = useGameState();
+
+  // deconstruct gamemode
+  const { board, nLighthouses, w, h, name, nIslands, clusterSpread, numBombs } =
+    state.currentGamemode;
+  console.log("this", board);
+
+  // calculates number of water tiles
   const [numWaterTiles, setNumWaterTiles] = useState<number>(
     board?.filter ? board.filter((t: TileType) => t.type !== 1).length : 0
-  ); // calculates number of water tiles
-
-  // game state
-  const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [gameOver, setGameOver] = useState<boolean>(false);
-  const [win, setWin] = useState<boolean>(false);
-  const [gameTime, setGameTime] = useState<number>(0);
-
-  const [lighthouseMode, setLighthouseMode] = useState<boolean>(false);
-  const [markMode, setMarkMode] = useState<boolean>(false);
-  const [availableLighthouses, setAvailableLighthouses] =
-    useState<number>(nLighthouses);
+  );
 
   // etc, states
   const [intervalId, setIntervalId] = useState<any>();
-  const [isSendingHighscore, setIsSendingHighscore] = useState<boolean>(false);
+  // const [isSendingHighscore, setIsSendingHighscore] = useState<boolean>(false);
 
   const refreshRate = 100; // sets timer accuracy
 
@@ -87,7 +73,10 @@ const GameBoard = ({
     const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;
 
     // set states
-    setCurrentBoard(tempBoard);
+    dispatch({
+      type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+      payload: tempBoard,
+    });
     setNumWaterTiles(countWaterTiles);
   };
 
@@ -96,7 +85,10 @@ const GameBoard = ({
     const countWaterTiles = w * h;
 
     // states
-    setCurrentBoard(blankMap);
+    dispatch({
+      type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+      payload: blankMap,
+    });
     setNumWaterTiles(countWaterTiles);
   };
 
@@ -121,7 +113,7 @@ const GameBoard = ({
       return;
     }
     // remove all bombs from board
-    const depopulatedBoard = depopulateBoard(currentBoard);
+    const depopulatedBoard = depopulateBoard(state.currentGameBoard);
     // generate new bombs to board
     const repopulatedBoard = gameUtils.populateBombs({
       board: depopulatedBoard,
@@ -134,11 +126,18 @@ const GameBoard = ({
     // hide/unreveal all tiles
     const unrevealedBoard = unrevealAll(repopulatedBoard);
     // states
-    setCurrentBoard(unrevealedBoard);
+    dispatch({
+      type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+      payload: unrevealedBoard,
+    });
     setNumWaterTiles(countWaterTiles);
   };
 
   useEffect(() => {
+    dispatch({
+      type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+      payload: board,
+    });
     // clear interval on unmount
     return () => {
       clearInterval(intervalId);
@@ -151,12 +150,15 @@ const GameBoard = ({
   // restart game
   const restartGame = async () => {
     // resets game states
-    setGameStarted(false);
-    setGameOver(false);
-    setWin(false);
-    setGameTime(0);
-    setNumMarkers(0);
-    setAvailableLighthouses(nLighthouses);
+    dispatch({ type: GameStateActionType.SET_GAME_STARTED, payload: false });
+    dispatch({ type: GameStateActionType.SET_GAME_OVER, payload: false });
+    dispatch({ type: GameStateActionType.SET_GAME_WIN, payload: false });
+    dispatch({ type: GameStateActionType.SET_GAME_TIME, payload: 0 });
+    dispatch({ type: GameStateActionType.SET_NUM_MARKERS, payload: 0 });
+    dispatch({
+      type: GameStateActionType.SET_AVAILABLE_LIGHTHOUSES,
+      payload: nLighthouses,
+    });
 
     // clear timer
     clearInterval(intervalId);
@@ -164,18 +166,23 @@ const GameBoard = ({
 
   // start game
   const startGame = () => {
-    setNumRevealed(0);
-    setGameStarted(true);
+    // setNumRevealed(0);
+    dispatch({ type: GameStateActionType.SET_NUM_REVEALED, payload: 0 });
+    // setGameStarted(true);
+    dispatch({ type: GameStateActionType.SET_GAME_STARTED, payload: true });
 
     // set timer
     clearInterval(intervalId); // clear timer first
 
     // get timestamp for calculating game time
-    const tempTime = Date.now();
+    const startTime = Date.now();
 
     // set game timer interval
     const gameInterval = setInterval(() => {
-      setGameTime(Date.now() - tempTime);
+      dispatch({
+        type: GameStateActionType.SET_GAME_TIME,
+        payload: Date.now() - startTime,
+      });
     }, refreshRate);
 
     // store intervalId
@@ -207,7 +214,7 @@ const GameBoard = ({
   // reveals all water tiles on board
   const revealAll = () => {
     // map { revealed: true } to all water tiles
-    const revealedBoard = currentBoard.map((t) =>
+    const revealedBoard = state.currentGameBoard.map((t: TileType) =>
       t.type === 2 ? { ...t, revealed: true } : t
     );
     return revealedBoard;
@@ -224,25 +231,36 @@ const GameBoard = ({
   // check for win conditions on current board
   const checkWinConditions = (boardToCheck: TileType[]) => {
     const revealed = countRevealed(boardToCheck);
-    setNumRevealed(revealed);
+    // setNumRevealed(revealed);
+    dispatch({ type: GameStateActionType.SET_NUM_REVEALED, payload: revealed });
 
     // win
     if (revealed >= numWaterTiles - numBombs) {
-      setWin(true);
-      setGameOver(true);
+      // setWin(true);
+      dispatch({ type: GameStateActionType.SET_GAME_WIN, payload: true });
+      // setGameOver(true);
+      dispatch({ type: GameStateActionType.SET_GAME_OVER, payload: true });
       clearInterval(intervalId);
     }
   };
 
   // event handlers
   const handleSendHighscore = async ({ playerName }: any) => {
-    setIsSendingHighscore(true); // trigger loading animation
+    // trigger loading animation
+    dispatch({
+      type: GameStateActionType.SET_IS_SENDING_HIGHSCORE,
+      payload: true,
+    });
 
-    await postHighscore(gameTime, playerName, name);
+    await postHighscore(state.gameTime, playerName, name);
     // const postedHighscore = await postHighscore(gameTime, playerName, name);
     // console.log("posted highscore", postedHighscore);
 
-    setIsSendingHighscore(false); // untrigger loading animation
+    // untrigger loading animation
+    dispatch({
+      type: GameStateActionType.SET_IS_SENDING_HIGHSCORE,
+      payload: false,
+    });
 
     handleRefetchHighscores(); // refetch highscore list
   };
@@ -250,18 +268,34 @@ const GameBoard = ({
   // eventhandler for clicking lighthouse mode button
   const handleLighthouseMode = () => {
     // available lighthouses
-    if (availableLighthouses > 0) {
-      setLighthouseMode(!lighthouseMode);
+    if (state.availableLighthouses > 0) {
+      // setLighthouseMode(!lighthouseMode);
+      dispatch({
+        type: GameStateActionType.SET_LIGHTHOUSE_MODE,
+        payload: !state.lighthouseMode,
+      });
       // disable mark mode
-      setMarkMode(false);
+      // setMarkMode(false);
+      dispatch({
+        type: GameStateActionType.SET_MARK_MODE,
+        payload: false,
+      });
     }
   };
 
   // eventhandler for clicking mark mode button
   const handleMarkMode = () => {
-    setMarkMode(!markMode);
+    // setMarkMode(!markMode);
+    dispatch({
+      type: GameStateActionType.SET_MARK_MODE,
+      payload: !state.markMode,
+    });
     // disable lighthouse mode
-    setLighthouseMode(false);
+    // setLighthouseMode(false);
+    dispatch({
+      type: GameStateActionType.SET_LIGHTHOUSE_MODE,
+      payload: false,
+    });
   };
 
   /**
@@ -270,30 +304,38 @@ const GameBoard = ({
    */
   const handleClick = (tile: TileType) => {
     // dont handle clicks if the game is over
-    if (gameOver) {
+    if (state.gameOver) {
       clearInterval(intervalId);
       return null;
     }
 
     // ignore clicks if gamemode carousel is showing
-    if (showGamemodeCarousel) {
+    if (state.showGamemodeCarousel) {
       return null;
     }
 
     // ignore clicks if tile is land and it's not lighthouse mode
-    if (!lighthouseMode && tile.type === 1) {
+    if (!state.lighthouseMode && tile.type === 1) {
       return null;
     }
 
     // markMode
-    if (markMode) {
+    if (state.markMode) {
       // if water, toggle marked
       if (tile.type === 2) {
         if (!tile.revealed) {
           if (!tile.marked) {
-            setNumMarkers((prev) => prev + 1);
+            // setNumMarkers((prev) => prev + 1);
+            dispatch({
+              type: GameStateActionType.SET_NUM_MARKERS,
+              payload: state.numMarkers + 1,
+            });
           } else {
-            setNumMarkers((prev) => prev - 1);
+            // setNumMarkers((prev) => prev - 1);
+            dispatch({
+              type: GameStateActionType.SET_NUM_MARKERS,
+              payload: state.numMarkers - 1,
+            });
           }
         }
         tile.marked = !tile.marked;
@@ -305,15 +347,15 @@ const GameBoard = ({
     }
 
     // lighthouse mode
-    if (lighthouseMode) {
+    if (state.lighthouseMode) {
       // check if on land
-      if (tile.type === 1 && availableLighthouses > 0) {
+      if (tile.type === 1 && state.availableLighthouses > 0) {
         // set lighthouse
         // filters and map ids of the tiles directly surrounding the lighthouse,
         // max 8 ignore self
-        const litTiles = currentBoard
+        const litTiles = state.currentGameBoard
           .filter(
-            (t) =>
+            (t: TileType) =>
               t.x >= tile.x - 1 &&
               t.x <= tile.x + 1 &&
               t.y >= tile.y - 1 &&
@@ -321,43 +363,63 @@ const GameBoard = ({
               t.id !== tile.id &&
               t
           )
-          .map((t) => t.id);
+          .map((t: TileType) => t.id);
 
         // maps lighthouse to tile
-        const newMap = currentBoard.map((t) =>
+        const newMap = state.currentGameBoard.map((t: TileType) =>
           t.id === tile.id ? { ...t, lighthouse: true } : t
         );
         // maps lit tiles
-        const litMap = newMap.map((t) =>
+        const litMap = newMap.map((t: TileType) =>
           litTiles.includes(t.id) ? { ...t, revealed: true, lit: true } : t
         );
 
         // decrement available lighthouses
-        setAvailableLighthouses((prev) => prev - 1);
+        // setAvailableLighthouses((prev) => prev - 1);
+        dispatch({
+          type: GameStateActionType.SET_AVAILABLE_LIGHTHOUSES,
+          payload: state.availableLighthouses - 1,
+        });
 
         // toggles lighthouse mode if no more lighthouses are available
-        if (availableLighthouses < 1) {
-          setLighthouseMode(false);
+        if (state.availableLighthouses < 1) {
+          // setLighthouseMode(false);
+          dispatch({
+            type: GameStateActionType.SET_LIGHTHOUSE_MODE,
+            payload: false,
+          });
         }
 
         // check if the placed lighthouse has won the game
         checkWinConditions(litMap);
 
         // update board
-        setCurrentBoard(litMap);
-        setNumRevealed(countRevealed(litMap)); // update number of revealed tile
+        dispatch({
+          type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+          payload: litMap,
+        });
+        // update number of revealed tile
+        // setNumRevealed(countRevealed(litMap));
+        dispatch({
+          type: GameStateActionType.SET_NUM_REVEALED,
+          payload: countRevealed(litMap),
+        });
 
         return null;
       } else {
         // toggle lighthouseMode
-        setLighthouseMode(false);
+        // setLighthouseMode(false);
+        dispatch({
+          type: GameStateActionType.SET_LIGHTHOUSE_MODE,
+          payload: false,
+        });
       }
     } else if (tile.type === 1) {
       return null;
     }
 
     // start game if not already started
-    if (!gameStarted) {
+    if (!state.gameStarted) {
       // never start on bomb
       if (tile.bomb) {
         // repopulate board
@@ -371,16 +433,20 @@ const GameBoard = ({
     }
 
     // if bomb is clicked setGameOver
-    if (tile.bomb && gameStarted) {
-      setGameOver(true);
+    if (tile.bomb && state.gameStarted) {
+      // setGameOver(true);
+      dispatch({ type: GameStateActionType.SET_GAME_OVER, payload: true });
       // reveal all
-      setCurrentBoard(revealAll());
+      dispatch({
+        type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+        payload: revealAll(),
+      });
       clearInterval(intervalId);
       return null;
     }
 
     // handle reveal and floodfill
-    const copiedBoard = [...currentBoard];
+    const copiedBoard = [...state.currentGameBoard];
     // use array to reveal all tiles at the same time
     let tilesToReveal: number[] = [];
 
@@ -391,7 +457,7 @@ const GameBoard = ({
       // start flood fill algo if the tile has no neighbouring bombs
       tilesToReveal = gameUtils.startFloodFill(
         tile,
-        currentBoard,
+        state.currentGameBoard,
         tilesToReveal
       );
     }
@@ -408,24 +474,26 @@ const GameBoard = ({
     checkWinConditions(sortedUpdatedBoard);
 
     // update board
-    setCurrentBoard(sortedUpdatedBoard);
-
-    // rerender map after click
-    // renderMap();
+    dispatch({
+      type: GameStateActionType.SET_CURRENT_GAMEBOARD,
+      payload: sortedUpdatedBoard,
+    });
   };
 
   /**
    *
-   * @returns map rendered as flex box
+   * @returns map rendered with flex box
    */
   const renderMap = () => {
+    console.log("render", state.currentGameBoard);
+    if (state.currentGameBoard === undefined) return null;
     const rows = [];
     for (let y = 0; y < h; y++) {
       // iterate y axis
-      const row = currentBoard
-        .filter((t) => t.y === y)
-        .sort((a, b) => a.x - b.x);
-      const mappedRow = row.map((tile, idx) => (
+      const row = state.currentGameBoard
+        .filter((t: TileType) => t.y === y)
+        .sort((a: TileType, b: TileType) => a.x - b.x);
+      const mappedRow = row.map((tile: TileType, idx: number) => (
         <Tile key={idx} tile={tile} onClick={() => handleClick(tile)} />
       ));
       rows.push(mappedRow);
@@ -442,49 +510,34 @@ const GameBoard = ({
   // props
   const hudProps = {
     numBombs,
-    numMarkers,
     numWaterTiles,
-    numRevealed,
-    gameStarted,
-    gameOver,
-    gameTime,
-    win,
-    lighthouseMode,
-    availableLighthouses,
     handleLighthouseMode,
-    markMode,
     handleMarkMode,
-    showGamemodeCarousel,
     handleToggleGamemodeCarousel,
   };
 
   const gameOverBoxProps = {
-    gameTime,
-    win,
     handleSendHighscore,
-    isSendingHighscore,
     handleNewGame: newGame,
     handleRetry: retryGame,
     newAvailable: nIslands > 0,
     refetchHighscores: handleRefetchHighscores,
   };
 
-  // render
-  if (currentBoard) {
-    // render game if finished generating maps
-    return (
-      <div className="game-board-container">
-        {children}
-        <Hud {...hudProps} />
-        {currentBoard && <div className="flex flex-col ">{renderMap()}</div>}
-        {gameOver && <GameOverBox {...gameOverBoxProps} />}
-        <ScrollDownArrow />
-      </div>
-    );
-  }
+  // render game if finished generating maps
+  return (
+    <div className="game-board-container">
+      {children}
+      <Hud {...hudProps} />
 
-  // render loading spinner while generating maps
-  return <GeneratingMapSpinner />;
+      <div className="flex flex-col ">
+        {state.currentGameBoard ? renderMap() : "lol"}
+      </div>
+
+      {state.gameOver && <GameOverBox {...gameOverBoxProps} />}
+      <ScrollDownArrow />
+    </div>
+  );
 };
 
 export default GameBoard;

@@ -14,19 +14,12 @@ import { RiMapFill } from "react-icons/ri";
 import { GiBroom, GiBuoy, GiCompass } from "react-icons/gi";
 import { SiLighthouse } from "react-icons/si";
 
+// hooks
+import { useGameState } from "../../hooks/gameStateContext";
+
 type Props = {
   numBombs: number;
-  numMarkers: number;
   numWaterTiles: number;
-  numRevealed: number;
-  gameTime: number;
-  availableLighthouses: number;
-  gameOver: boolean;
-  gameStarted: boolean;
-  win: boolean;
-  lighthouseMode: boolean;
-  showGamemodeCarousel: boolean;
-  markMode: boolean;
   handleLighthouseMode: () => void;
   handleMarkMode: () => void;
   handleToggleGamemodeCarousel: () => void;
@@ -34,21 +27,12 @@ type Props = {
 
 const Hud = ({
   numBombs,
-  numMarkers,
   numWaterTiles,
-  numRevealed,
-  gameOver,
-  gameTime,
-  gameStarted,
-  win,
-  lighthouseMode,
-  availableLighthouses,
   handleLighthouseMode,
-  markMode,
   handleMarkMode,
-  showGamemodeCarousel,
   handleToggleGamemodeCarousel,
 }: Props) => {
+  const { state } = useGameState();
   const doubleIcon = () => {
     return (
       <div className="flex justify-center items-center">
@@ -62,10 +46,10 @@ const Hud = ({
     <div className="w-full flex flex-col items-center">
       <div className="w-full flex flex-row items-center justify-around">
         <div className="text-3xl text-sky-900 font-bold h-10 mt-2">
-          {gameStarted ? (
-            !gameOver ? (
-              <Timer time={gameTime} />
-            ) : win ? (
+          {state.gameStarted ? (
+            !state.gameOver ? (
+              <Timer time={state.gameTime} />
+            ) : state.gameWin ? (
               <div className="pt-2">You win!</div>
             ) : (
               <div className="pt-2">Game over!</div>
@@ -87,7 +71,7 @@ const Hud = ({
         <div className="">
           <IconCheckbox
             icon={doubleIcon()}
-            status={showGamemodeCarousel}
+            status={state.showGamemodeCarousel}
             onClick={handleToggleGamemodeCarousel}
             tooltip={"Select game mode"}
           />
@@ -103,14 +87,14 @@ const Hud = ({
           <div className="grow">
             <IconBadge
               icon={<GiBuoy size={28} className="mb-1" />}
-              value={numMarkers}
+              value={state.numMarkers}
               tooltip={"Number of markers placed in the sea"}
             />
           </div>
           <div className="ml-1 grow">
             <IconBadge
               icon={<BiSquare size={24} />}
-              value={numWaterTiles - numRevealed - numBombs}
+              value={numWaterTiles - state.numRevealed - numBombs}
               tooltip={"Number of sea tiles left to clear"}
             />
           </div>
@@ -119,8 +103,8 @@ const Hud = ({
           <div className="mr-1">
             <IconCheckbox
               icon={<SiLighthouse size={28} />}
-              status={lighthouseMode}
-              value={availableLighthouses}
+              status={state.lighthouseMode}
+              value={state.availableLighthouses}
               onClick={handleLighthouseMode}
               tooltip={"Toogle place lighthouse mode"}
             />
@@ -129,7 +113,7 @@ const Hud = ({
             <IconCheckbox
               icon={<GiBroom size={36} className="mr-1" />}
               alternateIcon={<GiBuoy size={36} />}
-              status={markMode}
+              status={state.markMode}
               onClick={handleMarkMode}
               tooltip={"Toggle between mark and sweep mode"}
             />

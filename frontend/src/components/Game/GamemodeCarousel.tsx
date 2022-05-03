@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-// types
-import { Gamemode } from "../../types";
-
 // components
 import CarouselBoard from "./CarouselBoard";
+
+// hooks
+import { useGameState } from "../../hooks/gameStateContext";
 
 // icons
 import {
@@ -17,17 +17,22 @@ type Props = {
   name: string;
   handleSelectGamemode: (index: number) => void;
   handleToggleGamemodeCarousel: () => void;
-  mappedGamemodes: Gamemode[];
 };
 
 const GamemodeCarousel = ({
   name,
   handleSelectGamemode,
-  mappedGamemodes,
   handleToggleGamemodeCarousel,
 }: Props) => {
-  const sortedGamemodes = [...mappedGamemodes].sort((a, z) => a.id - z.id);
+  // state
+  const { state } = useGameState();
+
+  const sortedGamemodes = [...state.mappedGamemodes].sort(
+    (a, z) => a.id - z.id
+  );
   const startIndex = sortedGamemodes.findIndex((gm) => gm.name === name);
+
+  // local state
   const [currentIndex, setCurrentIndex] = useState(startIndex ? startIndex : 0);
 
   const handleCarouselNavigationClick = (inc: number) => {
