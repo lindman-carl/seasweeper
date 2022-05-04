@@ -38,17 +38,12 @@ const GameBoard = ({
     state.currentGamemode;
   console.log("this", board);
 
-  // calculates number of water tiles
-  const [numWaterTiles, setNumWaterTiles] = useState<number>(
-    board?.filter ? board.filter((t: TileType) => t.type !== 1).length : 0
-  );
-
   // etc, states
   const [intervalId, setIntervalId] = useState<any>();
-  // const [isSendingHighscore, setIsSendingHighscore] = useState<boolean>(false);
 
   const refreshRate = 100; // sets timer accuracy
 
+  // game logic
   // generate a new map, for restarting
   const generateMap = () => {
     // call correct map generation
@@ -77,7 +72,10 @@ const GameBoard = ({
       type: GameStateActionType.SET_CURRENT_GAMEBOARD,
       payload: tempBoard,
     });
-    setNumWaterTiles(countWaterTiles);
+    dispatch({
+      type: GameStateActionType.SET_NUM_WATER_TILES,
+      payload: countWaterTiles,
+    });
   };
 
   const generateOpenseaMap = () => {
@@ -89,7 +87,10 @@ const GameBoard = ({
       type: GameStateActionType.SET_CURRENT_GAMEBOARD,
       payload: blankMap,
     });
-    setNumWaterTiles(countWaterTiles);
+    dispatch({
+      type: GameStateActionType.SET_NUM_WATER_TILES,
+      payload: countWaterTiles,
+    });
   };
 
   const depopulateBoard = (boardToDepopulate: TileType[]) => {
@@ -130,13 +131,26 @@ const GameBoard = ({
       type: GameStateActionType.SET_CURRENT_GAMEBOARD,
       payload: unrevealedBoard,
     });
-    setNumWaterTiles(countWaterTiles);
+    dispatch({
+      type: GameStateActionType.SET_NUM_WATER_TILES,
+      payload: countWaterTiles,
+    });
   };
 
   useEffect(() => {
+    // set up the game board
     dispatch({
       type: GameStateActionType.SET_CURRENT_GAMEBOARD,
       payload: board,
+    });
+
+    // water tiles count
+    const numWaterTiles = board?.filter
+      ? board.filter((t: TileType) => t.type !== 1).length
+      : 0;
+    dispatch({
+      type: GameStateActionType.SET_NUM_WATER_TILES,
+      payload: numWaterTiles,
     });
     // clear interval on unmount
     return () => {
@@ -235,7 +249,7 @@ const GameBoard = ({
     dispatch({ type: GameStateActionType.SET_NUM_REVEALED, payload: revealed });
 
     // win
-    if (revealed >= numWaterTiles - numBombs) {
+    if (revealed >= state.numWaterTiles - numBombs) {
       // setWin(true);
       dispatch({ type: GameStateActionType.SET_GAME_WIN, payload: true });
       // setGameOver(true);
@@ -509,8 +523,6 @@ const GameBoard = ({
 
   // props
   const hudProps = {
-    numBombs,
-    numWaterTiles,
     handleLighthouseMode,
     handleMarkMode,
     handleToggleGamemodeCarousel,

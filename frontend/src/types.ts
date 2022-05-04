@@ -13,6 +13,8 @@ export type GameState = {
   markMode: boolean;
   numMarkers: number;
   numRevealed: number;
+  numBombs: number;
+  numWaterTiles: number;
   isSendingHighscore: boolean;
 };
 

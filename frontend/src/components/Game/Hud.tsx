@@ -18,16 +18,12 @@ import { SiLighthouse } from "react-icons/si";
 import { useGameState } from "../../hooks/gameStateContext";
 
 type Props = {
-  numBombs: number;
-  numWaterTiles: number;
   handleLighthouseMode: () => void;
   handleMarkMode: () => void;
   handleToggleGamemodeCarousel: () => void;
 };
 
 const Hud = ({
-  numBombs,
-  numWaterTiles,
   handleLighthouseMode,
   handleMarkMode,
   handleToggleGamemodeCarousel,
@@ -80,7 +76,7 @@ const Hud = ({
           <div className="mr-1 grow">
             <IconBadge
               icon={<FaBomb size={22} className="mb-1" />}
-              value={numBombs}
+              value={state.numBombs}
               tooltip={"Number of bombs remaining in the sea"}
             />
           </div>
@@ -94,7 +90,7 @@ const Hud = ({
           <div className="ml-1 grow">
             <IconBadge
               icon={<BiSquare size={24} />}
-              value={numWaterTiles - state.numRevealed - numBombs}
+              value={state.numWaterTiles - state.numRevealed - state.numBombs}
               tooltip={"Number of sea tiles left to clear"}
             />
           </div>

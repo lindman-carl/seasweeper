@@ -18,6 +18,8 @@ export enum GameStateActionType {
   SET_IS_SENDING_HIGHSCORE = "SET_IS_SENDING_HIGHSCORE",
   SET_MAPPED_GAMEMODES = "SET_MAPPED_GAMEMODES",
   SET_CURRENT_GAMEMODE = "SET_CURRENT_GAMEMODE",
+  SET_NUM_BOMBS = "SET_NUM_BOMBS",
+  SET_NUM_WATER_TILES = "SET_NUM_WATER_TILES",
 }
 
 export type GameStateAction = {
@@ -107,6 +109,16 @@ const gameStateReducer = (state: any, action: GameStateAction) => {
         ...state,
         currentGamemode: action.payload,
       };
+    case GameStateActionType.SET_NUM_BOMBS:
+      return {
+        ...state,
+        numBombs: action.payload,
+      };
+    case GameStateActionType.SET_NUM_WATER_TILES:
+      return {
+        ...state,
+        numWaterTiles: action.payload,
+      };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -129,6 +141,8 @@ const initialGamesState: GameState = {
   markMode: false,
   numMarkers: 0,
   numRevealed: 0,
+  numBombs: 0,
+  numWaterTiles: 0,
   isSendingHighscore: false,
 };
 
