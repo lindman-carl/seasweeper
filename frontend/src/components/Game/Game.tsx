@@ -13,6 +13,7 @@ import GamemodeCarousel from "./GamemodeCarousel";
 import HighscoresApp from "../Highscore";
 import GameBoard from "./GameBoard";
 import SignatureFooter from "../SignatureFooter";
+import { MdOpenInNew } from "react-icons/md";
 // import TutorialCarousel from "./TutorialCarousel";
 
 const generateBoard = async ({
@@ -199,7 +200,7 @@ const GameApp = ({
         <div className="lg:ml-3">
           <div className="game-text-container">
             Click to reveal tile. Flags are for slow players, try to mark the
-            mines in your head. Place lighthouses on shoreline to safely reveal
+            mines in your head. Place lighthouses on land to safely reveal
             adjacent water tiles.
             <a
               className="game-text-link"
@@ -209,7 +210,8 @@ const GameApp = ({
               data-tip="Show tutorial"
               data-for="checkboxInfo"
             >
-              Learn more
+              How to play
+              <MdOpenInNew />
             </a>
           </div>
 

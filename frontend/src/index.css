@@ -36,7 +36,9 @@
   .game-text-link {
     @apply mx-2 
     text-sky-900 font-semibold 
-    underline decoration-2 underline-offset-auto decoration-blue-300;
+    underline decoration-2 underline-offset-auto decoration-blue-300
+    inline-flex items-center gap-1
+    ;
   }
 
   .gameoverbox-container {
