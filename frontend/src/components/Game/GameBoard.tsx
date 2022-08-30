@@ -51,6 +51,7 @@ const GameBoard = ({
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [win, setWin] = useState<boolean>(false);
   const [gameTime, setGameTime] = useState<number>(0);
+  const [startUnixTimestamp, setStartUnixTimestamp] = useState<number>(0);
 
   const [lighthouseMode, setLighthouseMode] = useState<boolean>(false);
   const [markMode, setMarkMode] = useState<boolean>(false);
@@ -148,8 +149,15 @@ const GameBoard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // restart game
-  const restartGame = async () => {
+  const winGame = () => {
+    setWin(true);
+    setGameTime(Date.now() - startUnixTimestamp);
+    setGameOver(true);
+    clearInterval(intervalId);
+  };
+
+  // reset game
+  const resetGame = async () => {
     // resets game states
     setGameStarted(false);
     setGameOver(false);
@@ -178,6 +186,9 @@ const GameBoard = ({
       setGameTime(Date.now() - tempTime);
     }, refreshRate);
 
+    // unix timestamp
+    setStartUnixTimestamp(Date.now());
+
     // store intervalId
     setIntervalId(gameInterval);
   };
@@ -185,13 +196,13 @@ const GameBoard = ({
   // generate new map and restart game
   const newGame = async () => {
     await generateMap();
-    restartGame();
+    resetGame();
   };
 
   // repopulate board and restart game
   const retryGame = async () => {
     await repopulateBoard();
-    restartGame();
+    resetGame();
   };
 
   // counts number of revealed
@@ -228,9 +239,8 @@ const GameBoard = ({
 
     // win
     if (revealed >= numWaterTiles - numBombs) {
-      setWin(true);
-      setGameOver(true);
-      clearInterval(intervalId);
+      // setWin(true);
+      winGame();
     }
   };
 
@@ -373,6 +383,7 @@ const GameBoard = ({
     // if bomb is clicked setGameOver
     if (tile.bomb && gameStarted) {
       setGameOver(true);
+      setGameTime(Date.now() - startUnixTimestamp);
       // reveal all
       setCurrentBoard(revealAll());
       clearInterval(intervalId);

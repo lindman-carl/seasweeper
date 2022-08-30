@@ -84,14 +84,14 @@ const GameOverBox = ({
     win ? (
       <>
         <div className="gameoverbox-item gameoverbox-header">
-          {(gameTime / 1000).toFixed(2)}s
+          {(gameTime / 1000).toPrecision()}s
         </div>
 
         {renderForm()}
       </>
     ) : (
       <div className="gameoverbox-item gameoverbox-header">
-        Failure achieved in {(gameTime / 1000).toFixed(2)}s
+        Failure achieved in {(gameTime / 1000).toPrecision()}s
       </div>
     );
 
