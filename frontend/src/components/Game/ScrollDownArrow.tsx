@@ -2,6 +2,7 @@ import React from "react";
 
 // icons
 import { RiArrowDownSLine } from "react-icons/ri";
+import ReactTooltip from "react-tooltip";
 
 const ScrollDownArrow = () => {
   const scrollToHighscoreList = () =>
@@ -22,9 +23,20 @@ const ScrollDownArrow = () => {
         cursor-pointer"
       onClick={scrollToHighscoreList}
     >
-      <div className="my-4 animate-pulse text-sky-700">
+      <div
+        className="my-4 animate-pulse text-sky-700"
+        data-for="down-arrow"
+        data-tip="Scroll down for highscorelist"
+      >
         <RiArrowDownSLine size={24} />
       </div>
+      <ReactTooltip
+        id="down-arrow"
+        type="info"
+        effect="solid"
+        delayShow={600}
+        place="top"
+      />
     </div>
   );
 };
