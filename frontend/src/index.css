@@ -219,7 +219,7 @@
   .highscores-container {
     @apply h-min w-min
     bg-white
-    my-8
+    mt-8
     mx-auto
     flex flex-col justify-around items-center
     shadow-lg;

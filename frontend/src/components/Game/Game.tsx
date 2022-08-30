@@ -12,6 +12,7 @@ import Logo from "../Logo";
 import GamemodeCarousel from "./GamemodeCarousel";
 import HighscoresApp from "../Highscore";
 import GameBoard from "./GameBoard";
+import SignatureFooter from "../SignatureFooter";
 // import TutorialCarousel from "./TutorialCarousel";
 
 const generateBoard = async ({
@@ -214,6 +215,7 @@ const GameApp = ({
 
           <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
         </div>
+        <SignatureFooter />
       </div>
     </div>
   ) : null;
