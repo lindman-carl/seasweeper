@@ -10,6 +10,7 @@ module.exports = {
       },
       animation: {
         wiggle: "wiggle 3s ease-in-out infinite",
+        "spin-custom": "spin 1.5s ease-in-out infinite",
       },
     },
   },

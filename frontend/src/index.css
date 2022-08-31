@@ -190,12 +190,14 @@
   }
 
   .carousel-header {
-    @apply w-full h-20
+    @apply 
+    w-full h-20
+    col-start-2 col-span-1 row-start-1 row-span-1
+    flex justify-center items-center
     text-center text-xl font-extrabold
     sm:text-4xl 
-    col-start-2 col-span-1 row-start-1 row-span-1
-    flex items-center justify-center
-    underline underline-offset-auto decoration-blue-300;
+    underline underline-offset-auto decoration-blue-300
+    ;
   }
 
   .carousel-navigation-button {
@@ -208,7 +210,7 @@
   }
 
   .carousel-close-button {
-    @apply w-full h-20 flex justify-center items-center col-start-3 row-start-1 row-span-1 cursor-pointer;
+    @apply w-full h-20 flex justify-center items-center col-start-3 row-start-1 row-span-1;
   }
 
   .webgl {

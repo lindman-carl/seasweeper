@@ -154,6 +154,16 @@ const GameApp = ({
     setRandomKey(Math.floor(Math.random() * 100000)); // forces update, why i dont know, but it is needed
   };
 
+  const regenerateGamemode = async (id: number) => {
+    // generate a new map for the selected gamemode
+    const newMappedGamemodes = await regenerateSingleMappedGamemode(
+      mappedGamemodes,
+      id
+    );
+    // update states
+    setMappedGamemodes(newMappedGamemodes);
+  };
+
   // toggles gamemode carousel show state
   const handleToggleGamemodeCarousel = () => {
     setShowGamemodeCarousel(!showGamemodeCarousel);
@@ -181,6 +191,7 @@ const GameApp = ({
     handleSelectGamemode,
     handleToggleGamemodeCarousel,
     showGamemodeCarousel,
+    regenerateGamemode,
   };
 
   // render
