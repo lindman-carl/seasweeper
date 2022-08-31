@@ -22,6 +22,16 @@ type Props = {
   regenerateGamemode: (id: number) => void;
 };
 
+// local components
+const RegenerateGamemodeButton = ({ onClick }: { onClick: () => void }) => (
+  <button
+    className="h-20 col-start-1 col-span-1 row-start-1 row-span-1 flex items-center justify-center hover:animate-spin-custom"
+    onClick={onClick}
+  >
+    <MdRefresh size={28} />
+  </button>
+);
+
 const GamemodeCarousel = ({
   name,
   handleSelectGamemode,
@@ -49,12 +59,9 @@ const GamemodeCarousel = ({
 
   return (
     <div className="carousel-container">
-      <button
-        className="col-start-1 col-span-1 row-start-1 row-span-1 flex items-center justify-center hover:animate-spin-custom"
+      <RegenerateGamemodeButton
         onClick={() => regenerateGamemode(currentIndex)}
-      >
-        <MdRefresh size={28} />
-      </button>
+      />
       {/* header */}
       <div className="carousel-header">
         {sortedGamemodes[currentIndex].label}
