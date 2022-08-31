@@ -22,6 +22,7 @@ const gamemodes: Gamemode[] = [
     nLighthouses: 2,
     nIslands: 10,
     clusterSpread: 4,
+    keepFromBorder: false,
     id: 0,
   },
   {
@@ -34,6 +35,7 @@ const gamemodes: Gamemode[] = [
     nLighthouses: 0,
     nIslands: 0,
     clusterSpread: 2,
+    keepFromBorder: false,
     id: 1,
   },
   {
@@ -46,6 +48,7 @@ const gamemodes: Gamemode[] = [
     nLighthouses: 3,
     nIslands: 20,
     clusterSpread: 2,
+    keepFromBorder: false,
     id: 2,
   },
   {
@@ -58,6 +61,7 @@ const gamemodes: Gamemode[] = [
     nLighthouses: 1,
     nIslands: 6,
     clusterSpread: 2,
+    keepFromBorder: false,
     id: 3,
   },
   {
@@ -70,7 +74,21 @@ const gamemodes: Gamemode[] = [
     nLighthouses: 0,
     nIslands: 0,
     clusterSpread: 4,
+    keepFromBorder: false,
     id: 4,
+  },
+  {
+    name: "continent2032",
+    label: "Continent",
+    link: "/continent",
+    w: 20,
+    h: 20,
+    numBombs: 32,
+    nLighthouses: 0,
+    nIslands: 3,
+    clusterSpread: 10,
+    keepFromBorder: true,
+    id: 5,
   },
 ];
 

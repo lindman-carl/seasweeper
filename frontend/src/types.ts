@@ -19,6 +19,7 @@ export type Gamemode = {
   clusterSpread: number;
   id: number;
   board?: any;
+  keepFromBorder: boolean;
 };
 
 export type TileType = {

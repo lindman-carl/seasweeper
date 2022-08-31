@@ -33,6 +33,7 @@ const GameBoard = ({
     clusterSpread,
     numBombs,
     showGamemodeCarousel,
+    keepFromBorder,
   },
   handleToggleGamemodeCarousel,
   handleRefetchHighscores,
@@ -82,7 +83,8 @@ const GameBoard = ({
       h,
       nIslands,
       clusterSpread,
-      0.6
+      0.6,
+      keepFromBorder
     );
     const tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
     const countWaterTiles = tempBoard.filter((t) => t.type !== 1).length;

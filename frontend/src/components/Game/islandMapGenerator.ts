@@ -81,10 +81,15 @@ const generateIsland = (
   mapWidth: number,
   mapHeight: number,
   amountClusterPoints: number,
-  clusterSpread: number
+  clusterSpread: number,
+  keepFromBorder: boolean
 ): MapArray => {
   // generates an island with a given amount of cluster points and clusterSpread
   const map = generateBlankMap(mapWidth, mapHeight);
+  let borderInset = 0;
+
+  // keep from border
+  if (keepFromBorder) borderInset = 4;
 
   // generates a random center point for the island
   const centerPoint: Point = {
@@ -101,10 +106,10 @@ const generateIsland = (
     let newClusterPoint = getClusterPoint(centerPoint, clusterSpread);
 
     while (
-      newClusterPoint.x < 0 ||
-      newClusterPoint.x >= mapWidth ||
-      newClusterPoint.y < 0 ||
-      newClusterPoint.y >= mapHeight ||
+      newClusterPoint.x < 0 + borderInset ||
+      newClusterPoint.x >= mapWidth - borderInset ||
+      newClusterPoint.y < 0 + borderInset ||
+      newClusterPoint.y >= mapHeight - borderInset ||
       newClusterPoint.x === undefined ||
       newClusterPoint.y === undefined
     ) {
@@ -178,7 +183,8 @@ const generateIslandMap = (
   mapWidth: number,
   mapHeight: number,
   nIslands: number,
-  clusterSpread: number
+  clusterSpread: number,
+  keepFromBorder: boolean
 ): MapArray => {
   let islands = [];
 
@@ -192,7 +198,8 @@ const generateIslandMap = (
       mapWidth,
       mapHeight,
       randomNumberCluster,
-      clusterSpread
+      clusterSpread,
+      keepFromBorder
     );
 
     // add island to array
@@ -282,7 +289,8 @@ const generateValidMap = (
   mapHeight: number,
   amountIslands: number,
   clusterSpread: number,
-  waterRatio: number = 0.6
+  waterRatio: number = 0.6,
+  keepFromBorder: boolean
 ): MapArray => {
   // generates maps until a valid map is found
   while (true) {
@@ -290,7 +298,8 @@ const generateValidMap = (
       mapWidth,
       mapHeight,
       amountIslands,
-      clusterSpread
+      clusterSpread,
+      keepFromBorder
     );
 
     const { map, count } = floodFillMap(islandMap);
@@ -321,7 +330,8 @@ const generateValidMergedMap = (
   heigth: number,
   nIslands: number,
   clusterSpread: number,
-  waterRatio: number
+  waterRatio: number,
+  keepFromBorder: boolean
 ) => {
   // generate map
   const validMap = generateValidMap(
@@ -329,7 +339,8 @@ const generateValidMergedMap = (
     heigth,
     nIslands,
     clusterSpread,
-    waterRatio
+    waterRatio,
+    keepFromBorder
   );
   // merge layers
   const mergedMap = mergeLayers(validMap);
