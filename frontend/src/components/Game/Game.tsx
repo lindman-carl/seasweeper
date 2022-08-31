@@ -22,6 +22,7 @@ const generateBoard = async ({
   numBombs,
   nIslands,
   clusterSpread,
+  keepFromBorder,
 }: Gamemode) => {
   // generates a new board
   let tempBoard;
@@ -33,7 +34,8 @@ const generateBoard = async ({
       h,
       nIslands,
       clusterSpread,
-      0.6
+      0.6,
+      keepFromBorder
     );
     // populate map with bombs
     tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
