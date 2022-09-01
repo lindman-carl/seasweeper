@@ -13,42 +13,66 @@ import { FaBomb } from "react-icons/fa";
 import { RiMapFill } from "react-icons/ri";
 import { GiBroom, GiBuoy, GiCompass } from "react-icons/gi";
 import { SiLighthouse } from "react-icons/si";
+import { useGameState } from "../../context/gameStateContext";
+import { Types } from "../../context/gameStateReducer";
 
-type Props = {
-  numBombs: number;
-  numMarkers: number;
-  numWaterTiles: number;
-  numRevealed: number;
-  gameTime: number;
-  availableLighthouses: number;
-  gameOver: boolean;
-  gameStarted: boolean;
-  win: boolean;
-  lighthouseMode: boolean;
-  showGamemodeCarousel: boolean;
-  markMode: boolean;
-  handleLighthouseMode: () => void;
-  handleMarkMode: () => void;
-  handleToggleGamemodeCarousel: () => void;
-};
+const Hud = () => {
+  const {
+    state: {
+      board: { numBombs, numWaterTiles, numRevealedTiles },
+      numPlacedMarkers,
+      gameOver,
+      gameTime,
+      gameStarted,
+      gameWin,
+      lighthouseMode,
+      availableLighthouses,
+      showGamemodeCarousel,
+      markerMode,
+    },
+    dispatch,
+  } = useGameState();
 
-const Hud = ({
-  numBombs,
-  numMarkers,
-  numWaterTiles,
-  numRevealed,
-  gameOver,
-  gameTime,
-  gameStarted,
-  win,
-  lighthouseMode,
-  availableLighthouses,
-  handleLighthouseMode,
-  markMode,
-  handleMarkMode,
-  showGamemodeCarousel,
-  handleToggleGamemodeCarousel,
-}: Props) => {
+  // event handlers
+  const handleToggleGamemodeCarousel = () => {
+    // toggles gamemode carousel show state
+    dispatch({
+      type: Types.SET_SHOW_GAMEMODE_CAROUSEL,
+      payload: { showGamemodeCarousel: !showGamemodeCarousel },
+    });
+  };
+
+  // eventhandler for clicking lighthouse mode button
+  const handleToggleLighthouseMode = () => {
+    // if the player has available lighthouses
+    if (availableLighthouses > 0) {
+      // toggle lighhouse mode
+      dispatch({
+        type: Types.SET_LIGHTHOUSE_MODE,
+        payload: { lighthouseMode: !lighthouseMode },
+      });
+      // disable mark mode
+      dispatch({
+        type: Types.SET_MARKER_MODE,
+        payload: { markerMode: false },
+      });
+    }
+  };
+
+  // eventhandler for clicking mark mode button
+  const handleToggleMarkMode = () => {
+    // toggle mark mode
+    dispatch({
+      type: Types.SET_MARKER_MODE,
+      payload: { markerMode: !markerMode },
+    });
+    // disable lighthouse mode
+    dispatch({
+      type: Types.SET_LIGHTHOUSE_MODE,
+      payload: { lighthouseMode: false },
+    });
+  };
+
   const doubleIcon = () => {
     return (
       <div className="flex justify-center items-center">
@@ -65,7 +89,7 @@ const Hud = ({
           {gameStarted ? (
             !gameOver ? (
               <Timer time={gameTime} />
-            ) : win ? (
+            ) : gameWin ? (
               <div className="pt-2">You win!</div>
             ) : (
               <div className="pt-2">Game over!</div>
@@ -103,14 +127,14 @@ const Hud = ({
           <div className="grow">
             <IconBadge
               icon={<GiBuoy size={28} className="mb-1" />}
-              value={numMarkers}
+              value={numPlacedMarkers}
               tooltip={"Number of markers placed in the sea"}
             />
           </div>
           <div className="ml-1 grow">
             <IconBadge
               icon={<BiSquare size={24} />}
-              value={numWaterTiles - numRevealed - numBombs}
+              value={numWaterTiles - numRevealedTiles - numBombs}
               tooltip={"Number of sea tiles left to clear"}
             />
           </div>
@@ -121,7 +145,7 @@ const Hud = ({
               icon={<SiLighthouse size={28} />}
               status={lighthouseMode}
               value={availableLighthouses}
-              onClick={handleLighthouseMode}
+              onClick={handleToggleLighthouseMode}
               tooltip={"Toogle place lighthouse mode"}
             />
           </div>
@@ -129,8 +153,8 @@ const Hud = ({
             <IconCheckbox
               icon={<GiBroom size={36} className="mr-1" />}
               alternateIcon={<GiBuoy size={36} />}
-              status={markMode}
-              onClick={handleMarkMode}
+              status={markerMode}
+              onClick={handleToggleMarkMode}
               tooltip={"Toggle between mark and sweep mode"}
             />
           </div>

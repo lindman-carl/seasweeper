@@ -1,239 +1,163 @@
-import React, { useEffect, useState, useRef } from "react";
-
-// utils
-import gameUtils from "./gameUtils";
-import { generateValidMergedMap } from "./islandMapGenerator";
+import React, { useEffect } from "react";
 
 // types
-import { Gamemode } from "../../types";
+import { Board, Gamemode } from "../../types";
+
+// utils
+import { gamemodes } from "../../utils/gameUtils";
+import { generateBoardsForAllGamemodes } from "../../utils/boardGeneration";
+
+import { postHighscore } from "../../utils/apiUtils";
 
 // components
-import Logo from "../Logo";
+import BoardComponent from "./BoardComponent";
 import GamemodeCarousel from "./GamemodeCarousel";
-import HighscoresApp from "../Highscore";
-import GameBoard from "./GameBoard";
-import SignatureFooter from "../SignatureFooter";
-import { MdOpenInNew } from "react-icons/md";
-// import TutorialCarousel from "./TutorialCarousel";
+import GameOverBox from "./GameOverBox";
+import GeneratingMapSpinner from "./GeneratingMapSpinner";
+import Hud from "./Hud";
+import ScrollDownArrow from "./ScrollDownArrow";
 
-const generateBoard = async ({
-  w,
-  h,
-  numBombs,
-  nIslands,
-  clusterSpread,
-  keepFromBorder,
-}: Gamemode) => {
-  // generates a new board
-  let tempBoard;
+// context
+import { useGameState } from "../../context/gameStateContext";
+import { Types } from "../../context/gameStateReducer";
+import GameContainer from "./GameContainer";
+import { handleClickTile } from "../../logic/handleClickTile";
 
-  if (nIslands > 0) {
-    // generate map with islands
-    const tempMap = await generateValidMergedMap(
-      w,
-      h,
-      nIslands,
-      clusterSpread,
-      0.6,
-      keepFromBorder
-    );
-    // populate map with bombs
-    tempBoard = await gameUtils.populateGeneratedMap(numBombs, tempMap);
-  } else {
-    // generates map without islands
-    tempBoard = gameUtils.populateBoard(w, h, numBombs);
-  }
-  return tempBoard;
+// const REFRESH_RATE = 100; // sets timer accuracy
+
+type GameProps = {
+  handleRefetchHighscores: () => void;
+  setHighscoresMapFilter: (name: string) => void;
 };
 
-const mapGamemodes = async (gamemodes: Gamemode[]): Promise<Gamemode[]> => {
-  // generates maps for each gamemode asynchronously
-  const mappedGamemodes = await Promise.all(
-    gamemodes.map(async (gm) => {
-      const newBoard = await generateBoard(gm);
-      const mapped = { ...gm, board: newBoard };
-      return mapped;
-    })
-  );
-  return mappedGamemodes;
-};
+const Game = ({
+  handleRefetchHighscores,
+  setHighscoresMapFilter,
+}: GameProps) => {
+  // state
+  const { state: gameState, dispatch } = useGameState();
 
-const regenerateSingleMappedGamemode = async (
-  mappedGamemodes: Gamemode[],
-  id: number
-): Promise<Gamemode[]> => {
-  // generates one new board by id
-  const oldMappedGamemode = mappedGamemodes.find((gm) => gm.id === id);
-  if (oldMappedGamemode) {
-    const newBoard = await generateBoard(oldMappedGamemode);
-    const newMappedGamemode = { ...oldMappedGamemode, board: newBoard };
-    const newMappedGamemodes = [
-      ...mappedGamemodes.filter((gm) => gm.id !== id),
-      newMappedGamemode,
-    ];
-
-    return newMappedGamemodes.sort((a, b) => a.id - b.id);
-  }
-
-  // if failed
-  return mappedGamemodes;
-};
-
-const GameApp = ({
-  name,
-  gamemodes,
-}: {
-  name: string;
-  gamemodes: Gamemode[];
-}) => {
-  // states
-  const [mappedGamemodes, setMappedGamemodes] = useState<any>();
-  const [currentGamemodeId, setCurrentGamemodeId] = useState<number>(0);
-  const [currentGamemodeObject, setCurrentGamemodeObject] = useState<any>();
-
-  const [showGamemodeCarousel, setShowGamemodeCarousel] =
-    useState<boolean>(false);
-  // const [showTutorial, setShowTutorial] = useState(false);
-
-  // still necessary to force re-render
-  const [randomKey, setRandomKey] = useState(
-    Math.floor(Math.random() * 100000)
-  );
-
-  // refs
-  const highscoresRef = useRef<any>();
-
+  // useEffect
   useEffect(() => {
-    // generates initial maps for gamemodes
-    const start = async () => {
-      // generates maps for gamemodes
-      const mapped = await mapGamemodes(gamemodes);
+    const generateAllGamemodeBoards = async () => {
+      // generates initial maps for gamemodes
+      const newGamemodes = await generateBoardsForAllGamemodes(gamemodes);
 
-      // get ref to current gamemode
-      const current = mapped.find((gm) => gm.id === currentGamemodeId);
+      // get current gamemode
+      const currentGamemode =
+        newGamemodes.find((gm) => gm.id === gameState.currentGamemode.id) ||
+        gamemodes[0];
 
-      // states
-      setMappedGamemodes(mapped);
-      setCurrentGamemodeObject(current);
+      // update gamemodes and set board
+      dispatch({
+        type: Types.SET_BOARD,
+        payload: { board: currentGamemode.board },
+      });
+      dispatch({
+        type: Types.SET_GAMEMODES,
+        payload: { gamemodes: newGamemodes },
+      });
     };
 
-    start();
+    generateAllGamemodeBoards();
 
-    // why if I only want on mount???
+    // clear interval on unmount
+    return () => {
+      clearInterval(gameState.intervalId);
+    };
+
+    // what if i only want on mount?
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // get gamemode objet by id
-  const getGamemodeObject = (id: number) => {
-    if (mappedGamemodes) {
-      return mappedGamemodes.find((gm: Gamemode) => gm.id === id);
-    }
-
-    // if failure we are doomed
+  // generate new map and restart game
+  const handleNewGame = (gamemode: Gamemode) => {
+    // generate a new board,
+    // and reset game
+    dispatch({
+      type: Types.GENERATE_NEW_BOARD,
+      payload: { gamemode },
+    });
+    // reset game
+    dispatch({ type: Types.RESET_GAME, payload: {} });
   };
 
-  /**
-   * Eventhandler for selecting gamemode by id
-   * Also creates a new map for gamemode selection
-   * @param {number} id
-   */
-  const handleSelectGamemode = async (id: number) => {
-    const current = getGamemodeObject(id);
-    // generate a new map for the selected gamemode
-    const newMappedGamemodes = await regenerateSingleMappedGamemode(
-      mappedGamemodes,
-      id
-    );
-    // update states
-    setCurrentGamemodeId(id);
-    setCurrentGamemodeObject(current);
-    setMappedGamemodes(newMappedGamemodes);
+  const handleRetryGame = (board: Board, gamemode: Gamemode) => {
+    // reset game
+    dispatch({ type: Types.RESET_GAME, payload: {} });
+
+    // get new bombs
+    dispatch({
+      type: Types.REPOPULATE_BOARD,
+      payload: {
+        board,
+        gamemode,
+      },
+    });
+  };
+
+  const handleSendHighscore = async ({ playerName }: any) => {
+    // trigger loading animation
+    dispatch({
+      type: Types.SET_IS_SENDING_HIGHSCORE,
+      payload: { isSendingHighscore: true },
+    });
+
+    await postHighscore(gameState.gameTime, playerName, gameState.name);
+
+    // untrigger loading animation
+    dispatch({
+      type: Types.SET_IS_SENDING_HIGHSCORE,
+      payload: { isSendingHighscore: false },
+    });
+
+    // refetch highscore list
+    handleRefetchHighscores();
+  };
+
+  const handleSelectGamemode = (id: number) => {
+    // // sets current gamemode to id and generates a new board
+    dispatch({ type: Types.SELECT_GAMEMODE, payload: { id } });
+    // reset game
+    dispatch({ type: Types.RESET_GAME, payload: {} });
     // update highscore filtering to match the selected gamemode
-    highscoresRef.current.setMapFilter(current.name);
-
-    // closes carousel
-    setShowGamemodeCarousel(false);
-    setRandomKey(Math.floor(Math.random() * 100000)); // forces update, why i dont know, but it is needed
+    setHighscoresMapFilter(gameState.name); // TODO FIX BROKEN
   };
 
-  const regenerateGamemode = async (id: number) => {
-    // generate a new map for the selected gamemode
-    const newMappedGamemodes = await regenerateSingleMappedGamemode(
-      mappedGamemodes,
-      id
-    );
-    // update states
-    setMappedGamemodes(newMappedGamemodes);
-  };
-
-  // toggles gamemode carousel show state
-  const handleToggleGamemodeCarousel = () => {
-    setShowGamemodeCarousel(!showGamemodeCarousel);
-  };
-
-  // calls highscoreApp refetch method
-  const handleRefetchHighscores = () => {
-    highscoresRef.current.refetchHighscores();
-  };
+  // the main game
 
   // props
-  const gameBoardProps = {
-    gamemodeObject: currentGamemodeObject,
-    //handleRefetchHighscore,
-    gamemodes,
-    key: randomKey,
-    showGamemodeCarousel,
-    handleToggleGamemodeCarousel,
+  const gameOverBoxProps = {
+    handleSendHighscore,
     handleRefetchHighscores,
+    handleNewGame,
+    handleRetryGame,
   };
 
   const gamemodeCarouselProps = {
-    name,
-    mappedGamemodes,
     handleSelectGamemode,
-    handleToggleGamemodeCarousel,
-    showGamemodeCarousel,
-    regenerateGamemode,
   };
 
+  // render loading spinner while generating maps
+  if (!gameState.board) return <GeneratingMapSpinner />;
+
   // render
-  return currentGamemodeObject ? (
-    <div className="game-app-container">
-      <GameBoard {...gameBoardProps}>
-        <>
-          {showGamemodeCarousel && (
-            <GamemodeCarousel {...gamemodeCarouselProps} />
-          )}
-          {/* {showTutorial && <TutorialCarousel {...gamemodeCarouselProps} />} */}
-        </>
-      </GameBoard>
-      <div className="game-info-container">
-        <Logo variant={"logo-large"} />
+  return (
+    <GameContainer>
+      <GamemodeCarousel {...gamemodeCarouselProps} />
+      <Hud />
+      <button>
+        <BoardComponent
+          board={gameState.board}
+          handleClickTile={handleClickTile}
+          handleRetryGame={handleRetryGame}
+        />
+      </button>
 
-        <div className="lg:ml-3">
-          <div className="game-text-container">
-            Click to reveal tile. Flags are for slow players, try to mark the
-            mines in your head. Place lighthouses on land to safely reveal
-            adjacent water tiles.
-            <a
-              className="game-text-link"
-              href="https://minesweepergame.com/strategy.php"
-              target="_blank"
-              rel="noreferrer"
-              data-tip="Show tutorial"
-              data-for="checkboxInfo"
-            >
-              How to play
-              <MdOpenInNew />
-            </a>
-          </div>
-
-          <HighscoresApp gamemodes={mappedGamemodes} ref={highscoresRef} />
-        </div>
-        <SignatureFooter />
-      </div>
-    </div>
-  ) : null;
+      <GameOverBox {...gameOverBoxProps} />
+      <ScrollDownArrow />
+    </GameContainer>
+  );
 };
 
-export default GameApp;
+export default Game;

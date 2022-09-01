@@ -11,14 +11,14 @@ export type Gamemode = {
   name: string;
   label: string;
   link: string;
-  w: number;
-  h: number;
+  width: number;
+  height: number;
   numBombs: number;
   nLighthouses: number;
   nIslands: number;
   clusterSpread: number;
   id: number;
-  board?: any;
+  board: Board;
   keepFromBorder: boolean;
 };
 
@@ -40,12 +40,35 @@ export type Point = {
   y: number;
 };
 
-export type MapArray = number[][];
+export type Array2D = number[][];
 
 export type Board = {
-  board: TileType[];
+  tiles: TileType[];
   width: number;
   height: number;
-  nBombs: number;
+  numBombs: number;
+  numWaterTiles: number;
+  numRevealedTiles: number;
   bombIds?: number[];
+};
+
+export type GameState = {
+  name: string;
+  board: Board;
+  availableLighthouses: number;
+  numPlacedMarkers: number;
+  currentGamemode: Gamemode;
+  gamemodes: Gamemode[];
+  gameStarted: boolean;
+  gameOver: boolean;
+  gameWin: boolean;
+  showGamemodeCarousel: boolean;
+  isSendingHighscore: boolean;
+  // time
+  gameTime: number;
+  gameStartTimestamp: number;
+  intervalId: any;
+  // placing modes
+  lighthouseMode: boolean;
+  markerMode: boolean;
 };

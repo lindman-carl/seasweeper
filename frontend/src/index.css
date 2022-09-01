@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply
+  bg-sky-200
+  ;
+}
+
 @layer components {
   .game-app-container {
     @apply h-full 
@@ -12,7 +18,7 @@
     overflow-x-hidden;
   }
 
-  .game-board-container {
+  .game-container {
     @apply w-screen min-h-screen
     lg:max-w-[50%] lg:w-full
     flex flex-col justify-start items-center grow

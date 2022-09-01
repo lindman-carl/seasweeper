@@ -6,6 +6,7 @@ import { HighscoreEntry } from "../../types";
 // icons
 import { IconContext } from "react-icons";
 import { FaMedal } from "react-icons/fa";
+import { formatTime } from "../../utils/gameUtils";
 
 type Props = {
   highscore: HighscoreEntry;
@@ -35,7 +36,7 @@ const HighScoreRow = ({ highscore: { playerName, time, rank } }: Props) => {
     <>
       <div className="highscores-list-rank">{rankFormatted()}</div>
       <div className="highscores-list-name">{playerName}</div>
-      <div className="highscores-list-time">{(time / 1000).toPrecision()}</div>
+      <div className="highscores-list-time">{formatTime(time)}</div>
     </>
   );
 };

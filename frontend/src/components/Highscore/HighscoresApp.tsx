@@ -2,23 +2,22 @@ import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { useQuery } from "react-query";
 
 // types
-import { Gamemode, HighscoreEntry } from "../../types";
+import { HighscoreEntry } from "../../types";
+
+// utils
+import { gamemodes } from "../../utils/gameUtils";
 
 // components
 import HighScoresContainer from "./HighscoreContainer";
 import HighscoreList from "./HighscoreList";
 import HighscoreFilter from "./HighscoreFilter";
 import IconCheckbox from "../Game/IconCheckbox";
-import { fetchHighscores } from "../Game/apiUtils";
+import { fetchHighscores } from "../../utils/apiUtils";
 
 //icons
 import { GiTrophy } from "react-icons/gi";
 
-type Props = {
-  gamemodes: Gamemode[];
-};
-
-const HighscoresApp = forwardRef(({ gamemodes }: Props, ref) => {
+const HighscoresApp = forwardRef((_, ref) => {
   const sortedGamemodes = [...gamemodes].sort((a, z) => a.id - z.id);
   const [mapFilter, setMapFilter] = useState<string>(sortedGamemodes[0].name); // init on first gamemode
   const [searchFilter, setSearchFilter] = useState<string>("");

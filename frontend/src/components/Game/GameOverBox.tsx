@@ -9,6 +9,13 @@ import { ClipLoader } from "react-spinners";
 import SendHighscoreForm from "./SendHighscoreForm";
 import GameOverBoxButton from "./GameOverBoxButton";
 
+// state
+import { useGameState } from "../../context/gameStateContext";
+
+// types
+import { Board, Gamemode } from "../../types";
+import { formatTime } from "../../utils/gameUtils";
+
 type FormResponseProps = {
   isSendingHighscore: boolean;
 };
@@ -28,26 +35,29 @@ const FormResponse = ({ isSendingHighscore }: FormResponseProps) => (
 );
 
 type GameOverBoxProps = {
-  gameTime: number;
-  win: boolean;
-  newAvailable: boolean;
-  isSendingHighscore: boolean;
   handleSendHighscore: (data: string) => void;
-  handleNewGame: () => void;
-  handleRetry: () => void;
-  refetchHighscores: () => void;
+  handleNewGame: (gamemode: Gamemode) => void;
+  handleRetryGame: (board: Board, gamemode: Gamemode) => void;
+  handleRefetchHighscores: () => void;
 };
 
 const GameOverBox = ({
-  gameTime,
-  win,
   handleSendHighscore,
-  isSendingHighscore,
   handleNewGame,
-  handleRetry,
-  newAvailable,
-  refetchHighscores,
+  handleRetryGame,
+  handleRefetchHighscores,
 }: GameOverBoxProps) => {
+  // game context
+  const {
+    state: {
+      board,
+      gameOver,
+      gameWin,
+      gameTime,
+      isSendingHighscore,
+      currentGamemode,
+    },
+  } = useGameState();
   // react-hook-form
   const {
     register,
@@ -57,10 +67,13 @@ const GameOverBox = ({
 
   const [hasSubmit, setHasSubmit] = useState(false);
 
+  // whether to display the Generate New Map button
+  const generateNewMapAvailable = currentGamemode.nIslands > 0;
+
   const onSubmit = (data: string) => {
     handleSendHighscore(data);
     setHasSubmit(true);
-    refetchHighscores();
+    handleRefetchHighscores();
   };
 
   const renderForm = () =>
@@ -81,19 +94,22 @@ const GameOverBox = ({
 
   const displayForm = () =>
     // display submit form if win, else lose statement
-    win ? (
+    gameWin ? (
       <>
         <div className="gameoverbox-item gameoverbox-header">
-          {(gameTime / 1000).toPrecision()}s
+          {formatTime(gameTime)}s
         </div>
 
         {renderForm()}
       </>
     ) : (
       <div className="gameoverbox-item gameoverbox-header">
-        Failure achieved in {(gameTime / 1000).toPrecision()}s
+        Failure achieved in {formatTime(gameTime)}s
       </div>
     );
+
+  // only render when gameOver
+  if (!gameOver) return null;
 
   // render
   return (
@@ -101,15 +117,18 @@ const GameOverBox = ({
       {/* show submit form if win */}
       {displayForm()}
 
-      <GameOverBoxButton label="Retry Map" onClick={handleRetry} />
+      <GameOverBoxButton
+        label="Retry Map"
+        onClick={() => handleRetryGame(board, currentGamemode)}
+      />
 
       {/* displays Generate New Map button if islands map */}
-      {newAvailable && (
+      {generateNewMapAvailable && (
         <GameOverBoxButton
           label="Generate New Map"
           textColor="text-green-600"
           borderColor="border-green-700"
-          onClick={handleNewGame}
+          onClick={() => handleNewGame(currentGamemode)}
         />
       )}
 
