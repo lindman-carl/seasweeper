@@ -1,7 +1,7 @@
-import { MapArray, Point } from "../../types";
+import { Array2D, Point } from "../../types";
 
-const generateBlankMap = (w: number, h: number): MapArray => {
-  // generates an MapArray of 0 with size w x h
+const createBlankArray2D = (w: number, h: number): Array2D => {
+  // creates an Array2D of 0 with size w x h
   const map = [];
 
   // generate map
@@ -83,9 +83,9 @@ const generateIsland = (
   amountClusterPoints: number,
   clusterSpread: number,
   keepFromBorder: boolean
-): MapArray => {
+): Array2D => {
   // generates an island with a given amount of cluster points and clusterSpread
-  const map = generateBlankMap(mapWidth, mapHeight);
+  const map = createBlankArray2D(mapWidth, mapHeight);
   let borderInset = 0;
 
   // keep from border
@@ -163,7 +163,7 @@ const generateIsland = (
   return map;
 };
 
-const addIslandToMap = (map: MapArray, islandMap: MapArray) => {
+const addIslandToArray2D = (map: Array2D, islandMap: Array2D): Array2D => {
   // adds island to a existing MapArray
   const copiedMap = [...map];
 
@@ -179,13 +179,13 @@ const addIslandToMap = (map: MapArray, islandMap: MapArray) => {
   return copiedMap;
 };
 
-const generateIslandMap = (
+const generateIslands = (
   mapWidth: number,
   mapHeight: number,
   nIslands: number,
   clusterSpread: number,
   keepFromBorder: boolean
-): MapArray => {
+): Array2D => {
   let islands = [];
 
   // generate array of islands
@@ -210,15 +210,13 @@ const generateIslandMap = (
 
   // add islands to map
   for (let i = 1; i < islands.length; i++) {
-    map = addIslandToMap(map, islands[i]);
+    map = addIslandToArray2D(map, islands[i]);
   }
 
   return map;
 };
 
-const floodFillMap = (
-  islandMap: MapArray
-): { map: MapArray; count: number } => {
+const floodFillMap = (islandMap: Array2D): { map: Array2D; count: number } => {
   // flood fills the islandMap to create a "water" map
   // smooths the map by removing small inlets and inaccessible areas
 
@@ -291,10 +289,10 @@ const generateValidMap = (
   clusterSpread: number,
   waterRatio: number = 0.6,
   keepFromBorder: boolean
-): MapArray => {
+): Array2D => {
   // generates maps until a valid map is found
   while (true) {
-    const islandMap = generateIslandMap(
+    const islandMap = generateIslands(
       mapWidth,
       mapHeight,
       amountIslands,
@@ -310,7 +308,7 @@ const generateValidMap = (
   }
 };
 
-const mergeLayers = (mapToMerge: MapArray): MapArray => {
+const mergeLayers = (mapToMerge: Array2D): Array2D => {
   // makes all the water tiles the same value
   const map = [...mapToMerge];
 
@@ -325,7 +323,7 @@ const mergeLayers = (mapToMerge: MapArray): MapArray => {
   return map;
 };
 
-const generateValidMergedMap = (
+const generateValidIslandsMap = (
   mapWidth: number,
   heigth: number,
   nIslands: number,
@@ -348,18 +346,16 @@ const generateValidMergedMap = (
   return mergedMap;
 };
 
-/*
-const printMap = (map: MapArray) => {
-  for (let y = 0; y < map.length; y++) {
-    console.log(
-      map[y]
-        .join(" ")
-        .replaceAll("0", " ")
-        .replaceAll("1", "#")
-        .replaceAll("2", ".")
-    );
-  }
-};
-*/
+// const printMap = (map: Array2D) => {
+//   for (let y = 0; y < map.length; y++) {
+//     console.log(
+//       map[y]
+//         .join(" ")
+//         .replaceAll("0", " ")
+//         .replaceAll("1", "#")
+//         .replaceAll("2", ".")
+//     );
+//   }
+// };
 
-export { generateValidMergedMap };
+export { generateValidIslandsMap };

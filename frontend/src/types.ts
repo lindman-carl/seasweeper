@@ -40,7 +40,7 @@ export type Point = {
   y: number;
 };
 
-export type MapArray = number[][];
+export type Array2D = number[][];
 
 export type Board = {
   tiles: TileType[];

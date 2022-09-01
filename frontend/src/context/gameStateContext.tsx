@@ -5,14 +5,20 @@ import React, {
   Dispatch,
   useReducer,
 } from "react";
+
+// types
 import { GameState } from "../types";
 
-import { gamemodes, getBlankBoard } from "../utils/gameUtils";
+// utils
+import { generateOpenSeaBoard } from "../utils/boardGeneration";
+import { gamemodes } from "../utils/gameUtils";
+
+// context
 import { GameStateActions, gameStateReducer } from "./gameStateReducer";
 
 export const initialGameState: GameState = {
   name: gamemodes[0].name,
-  board: getBlankBoard(),
+  board: generateOpenSeaBoard(),
   availableLighthouses: 0,
   currentGamemode: gamemodes[0],
   gamemodes,

@@ -1,10 +1,14 @@
 import { Board, Gamemode, GameState } from "../types";
 import {
   depopulateBoard,
-  generateBoardForSingleGamemode,
-  getBlankBoard,
-  hideAllTiles,
+  generateBoard,
+  generateBoardForSpecificGamemode,
+  generateOpenSeaBoard,
   populateBombs,
+} from "../utils/boardGeneration";
+import {
+  countRevealedTiles,
+  hideAllTiles,
   revealAllTiles,
 } from "../utils/gameUtils";
 
@@ -40,6 +44,8 @@ export enum Types {
   REGENERATE_BOARD = "REGENERATE_BOARD",
   REPOPULATE_BOARD = "REPOPULATE_BOARD",
   REVEAL_BOARD = "REVEAL_BOARD",
+  GENERATE_NEW_BOARD = "GENERATE_NEW_BOARD",
+  UPDATE_NUM_REVEALED_TILES = "UPDATE_NUM_REVEALED_TILES",
 }
 
 type GameStatePayload = {
@@ -102,6 +108,12 @@ type GameStatePayload = {
     gamemode: Gamemode;
   };
   [Types.REVEAL_BOARD]: {
+    board: Board;
+  };
+  [Types.GENERATE_NEW_BOARD]: {
+    gamemode: Gamemode;
+  };
+  [Types.UPDATE_NUM_REVEALED_TILES]: {
     board: Board;
   };
 };
@@ -203,7 +215,7 @@ export const gameStateReducer = (
         isSendingHighscore: action.payload.isSendingHighscore,
       };
     case Types.REGENERATE_BOARD:
-      const updatedGamemodes = generateBoardForSingleGamemode(
+      const updatedGamemodes = generateBoardForSpecificGamemode(
         state.gamemodes,
         action.payload.gamemodeId
       );
@@ -214,8 +226,10 @@ export const gameStateReducer = (
     case Types.REPOPULATE_BOARD:
       if (action.payload.gamemode.nIslands === 0) {
         // open sea board
+        // just create a new one
+        // also this will never happen as the retry button is disabled
         const { width, height, numBombs } = action.payload.gamemode;
-        const blankBoard = getBlankBoard(width, height, numBombs);
+        const blankBoard = generateOpenSeaBoard(width, height, numBombs);
 
         return {
           ...state,
@@ -238,6 +252,19 @@ export const gameStateReducer = (
       return {
         ...state,
         board: revealedBoard,
+      };
+    case Types.GENERATE_NEW_BOARD:
+      const newBoard = generateBoard(action.payload.gamemode);
+
+      return {
+        ...state,
+        board: newBoard,
+      };
+    case Types.UPDATE_NUM_REVEALED_TILES:
+      const numRevealedTiles = countRevealedTiles(action.payload.board);
+      return {
+        ...state,
+        board: { ...state.board, numRevealedTiles },
       };
     default:
       return state;

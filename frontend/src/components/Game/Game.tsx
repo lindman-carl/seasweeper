@@ -4,14 +4,17 @@ import React, { useEffect } from "react";
 import { Board, Gamemode, TileType } from "../../types";
 
 // utils
-import gameUtils, {
+import {
   countRevealedTiles,
   gamemodes,
-  generateBoard,
-  generateBoardForSingleGamemode,
-  generateBoardsForAllGamemodes,
   getGamemodeById,
+  startFloodFill,
 } from "../../utils/gameUtils";
+import {
+  generateBoardForSpecificGamemode,
+  generateBoardsForAllGamemodes,
+} from "../../utils/boardGeneration";
+
 import { postHighscore } from "../../utils/apiUtils";
 
 // components
@@ -43,7 +46,7 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
       // generates initial maps for gamemodes
       const newGamemodes = await generateBoardsForAllGamemodes(gamemodes);
 
-      // get ref to current gamemode
+      // get current gamemode
       const currentGamemode =
         newGamemodes.find((gm) => gm.id === gameState.currentGamemode.id) ||
         gamemodes[0];
@@ -159,15 +162,12 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
   };
 
   // generate new map and restart game
-  const newGame = async (gamemode: Gamemode) => {
+  const newGame = (gamemode: Gamemode) => {
     // generate a new board,
     // and reset game
-    const newBoard = generateBoard(gamemode);
-
-    // set board
     dispatch({
-      type: Types.SET_BOARD,
-      payload: { board: newBoard },
+      type: Types.GENERATE_NEW_BOARD,
+      payload: { gamemode },
     });
     // reset
     resetGame();
@@ -242,7 +242,7 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
     // sets current gamemode to id and generates a new board
     const currentGamemode = getGamemodeById(gameState.gamemodes, id);
     // generate a new map for the selected gamemode
-    const newGamemodes = await generateBoardForSingleGamemode(
+    const newGamemodes = await generateBoardForSpecificGamemode(
       gameState.gamemodes,
       id
     );
@@ -371,8 +371,6 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
           numWaterTiles,
         };
 
-        const numRevealedTiles = countRevealedTiles(newBoard);
-
         // check if the placed lighthouse has won the game
         checkWinConditions(newBoard);
 
@@ -383,8 +381,8 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
         });
         // update number of revealed tiles
         dispatch({
-          type: Types.SET_NUM_REVEALED_TILES,
-          payload: { numRevealedTiles },
+          type: Types.UPDATE_NUM_REVEALED_TILES,
+          payload: { board: newBoard },
         });
 
         return;
@@ -447,7 +445,7 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
 
     if (tile.count === 0) {
       // start flood fill algo if the tile has no neighbouring bombs
-      tileIdsToReveal = gameUtils.startFloodFill(
+      tileIdsToReveal = startFloodFill(
         tile,
         gameState.board.tiles,
         tileIdsToReveal
@@ -470,6 +468,11 @@ const Game = ({ handleRefetchHighscores, setHighscoresMapFilter }: Props) => {
     // update board
     dispatch({
       type: Types.SET_BOARD,
+      payload: { board: newBoard },
+    });
+    // update number of revealed tiles
+    dispatch({
+      type: Types.UPDATE_NUM_REVEALED_TILES,
       payload: { board: newBoard },
     });
   };
