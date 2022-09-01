@@ -36,14 +36,14 @@ const FormResponse = ({ isSendingHighscore }: FormResponseProps) => (
 type GameOverBoxProps = {
   handleSendHighscore: (data: string) => void;
   handleNewGame: (gamemode: Gamemode) => void;
-  handleRetry: (board: Board, gamemode: Gamemode) => void;
+  handleRetryGame: (board: Board, gamemode: Gamemode) => void;
   handleRefetchHighscores: () => void;
 };
 
 const GameOverBox = ({
   handleSendHighscore,
   handleNewGame,
-  handleRetry,
+  handleRetryGame,
   handleRefetchHighscores,
 }: GameOverBoxProps) => {
   // game context
@@ -118,7 +118,7 @@ const GameOverBox = ({
 
       <GameOverBoxButton
         label="Retry Map"
-        onClick={() => handleRetry(board, currentGamemode)}
+        onClick={() => handleRetryGame(board, currentGamemode)}
       />
 
       {/* displays Generate New Map button if islands map */}

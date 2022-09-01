@@ -1,7 +1,8 @@
 import React from "react";
+import { useGameState } from "../../context/gameStateContext";
 
 // types
-import { Board, TileType } from "../../types";
+import { Board, Gamemode } from "../../types";
 
 // components
 import Tile from "./Tile";
@@ -9,15 +10,18 @@ import TileCarousel from "./TileCarousel";
 
 type BoardProps = {
   board: Board;
-  handleClickTile?: (tile: TileType) => void;
+  handleClickTile?: any; //?: (tile: TileType) => void;
   carousel?: boolean;
+  handleRetryGame?: (board: Board, gamemode: Gamemode) => void;
 };
 
 const BoardComponent = ({
   board,
   handleClickTile = () => {},
   carousel = false,
+  handleRetryGame = () => {},
 }: BoardProps) => {
+  const { state: gameState, dispatch } = useGameState();
   // render board with Tile objects
   const rows = [];
   for (let y = 0; y < board.height; y++) {
@@ -28,7 +32,13 @@ const BoardComponent = ({
         return <TileCarousel key={idx} tile={tile} />;
       } else {
         return (
-          <Tile key={idx} tile={tile} onClick={() => handleClickTile(tile)} />
+          <Tile
+            key={idx}
+            tile={tile}
+            onClick={() =>
+              handleClickTile(tile, gameState, dispatch, handleRetryGame)
+            }
+          />
         );
       }
     });

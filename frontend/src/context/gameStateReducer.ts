@@ -8,6 +8,7 @@ import {
 } from "../utils/boardGeneration";
 import {
   countRevealedTiles,
+  getGamemodeById,
   hideAllTiles,
   revealAllTiles,
 } from "../utils/gameUtils";
@@ -46,6 +47,10 @@ export enum Types {
   REVEAL_BOARD = "REVEAL_BOARD",
   GENERATE_NEW_BOARD = "GENERATE_NEW_BOARD",
   UPDATE_NUM_REVEALED_TILES = "UPDATE_NUM_REVEALED_TILES",
+  RESET_GAME = "RESET_GAME",
+  SELECT_GAMEMODE = "SELECT_GAMEMODE",
+  START_GAME = "START_GAME",
+  WIN_GAME = "WIN_GAME",
 }
 
 type GameStatePayload = {
@@ -116,6 +121,15 @@ type GameStatePayload = {
   [Types.UPDATE_NUM_REVEALED_TILES]: {
     board: Board;
   };
+  [Types.RESET_GAME]: {};
+  [Types.SELECT_GAMEMODE]: {
+    id: number;
+  };
+  [Types.START_GAME]: {
+    intervalId: any;
+    gameStartTimestamp: number;
+  };
+  [Types.WIN_GAME]: {};
 };
 
 export type GameStateActions =
@@ -265,6 +279,50 @@ export const gameStateReducer = (
       return {
         ...state,
         board: { ...state.board, numRevealedTiles },
+      };
+    case Types.RESET_GAME:
+      return {
+        ...state,
+        gameStarted: false,
+        gameOver: false,
+        gameWin: false,
+        gameTime: 0,
+        numPlacedMarkers: 0,
+        availableLighthouses: state.currentGamemode.nLighthouses,
+      };
+    case Types.SELECT_GAMEMODE:
+      const newCurrentGamemode = getGamemodeById(
+        state.gamemodes,
+        action.payload.id
+      );
+      const newGamemodes = generateBoardForSpecificGamemode(
+        state.gamemodes,
+        action.payload.id
+      );
+
+      return {
+        ...state,
+        currentGamemode: newCurrentGamemode,
+        gamemodes: newGamemodes,
+        board: newCurrentGamemode.board,
+        showGamemodeCarousel: false,
+      };
+    case Types.START_GAME:
+      return {
+        ...state,
+        board: { ...state.board, numRevealedTiles: 0 },
+        gameStarted: true,
+        intervalId: action.payload.intervalId,
+        gameStartTimestamp: action.payload.gameStartTimestamp,
+      };
+    case Types.WIN_GAME:
+      // clear timer
+      clearInterval(state.intervalId);
+      return {
+        ...state,
+        gameWin: true,
+        gameOver: true,
+        gameTime: Date.now() - state.gameStartTimestamp,
       };
     default:
       return state;
