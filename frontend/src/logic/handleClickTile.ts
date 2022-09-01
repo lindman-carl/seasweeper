@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
-import { GameStateActions, Types } from "../../context/gameStateReducer";
-import { Board, Gamemode, GameState, TileType } from "../../types";
-import { countRevealedTiles, startFloodFill } from "../../utils/gameUtils";
+import { GameStateActions, Types } from "../context/gameStateReducer";
+import { Board, Gamemode, GameState, TileType } from "../types";
+import { countRevealedTiles, startFloodFill } from "../utils/gameUtils";
 
 export const handleClickTile = (
   tile: TileType,
@@ -9,7 +9,7 @@ export const handleClickTile = (
   dispatch: Dispatch<GameStateActions>,
   handleRetryGame: (board: Board, currentGamemode: Gamemode) => void
 ) => {
-  const REFRESH_RATE = 100;
+  const REFRESH_RATE = 1000;
 
   const startGame = () => {
     // start game

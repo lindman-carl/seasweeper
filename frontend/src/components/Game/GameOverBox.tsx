@@ -14,6 +14,7 @@ import { useGameState } from "../../context/gameStateContext";
 
 // types
 import { Board, Gamemode } from "../../types";
+import { formatTime } from "../../utils/gameUtils";
 
 type FormResponseProps = {
   isSendingHighscore: boolean;
@@ -96,14 +97,14 @@ const GameOverBox = ({
     gameWin ? (
       <>
         <div className="gameoverbox-item gameoverbox-header">
-          {(gameTime / 1000).toPrecision()}s
+          {formatTime(gameTime)}s
         </div>
 
         {renderForm()}
       </>
     ) : (
       <div className="gameoverbox-item gameoverbox-header">
-        Failure achieved in {(gameTime / 1000).toPrecision()}s
+        Failure achieved in {formatTime(gameTime)}s
       </div>
     );
 

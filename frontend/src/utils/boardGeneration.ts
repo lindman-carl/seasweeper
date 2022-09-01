@@ -1,4 +1,4 @@
-import { generateValidIslandsMap } from "../components/Game/islandMapGenerator";
+import { generateValidIslandsMap } from "./islandMapGenerator";
 import { Array2D, Board, Gamemode, TileType } from "../types";
 import { hideAllTiles } from "./gameUtils";
 

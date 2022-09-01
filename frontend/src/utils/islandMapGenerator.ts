@@ -1,4 +1,4 @@
-import { Array2D, Point } from "../../types";
+import { Array2D, Point } from "../types";
 
 const createBlankArray2D = (w: number, h: number): Array2D => {
   // creates an Array2D of 0 with size w x h

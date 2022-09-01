@@ -21,7 +21,7 @@ import ScrollDownArrow from "./ScrollDownArrow";
 import { useGameState } from "../../context/gameStateContext";
 import { Types } from "../../context/gameStateReducer";
 import GameContainer from "./GameContainer";
-import { handleClickTile } from "./handleClickTile";
+import { handleClickTile } from "../../logic/handleClickTile";
 
 // const REFRESH_RATE = 100; // sets timer accuracy
 

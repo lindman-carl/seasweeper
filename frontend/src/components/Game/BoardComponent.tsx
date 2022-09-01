@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useGameState } from "../../context/gameStateContext";
 
 // types
@@ -15,43 +15,47 @@ type BoardProps = {
   handleRetryGame?: (board: Board, gamemode: Gamemode) => void;
 };
 
-const BoardComponent = ({
-  board,
-  handleClickTile = () => {},
-  carousel = false,
-  handleRetryGame = () => {},
-}: BoardProps) => {
-  const { state: gameState, dispatch } = useGameState();
-  // render board with Tile objects
-  const rows = [];
-  for (let y = 0; y < board.height; y++) {
-    // iterate y axis
-    const row = board.tiles.filter((t) => t.y === y).sort((a, b) => a.x - b.x);
-    const mappedRow = row.map((tile, idx) => {
-      if (carousel) {
-        return <TileCarousel key={idx} tile={tile} />;
-      } else {
-        return (
-          <Tile
-            key={idx}
-            tile={tile}
-            onClick={() =>
-              handleClickTile(tile, gameState, dispatch, handleRetryGame)
-            }
-          />
-        );
-      }
-    });
-    rows.push(mappedRow);
+const BoardComponent = memo(
+  ({
+    board,
+    handleClickTile = () => {},
+    carousel = false,
+    handleRetryGame = () => {},
+  }: BoardProps) => {
+    const { state: gameState, dispatch } = useGameState();
+    // render board with Tile objects
+    const rows = [];
+    for (let y = 0; y < board.height; y++) {
+      // iterate y axis
+      const row = board.tiles
+        .filter((t) => t.y === y)
+        .sort((a, b) => a.x - b.x);
+      const mappedRow = row.map((tile, idx) => {
+        if (carousel) {
+          return <TileCarousel key={idx} tile={tile} />;
+        } else {
+          return (
+            <Tile
+              key={idx}
+              tile={tile}
+              onClick={() =>
+                handleClickTile(tile, gameState, dispatch, handleRetryGame)
+              }
+            />
+          );
+        }
+      });
+      rows.push(mappedRow);
+    }
+
+    const rowsMapped = rows.map((row, idx) => (
+      <div key={idx} className="flex flex-row justify-start items-start shrink">
+        {row}
+      </div>
+    ));
+
+    return <div className="flex flex-col ">{rowsMapped}</div>;
   }
-
-  const rowsMapped = rows.map((row, idx) => (
-    <div key={idx} className="flex flex-row justify-start items-start shrink">
-      {row}
-    </div>
-  ));
-
-  return <div className="flex flex-col ">{rowsMapped}</div>;
-};
+);
 
 export default BoardComponent;

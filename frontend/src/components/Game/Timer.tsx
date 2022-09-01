@@ -5,21 +5,8 @@ type Props = {
 };
 
 const Timer = ({ time }: Props) => {
-  const formatTime = () => {
-    const seconds = Math.floor(time / 1000);
-    const hundreds = Math.floor((time % 1000) / 100);
+  const seconds = Math.floor(time / 1000);
 
-    return (
-      <>
-        <div className="w-min mt-2 text-left text-4xl justify-self-end">
-          {seconds}
-        </div>
-        <div className="w-3 mt-2 pt-px text-right text-lg font-medium">
-          {hundreds}
-        </div>
-      </>
-    );
-  };
   return (
     <div
       className="
@@ -33,7 +20,9 @@ const Timer = ({ time }: Props) => {
         cursor-default
         select-none"
     >
-      {time ? formatTime() : " "}
+      <div className="w-min mt-2 text-left text-4xl justify-self-end">
+        {seconds || 0}
+      </div>
     </div>
   );
 };
