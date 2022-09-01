@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // types
-import { HighscoreEntry } from "../../types";
+import { HighscoreEntry } from "../types";
 
 const fetchHighscores = async () => {
   // const res = await axios.get("/api/highscores");

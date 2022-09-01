@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply
+  bg-sky-200
+  ;
+}
+
 @layer components {
   .game-app-container {
     @apply h-full 
