@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Board, Gamemode } from "../../types";
 
 // utils
-import { gamemodes } from "../../utils/gameUtils";
+import { gamemodes, getGamemodeById } from "../../utils/gameUtils";
 import { generateBoardsForAllGamemodes } from "../../utils/boardGeneration";
 
 import { postHighscore } from "../../utils/apiUtils";
@@ -103,7 +103,11 @@ const Game = ({
       payload: { isSendingHighscore: true },
     });
 
-    await postHighscore(gameState.gameTime, playerName, gameState.name);
+    await postHighscore(
+      gameState.gameTime,
+      playerName,
+      gameState.currentGamemode.name
+    );
 
     // untrigger loading animation
     dispatch({
@@ -120,11 +124,11 @@ const Game = ({
     dispatch({ type: Types.SELECT_GAMEMODE, payload: { id } });
     // reset game
     dispatch({ type: Types.RESET_GAME, payload: {} });
-    // update highscore filtering to match the selected gamemode
-    setHighscoresMapFilter(gameState.name); // TODO FIX BROKEN
-  };
 
-  // the main game
+    // update highscore filtering to match the selected gamemode
+    const newGamemodeName = getGamemodeById(gameState.gamemodes, id).name;
+    setHighscoresMapFilter(newGamemodeName);
+  };
 
   // props
   const gameOverBoxProps = {
