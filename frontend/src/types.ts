@@ -53,7 +53,6 @@ export type Board = {
 };
 
 export type GameState = {
-  name: string;
   board: Board;
   availableLighthouses: number;
   numPlacedMarkers: number;

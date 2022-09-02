@@ -17,7 +17,6 @@ import { gamemodes } from "../utils/gameUtils";
 import { GameStateActions, gameStateReducer } from "./gameStateReducer";
 
 export const initialGameState: GameState = {
-  name: gamemodes[0].name,
   board: generateOpenSeaBoard(),
   availableLighthouses: 0,
   currentGamemode: gamemodes[0],
