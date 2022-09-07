@@ -9,12 +9,13 @@ import { ClipLoader } from "react-spinners";
 import SendHighscoreForm from "./SendHighscoreForm";
 import GameOverBoxButton from "./GameOverBoxButton";
 
-// state
-import { useGameState } from "../../context/gameStateContext";
-
 // types
-import { Board, Gamemode } from "../../types";
-import { formatTime } from "../../utils/gameUtils";
+import { Board, Gamemode } from "../../../types";
+import { formatTime } from "../../../utils/gameUtils";
+
+// Redux
+import { useAppSelector } from "../../../redux/hooks";
+import { RootState } from "../../../redux/store";
 
 type FormResponseProps = {
   isSendingHighscore: boolean;
@@ -47,17 +48,10 @@ const GameOverBox = ({
   handleRetryGame,
   handleRefetchHighscores,
 }: GameOverBoxProps) => {
-  // game context
-  const {
-    state: {
-      board,
-      gameOver,
-      gameWin,
-      gameTime,
-      isSendingHighscore,
-      currentGamemode,
-    },
-  } = useGameState();
+  const { gameOver, gameWin, gameTime, isSendingHighscore, currentGamemode } =
+    useAppSelector((state: RootState) => state.gameState);
+  const board = useAppSelector((state: RootState) => state.board);
+
   // react-hook-form
   const {
     register,

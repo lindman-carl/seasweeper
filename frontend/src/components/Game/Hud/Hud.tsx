@@ -4,7 +4,7 @@ import ReactTooltip from "react-tooltip";
 // components
 import IconBadge from "./IconBadge";
 import IconCheckbox from "./IconCheckbox";
-import Logo from "../Logo";
+import Logo from "../../Logo";
 import Timer from "./Timer";
 
 // icons & animations
@@ -13,33 +13,40 @@ import { FaBomb } from "react-icons/fa";
 import { RiMapFill } from "react-icons/ri";
 import { GiBroom, GiBuoy, GiCompass } from "react-icons/gi";
 import { SiLighthouse } from "react-icons/si";
-import { useGameState } from "../../context/gameStateContext";
-import { Types } from "../../context/gameStateReducer";
+
+// redux
+import { gameStateActions } from "../../../redux/gameStateSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { RootState } from "../../../redux/store";
 
 const Hud = () => {
   const {
-    state: {
-      board: { numBombs, numWaterTiles, numRevealedTiles },
-      numPlacedMarkers,
-      gameOver,
-      gameTime,
-      gameStarted,
-      gameWin,
-      lighthouseMode,
-      availableLighthouses,
-      showGamemodeCarousel,
-      markerMode,
-    },
-    dispatch,
-  } = useGameState();
+    numPlacedMarkers,
+    gameOver,
+    gameTime,
+    gameStarted,
+    gameWin,
+    lighthouseMode,
+    availableLighthouses,
+    showGamemodeCarousel,
+    markerMode,
+  } = useAppSelector((state: RootState) => state.gameState);
+  const { numBombs, numWaterTiles, numRevealedTiles } = useAppSelector(
+    (state: RootState) => state.board
+  );
+  const dispatch = useAppDispatch();
+
+  const { setShowGamemodeCarousel, setLighthouseMode, setMarkerMode } =
+    gameStateActions;
 
   // event handlers
   const handleToggleGamemodeCarousel = () => {
     // toggles gamemode carousel show state
-    dispatch({
-      type: Types.SET_SHOW_GAMEMODE_CAROUSEL,
-      payload: { showGamemodeCarousel: !showGamemodeCarousel },
-    });
+    // dispatch({
+    //   type: Types.SET_SHOW_GAMEMODE_CAROUSEL,
+    //   payload: { showGamemodeCarousel: !showGamemodeCarousel },
+    // });
+    dispatch(setShowGamemodeCarousel(!showGamemodeCarousel));
   };
 
   // eventhandler for clicking lighthouse mode button
@@ -47,30 +54,34 @@ const Hud = () => {
     // if the player has available lighthouses
     if (availableLighthouses > 0) {
       // toggle lighhouse mode
-      dispatch({
-        type: Types.SET_LIGHTHOUSE_MODE,
-        payload: { lighthouseMode: !lighthouseMode },
-      });
+      // dispatch({
+      //   type: Types.SET_LIGHTHOUSE_MODE,
+      //   payload: { lighthouseMode: !lighthouseMode },
+      // });
+      dispatch(setLighthouseMode(!lighthouseMode));
       // disable mark mode
-      dispatch({
-        type: Types.SET_MARKER_MODE,
-        payload: { markerMode: false },
-      });
+      // dispatch({
+      //   type: Types.SET_MARKER_MODE,
+      //   payload: { markerMode: false },
+      // });
+      dispatch(setMarkerMode(false));
     }
   };
 
   // eventhandler for clicking mark mode button
   const handleToggleMarkMode = () => {
     // toggle mark mode
-    dispatch({
-      type: Types.SET_MARKER_MODE,
-      payload: { markerMode: !markerMode },
-    });
+    // dispatch({
+    //   type: Types.SET_MARKER_MODE,
+    //   payload: { markerMode: !markerMode },
+    // });
+    dispatch(setMarkerMode(!markerMode));
     // disable lighthouse mode
-    dispatch({
-      type: Types.SET_LIGHTHOUSE_MODE,
-      payload: { lighthouseMode: false },
-    });
+    // dispatch({
+    //   type: Types.SET_LIGHTHOUSE_MODE,
+    //   payload: { lighthouseMode: false },
+    // });
+    dispatch(setLighthouseMode(false));
   };
 
   const doubleIcon = () => {
@@ -82,6 +93,7 @@ const Hud = () => {
       </div>
     );
   };
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-full flex flex-row items-center justify-around">

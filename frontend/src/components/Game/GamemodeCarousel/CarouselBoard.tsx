@@ -1,10 +1,10 @@
 import React from "react";
 
 // types
-import { Board } from "../../types";
+import { Board } from "../../../types";
 
 // components
-import BoardComponent from "./BoardComponent";
+import BoardComponent from "../BoardComponent";
 
 type Props = {
   board: Board;

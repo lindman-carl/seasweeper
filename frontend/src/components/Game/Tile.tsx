@@ -149,7 +149,6 @@ const Tile = ({ tile, onClick }: Props) => {
   };
 
   // render
-
   return renderTile();
 };
 

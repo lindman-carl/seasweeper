@@ -11,7 +11,7 @@ import { gamemodes } from "../../utils/gameUtils";
 import HighScoresContainer from "./HighscoreContainer";
 import HighscoreList from "./HighscoreList";
 import HighscoreFilter from "./HighscoreFilter";
-import IconCheckbox from "../Game/IconCheckbox";
+import IconCheckbox from "../Game/Hud/IconCheckbox";
 import { fetchHighscores } from "../../utils/apiUtils";
 
 //icons
@@ -60,7 +60,7 @@ const HighscoresApp = forwardRef((_, ref) => {
 
   // mapping gamemodes to select input
   const mapGamemodesToSelect = () =>
-    gamemodes
+    sortedGamemodes
       .sort((a, b) => 0 - (a.name > b.name ? 1 : -1))
       .map((gm) => (
         <option value={gm.name} key={gm.id}>

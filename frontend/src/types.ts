@@ -53,7 +53,6 @@ export type Board = {
 };
 
 export type GameState = {
-  board: Board;
   availableLighthouses: number;
   numPlacedMarkers: number;
   currentGamemode: Gamemode;

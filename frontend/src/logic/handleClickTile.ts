@@ -1,15 +1,36 @@
-import { Dispatch } from "react";
-import { GameStateActions, Types } from "../context/gameStateReducer";
 import { Board, Gamemode, GameState, TileType } from "../types";
 import { countRevealedTiles, startFloodFill } from "../utils/gameUtils";
+import { boardActions, gameStateActions } from "../redux/gameStateSlice";
+import { AnyAction, Dispatch, ThunkDispatch } from "@reduxjs/toolkit";
 
 export const handleClickTile = (
   tile: TileType,
   gameState: GameState,
-  dispatch: Dispatch<GameStateActions>,
+  board: Board,
+  dispatch: ThunkDispatch<
+    {
+      gameState: GameState;
+      board: Board;
+    },
+    undefined,
+    AnyAction
+  > &
+    Dispatch<AnyAction>,
   handleRetryGame: (board: Board, currentGamemode: Gamemode) => void
 ) => {
   const REFRESH_RATE = 1000;
+
+  const {
+    setGameTime,
+    startGame: startGameAction,
+    winGame,
+    setNumPlacedMarkers,
+    setAvailableLighthouses,
+    setLighthouseMode,
+    setGameOver,
+  } = gameStateActions;
+
+  const { setBoard, revealBoard, setNumRevealedTiles } = boardActions;
 
   const startGame = () => {
     // start game
@@ -22,18 +43,16 @@ export const handleClickTile = (
 
     // set game timer interval
     const gameInterval = setInterval(() => {
-      dispatch({
-        type: Types.SET_GAME_TIME,
-        payload: {
-          gameTime: Date.now() - startTimestamp,
-        },
-      });
+      dispatch(setGameTime(Date.now() - startTimestamp));
     }, REFRESH_RATE);
 
-    dispatch({
-      type: Types.START_GAME,
-      payload: { intervalId: gameInterval, gameStartTimestamp: startTimestamp },
-    });
+    dispatch(
+      startGameAction({
+        intervalId: gameInterval,
+        gameStartTimestamp: startTimestamp,
+      })
+    );
+    dispatch(setNumRevealedTiles(0));
   };
 
   // check for win conditions on current board
@@ -44,20 +63,11 @@ export const handleClickTile = (
     // side effect
     // not very pure bro
     // update game state
-    dispatch({
-      type: Types.SET_NUM_REVEALED_TILES,
-      payload: { numRevealedTiles },
-    });
+    dispatch(setNumRevealedTiles(numRevealedTiles));
 
-    if (
-      numRevealedTiles >=
-      gameState.board.numWaterTiles - gameState.board.numBombs
-    ) {
+    if (numRevealedTiles >= board.numWaterTiles - board.numBombs) {
       // win
-      dispatch({
-        type: Types.WIN_GAME,
-        payload: {},
-      });
+      dispatch(winGame());
     }
   };
 
@@ -92,12 +102,8 @@ export const handleClickTile = (
     }
 
     // updated number of placed markers
-    dispatch({
-      type: Types.SET_NUM_PLACED_MARKERS,
-      payload: {
-        numPlacedMarkers: gameState.numPlacedMarkers + (tile.marked ? -1 : 1),
-      },
-    });
+    const placed = gameState.numPlacedMarkers + (tile.marked ? -1 : 1);
+    dispatch(setNumPlacedMarkers(placed));
 
     // toggle tile
     tile.marked = !tile.marked;
@@ -112,7 +118,7 @@ export const handleClickTile = (
       // set lighthouse
       // filters and map ids of the tiles directly surrounding the lighthouse,
       // max 8 ignore self
-      const litTileIds = gameState.board.tiles
+      const litTileIds = board.tiles
         .filter(
           (t) =>
             t.x >= tile.x - 1 &&
@@ -125,7 +131,7 @@ export const handleClickTile = (
         .map((t) => t.id);
 
       // maps lighthouse to tile
-      const newTiles = gameState.board.tiles.map((t) =>
+      const newTiles = board.tiles.map((t) =>
         t.id === tile.id ? { ...t, lighthouse: true } : t
       );
       // maps lit tiles
@@ -134,24 +140,18 @@ export const handleClickTile = (
       );
 
       // decrement available lighthouses
-      dispatch({
-        type: Types.SET_AVAILABLE_LIGHTHOUSES,
-        payload: { availableLighthouses: gameState.availableLighthouses - 1 },
-      });
+      dispatch(setAvailableLighthouses(gameState.availableLighthouses - 1));
 
       if (gameState.availableLighthouses < 1) {
         // disables lighthouse mode if no more lighthouses are available
-        dispatch({
-          type: Types.SET_LIGHTHOUSE_MODE,
-          payload: { lighthouseMode: false },
-        });
+        dispatch(setLighthouseMode(false));
       }
 
       // count water tiles
       const numWaterTiles = litTiles.filter((tile) => tile.type !== 1).length;
 
       const newBoard: Board = {
-        ...gameState.board,
+        ...board,
         tiles: litTiles,
         numWaterTiles,
       };
@@ -160,23 +160,19 @@ export const handleClickTile = (
       checkWinConditions(newBoard);
 
       // update board
-      dispatch({
-        type: Types.SET_BOARD,
-        payload: { board: newBoard },
-      });
+      dispatch(setBoard(newBoard));
       // update number of revealed tiles
-      dispatch({
-        type: Types.UPDATE_NUM_REVEALED_TILES,
-        payload: { board: newBoard },
-      });
+      const numRevealedTiles = countRevealedTiles(newBoard);
+      dispatch(setNumRevealedTiles(numRevealedTiles));
 
       return;
     } else {
       // disable lighthouseMode
-      dispatch({
-        type: Types.SET_LIGHTHOUSE_MODE,
-        payload: { lighthouseMode: false },
-      });
+      // dispatch({
+      //   type: Types.SET_LIGHTHOUSE_MODE,
+      //   payload: { lighthouseMode: false },
+      // });
+      dispatch(setLighthouseMode(false));
     }
   }
 
@@ -186,7 +182,7 @@ export const handleClickTile = (
       // never start on bomb
       // quickly repopulate board
       // TODO: PREVENT HAVING TO DOUBLE CLICK
-      handleRetryGame(gameState.board, gameState.currentGamemode);
+      handleRetryGame(board, gameState.currentGamemode);
 
       tile.revealed = true;
       return;
@@ -198,20 +194,13 @@ export const handleClickTile = (
   // if bomb is clicked setGameOver
   if (tile.bomb && gameState.gameStarted) {
     // trigger game over
-    dispatch({
-      type: Types.SET_GAME_OVER,
-      payload: { gameOver: true },
-    });
+
+    dispatch(setGameOver(true));
     // get the final time
-    dispatch({
-      type: Types.SET_GAME_TIME,
-      payload: { gameTime: Date.now() - gameState.gameStartTimestamp },
-    });
+
+    dispatch(setGameTime(Date.now() - gameState.gameStartTimestamp));
     // reveal all tiles on board
-    dispatch({
-      type: Types.REVEAL_BOARD,
-      payload: { board: gameState.board },
-    });
+    dispatch(revealBoard(board));
 
     // clear timer
     clearInterval(gameState.intervalId);
@@ -228,34 +217,26 @@ export const handleClickTile = (
 
   if (tile.count === 0) {
     // start flood fill algo if the tile has no neighbouring bombs
-    tileIdsToReveal = startFloodFill(
-      tile,
-      gameState.board.tiles,
-      tileIdsToReveal
-    );
+    tileIdsToReveal = startFloodFill(tile, board.tiles, tileIdsToReveal);
   }
 
   // reveal tiles and update board
-  const revealedTiles = gameState.board.tiles.map((t) =>
+  const revealedTiles = board.tiles.map((t) =>
     tileIdsToReveal.includes(t.id) ? { ...t, revealed: true } : t
   );
 
   // sort board by id
   const sortedRevealedTiles = revealedTiles.sort((a, b) => a.id - b.id);
 
-  const newBoard: Board = { ...gameState.board, tiles: sortedRevealedTiles };
+  const newBoard: Board = { ...board, tiles: sortedRevealedTiles };
 
   // check win
   checkWinConditions(newBoard);
 
   // update board
-  dispatch({
-    type: Types.SET_BOARD,
-    payload: { board: newBoard },
-  });
+  dispatch(setBoard(newBoard));
   // update number of revealed tiles
-  dispatch({
-    type: Types.UPDATE_NUM_REVEALED_TILES,
-    payload: { board: newBoard },
-  });
+
+  const numRevealedTiles = countRevealedTiles(newBoard);
+  dispatch(setNumRevealedTiles(numRevealedTiles));
 };

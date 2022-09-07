@@ -72,11 +72,11 @@ export const populateBombs = ({
   width,
   height,
   numBombs,
-  bombIds = [],
   numWaterTiles,
 }: Board) => {
   // get bomb positions
   let getRandomId;
+  const bombIds: number[] = [];
 
   if (width && height) {
     getRandomId = () => Math.floor(Math.random() * (width * height));

@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Provider } from "react-redux";
 
 // components
 import Game from "./Game";
@@ -7,8 +8,8 @@ import HighscoresApp from "../Highscore";
 import Logo from "../Logo";
 import SignatureFooter from "../SignatureFooter";
 
-// context
-import { GameStateProvider } from "../../context/gameStateContext";
+// state management
+import { store } from "../../redux/store";
 
 const GameApp = () => {
   // refs
@@ -27,7 +28,7 @@ const GameApp = () => {
   // render
   return (
     <div className="game-app-container">
-      <GameStateProvider>
+      <Provider store={store}>
         <Game
           handleRefetchHighscores={handleRefetchHighscores}
           setHighscoresMapFilter={setHighscoresMapFilter}
@@ -41,7 +42,7 @@ const GameApp = () => {
           </div>
           <SignatureFooter />
         </div>
-      </GameStateProvider>
+      </Provider>
     </div>
   );
 };
