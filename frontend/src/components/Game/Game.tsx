@@ -16,12 +16,12 @@ import GameOverBox from "./GameOverBox";
 import GeneratingMapSpinner from "./GeneratingMapSpinner";
 import Hud from "./Hud";
 import ScrollDownArrow from "./ScrollDownArrow";
-
-// context
-import { useGameState } from "../../context/gameStateContext";
-import { Types } from "../../context/gameStateReducer";
 import GameContainer from "./GameContainer";
-import { handleClickTile } from "../../logic/handleClickTile";
+
+// redux
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { RootState } from "../../redux/store";
+import { boardActions, gameStateActions } from "../../redux/gameStateSlice";
 
 // const REFRESH_RATE = 100; // sets timer accuracy
 
@@ -35,7 +35,20 @@ const Game = ({
   setHighscoresMapFilter,
 }: GameProps) => {
   // state
-  const { state: gameState, dispatch } = useGameState();
+  const gameState = useAppSelector((state: RootState) => state.gameState);
+  const board = useAppSelector((state: RootState) => state.board);
+
+  const dispatch = useAppDispatch();
+
+  const {
+    setGamemodes,
+    setCurrentGamemode,
+    resetGame,
+    setIsSendingHighscore,
+    selectGamemode,
+  } = gameStateActions;
+
+  const { setBoard, generateNewBoard, repopulateBoard } = boardActions;
 
   // useEffect
   useEffect(() => {
@@ -48,15 +61,9 @@ const Game = ({
         newGamemodes.find((gm) => gm.id === gameState.currentGamemode.id) ||
         gamemodes[0];
 
-      // update gamemodes and set board
-      dispatch({
-        type: Types.SET_BOARD,
-        payload: { board: currentGamemode.board },
-      });
-      dispatch({
-        type: Types.SET_GAMEMODES,
-        payload: { gamemodes: newGamemodes },
-      });
+      dispatch(setBoard(currentGamemode.board));
+      dispatch(setCurrentGamemode(currentGamemode));
+      dispatch(setGamemodes(newGamemodes));
     };
 
     generateAllGamemodeBoards();
@@ -74,34 +81,22 @@ const Game = ({
   const handleNewGame = (gamemode: Gamemode) => {
     // generate a new board,
     // and reset game
-    dispatch({
-      type: Types.GENERATE_NEW_BOARD,
-      payload: { gamemode },
-    });
+    dispatch(generateNewBoard(gamemode));
     // reset game
-    dispatch({ type: Types.RESET_GAME, payload: {} });
+    dispatch(resetGame());
   };
 
   const handleRetryGame = (board: Board, gamemode: Gamemode) => {
     // reset game
-    dispatch({ type: Types.RESET_GAME, payload: {} });
+    dispatch(resetGame());
 
     // get new bombs
-    dispatch({
-      type: Types.REPOPULATE_BOARD,
-      payload: {
-        board,
-        gamemode,
-      },
-    });
+    dispatch(repopulateBoard(gameState.currentGamemode));
   };
 
   const handleSendHighscore = async ({ playerName }: any) => {
     // trigger loading animation
-    dispatch({
-      type: Types.SET_IS_SENDING_HIGHSCORE,
-      payload: { isSendingHighscore: true },
-    });
+    dispatch(setIsSendingHighscore(true));
 
     await postHighscore(
       gameState.gameTime,
@@ -109,11 +104,8 @@ const Game = ({
       gameState.currentGamemode.name
     );
 
-    // untrigger loading animation
-    dispatch({
-      type: Types.SET_IS_SENDING_HIGHSCORE,
-      payload: { isSendingHighscore: false },
-    });
+    // end loading animation
+    dispatch(setIsSendingHighscore(false));
 
     // refetch highscore list
     handleRefetchHighscores();
@@ -121,9 +113,12 @@ const Game = ({
 
   const handleSelectGamemode = (id: number) => {
     // // sets current gamemode to id and generates a new board
-    dispatch({ type: Types.SELECT_GAMEMODE, payload: { id } });
+    const newGamemode = getGamemodeById(gameState.gamemodes, id);
+    dispatch(selectGamemode(id));
+    dispatch(setBoard(newGamemode.board));
+
     // reset game
-    dispatch({ type: Types.RESET_GAME, payload: {} });
+    dispatch(resetGame());
 
     // update highscore filtering to match the selected gamemode
     const newGamemodeName = getGamemodeById(gameState.gamemodes, id).name;
@@ -143,7 +138,7 @@ const Game = ({
   };
 
   // render loading spinner while generating maps
-  if (!gameState.board) return <GeneratingMapSpinner />;
+  if (!board) return <GeneratingMapSpinner />;
 
   // render
   return (
@@ -151,11 +146,7 @@ const Game = ({
       <GamemodeCarousel {...gamemodeCarouselProps} />
       <Hud />
       <button>
-        <BoardComponent
-          board={gameState.board}
-          handleClickTile={handleClickTile}
-          handleRetryGame={handleRetryGame}
-        />
+        <BoardComponent board={board} handleRetryGame={handleRetryGame} />
       </button>
 
       <GameOverBox {...gameOverBoxProps} />

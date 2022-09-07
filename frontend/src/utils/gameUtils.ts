@@ -165,7 +165,7 @@ export const gamemodes: Gamemode[] = [
     width: 20,
     height: 20,
     numBombs: 32,
-    nLighthouses: 0,
+    nLighthouses: 2,
     nIslands: 3,
     clusterSpread: 10,
     keepFromBorder: true,

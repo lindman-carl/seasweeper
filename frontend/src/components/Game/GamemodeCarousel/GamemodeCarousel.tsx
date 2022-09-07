@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // components
 import CarouselBoard from "./CarouselBoard";
@@ -10,8 +10,13 @@ import {
   MdOutlineClose,
   MdRefresh,
 } from "react-icons/md";
-import { useGameState } from "../../context/gameStateContext";
-import { Types } from "../../context/gameStateReducer";
+
+// redux
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { gameStateActions } from "../../../redux/gameStateSlice";
+import { getGamemodeById } from "../../../utils/gameUtils";
+import { RootState } from "../../../redux/store";
+import { Gamemode } from "../../../types";
 
 type Props = {
   handleSelectGamemode: (index: number) => void;
@@ -58,18 +63,28 @@ const RightButton = ({ onClick }: { onClick: () => void }) => (
 
 const GamemodeCarousel = ({ handleSelectGamemode }: Props) => {
   const {
-    state: {
-      gamemodes,
-      showGamemodeCarousel,
-      currentGamemode: { id: startIndex },
-    },
-    dispatch,
-  } = useGameState();
+    gamemodes,
+    showGamemodeCarousel,
+    currentGamemode: { id: startIndex },
+  } = useAppSelector((state: RootState) => state.gameState);
+  const dispatch = useAppDispatch();
+
+  const { setShowGamemodeCarousel, regenerateGamemodeBoard } = gameStateActions;
 
   // index state
   const [currentIndex, setCurrentIndex] = useState<number>(
     startIndex ? startIndex : 0
   );
+  const [gamemodeToDisplay, setGamemodeToDisplay] = useState<Gamemode>(
+    gamemodes[startIndex]
+  );
+
+  useEffect(() => {
+    const newGamemode = getGamemodeById(gamemodes, currentIndex);
+    setGamemodeToDisplay(newGamemode);
+    console.log(newGamemode);
+    console.log(currentIndex);
+  }, [gamemodes, currentIndex]);
 
   const handleCarouselNavigationClick = (inc: number) => {
     // handles click right and left navigation buttons
@@ -87,23 +102,12 @@ const GamemodeCarousel = ({ handleSelectGamemode }: Props) => {
 
   const handleToggleGamemodeCarousel = () => {
     // toggles gamemode carousel show state
-    dispatch({
-      type: Types.SET_SHOW_GAMEMODE_CAROUSEL,
-      payload: { showGamemodeCarousel: !showGamemodeCarousel },
-    });
+    dispatch(setShowGamemodeCarousel(!showGamemodeCarousel));
   };
 
   const handleRegenerateBoard = () => {
-    // regenerate current board
-    dispatch({
-      type: Types.REGENERATE_BOARD,
-      payload: {
-        gamemodeId: currentIndex,
-      },
-    });
+    dispatch(regenerateGamemodeBoard(currentIndex));
   };
-
-  const gamemodeToDisplay = gamemodes.sort((a, z) => a.id - z.id)[currentIndex];
 
   // check if it supposed to render
   if (!showGamemodeCarousel) return null;
