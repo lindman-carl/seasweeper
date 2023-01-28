@@ -5,7 +5,7 @@ import { HighscoreEntry } from "../types";
 
 const fetchHighscores = async () => {
   // const res = await axios.get("/api/highscores");
-  const res = await axios.get<[HighscoreEntry]>(
+  const res = await axios.get<HighscoreEntry[]>(
     // "https://seasweeper.herokuapp.com/api/highscores"
     "https://prickly-moth-slippers.cyclic.app/api/highscores"
   );
