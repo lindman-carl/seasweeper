@@ -32,7 +32,7 @@ const HighscoresApp = forwardRef((_, ref) => {
   );
 
   // handle undefined data
-  const highscoreData: [HighscoreEntry] | [] = data ?? [];
+  const highscoreData: HighscoreEntry[] = data ?? [];
 
   // export functions to parent
   useImperativeHandle(ref, () => ({

@@ -11,7 +11,7 @@ import HighscoreListRow from "./HighscoreListRow";
 import { ClipLoader } from "react-spinners";
 
 type Props = {
-  data: [HighscoreEntry] | [];
+  data: HighscoreEntry[];
   isLoading: boolean;
   error: any;
   mapFilter: string;
