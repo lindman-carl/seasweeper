@@ -15,7 +15,7 @@ const app = express(); // initialize express app
 console.log("connecting to", config.MONGODB_URI); // log mongodb uri
 
 // connect to mongodb
-export const connectDB = () =>
+const connectDB = () =>
   mongoose
     .connect(config.MONGODB_URI, { useNewUrlParser: true })
     .then(() => {
@@ -37,4 +37,4 @@ app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-module.exports = app;
+module.exports = { app, connectDB };

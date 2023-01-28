@@ -1,11 +1,11 @@
 const http = require("http");
 
 const config = require("./utils/config");
-const app = require("./app");
+const { app, connectDB } = require("./app");
 
 const server = http.createServer(app);
 
-app.connectDB().then(() => {
+connectDB().then(() => {
   server.listen(config.PORT, () => {
     console.log(`Server running on port ${config.PORT}`);
   });
