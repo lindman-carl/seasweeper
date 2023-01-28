@@ -15,14 +15,15 @@ const app = express(); // initialize express app
 console.log("connecting to", config.MONGODB_URI); // log mongodb uri
 
 // connect to mongodb
-mongoose
-  .connect(config.MONGODB_URI, { useNewUrlParser: true })
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.error("error connection to MongoDB:", error.message);
-  });
+export const connectDB = () =>
+  mongoose
+    .connect(config.MONGODB_URI, { useNewUrlParser: true })
+    .then(() => {
+      console.log("connected to MongoDB");
+    })
+    .catch((error) => {
+      console.error("error connection to MongoDB:", error.message);
+    });
 
 // middleware
 app.use(cors());
