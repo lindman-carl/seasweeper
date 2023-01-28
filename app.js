@@ -15,6 +15,7 @@ const app = express(); // initialize express app
 console.log("connecting to", config.MONGODB_URI); // log mongodb uri
 
 // connect to mongodb
+// test
 const connectDB = () =>
   mongoose
     .connect(config.MONGODB_URI, { useNewUrlParser: true })
