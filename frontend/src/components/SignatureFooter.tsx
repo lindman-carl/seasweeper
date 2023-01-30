@@ -6,7 +6,7 @@ import { MdOpenInNew } from "react-icons/md";
 const SignatureFooter = () => {
   return (
     <div className="text-base text-sky-900 font-light text-center inline-flex gap-4 my-4">
-      @lindman
+      @lindman_dev
       <a
         href="https://github.com/yoga-python/seasweeper"
         target="_blank"
