@@ -41,3 +41,4 @@ glhf
 ### Styling
 
 - tailwindcss
+- fully responsive design
