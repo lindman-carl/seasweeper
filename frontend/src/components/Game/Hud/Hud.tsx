@@ -87,7 +87,12 @@ const Hud = () => {
   const doubleIcon = () => {
     return (
       <div className="flex justify-center items-center">
-        <RiMapFill size={44} className="absolute text-sky-800" />
+        <RiMapFill
+          size={44}
+          className={`absolute ${
+            showGamemodeCarousel ? "text-red-600" : "text-sky-800"
+          }`}
+        />
         {/* <ImEarth size={22} className="absolute text-white" /> */}
         <GiCompass size={26} className="absolute  text-white" />
       </div>
