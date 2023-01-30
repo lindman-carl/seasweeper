@@ -82,8 +82,6 @@ const GamemodeCarousel = ({ handleSelectGamemode }: Props) => {
   useEffect(() => {
     const newGamemode = getGamemodeById(gamemodes, currentIndex);
     setGamemodeToDisplay(newGamemode);
-    console.log(newGamemode);
-    console.log(currentIndex);
   }, [gamemodes, currentIndex]);
 
   const handleCarouselNavigationClick = (inc: number) => {
