@@ -119,7 +119,9 @@ export const gameStateSlice = createSlice({
       state.showGamemodeCarousel = action.payload;
     },
     setGameTime: (state: GameState, action: PayloadAction<number>) => {
-      state.gameTime = action.payload;
+      if (!state.gameOver) {
+        state.gameTime = action.payload;
+      }
     },
     setGameStartTimestamp: (
       state: GameState,
@@ -175,9 +177,11 @@ export const gameStateSlice = createSlice({
       state.gameStartTimestamp = action.payload.gameStartTimestamp;
     },
     winGame: (state: GameState) => {
+      const finalTime = Date.now() - state.gameStartTimestamp;
+      console.log("final time", finalTime);
       state.gameWin = true;
       state.gameOver = true;
-      state.gameTime = Date.now() - state.gameStartTimestamp;
+      state.gameTime = finalTime;
     },
   },
 });
