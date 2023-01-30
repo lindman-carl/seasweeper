@@ -82,7 +82,8 @@ export const countRevealedTiles = (boardToCount: Board): number => {
 };
 
 export const formatTime = (time: number) => {
-  return (time / 1000).toFixed(2);
+  const timeInS = time / 1000;
+  return Number(Math.round(Number(timeInS + "e" + 2)) + "e-" + 2);
 };
 
 const openSeaBoard = generateOpenSeaBoard(20, 20, 32);
