@@ -62,6 +62,7 @@ const GameOverBox = ({
   const [hasSubmit, setHasSubmit] = useState(false);
 
   // whether to display the Generate New Map button
+  // only available for islands map, no need for maps without islands
   const generateNewMapAvailable = currentGamemode.nIslands > 0;
 
   const onSubmit = (data: string) => {
@@ -113,7 +114,10 @@ const GameOverBox = ({
 
       <GameOverBoxButton
         label="Retry Map"
-        onClick={() => handleRetryGame(board, currentGamemode)}
+        onClick={() => {
+          setHasSubmit(false);
+          handleRetryGame(board, currentGamemode);
+        }}
       />
 
       {/* displays Generate New Map button if islands map */}
