@@ -85,14 +85,109 @@ describe("The game", () => {
       cy.get("[data-id=toggle-mark-mode]").click();
       cy.get("#tile-0").click();
 
-      // expect the tile to have a marker (the wiggle animation)
-      cy.get("#tile-0").find("div").should("have.class", "animate-wiggle");
+      // expect the tile to have a marker, svg
+      cy.get("#tile-0").find("svg");
 
       cy.get("[data-id=toggle-mark-mode]").click();
       cy.get("#tile-0").click();
 
-      // expect the tile to still have a marker (the wiggle animation)
-      cy.get("#tile-0").find("div").should("have.class", "animate-wiggle");
+      // expect the tile to still have a marker, svg
+      cy.get("#tile-0").find("svg");
+    });
+  });
+
+  describe("placing lighthouse", () => {
+    it("can place a lighthouse", () => {
+      // expect 2 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("2");
+
+      // toggle lighthouse mode, click a tile
+      cy.get("[data-id=toggle-lighthouse-mode]").click();
+      cy.get("#tile-72").click();
+
+      // expect 1 lighthouse left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("1");
+
+      // expect the tile to have a lighthouse, check for svg
+      cy.get("#tile-72").find("svg");
+
+      // check that the correct tiles are lit, and the rest are not
+      // 5x5 grid centered at 72
+      const litTiles = [51, 52, 53, 73, 93];
+      for (const id of litTiles) {
+        // expect the lit tiles to have the lit background color: bg-yellow-100
+        cy.get(`#tile-${id}`)
+          .find("div")
+          .should("have.class", "tile-base")
+          .should("have.class", "bg-yellow-100");
+      }
+      const unlitTiles = [
+        30, 31, 32, 33, 34, 50, 54, 70, 71, 72, 74, 90, 91, 92, 94,
+      ];
+      for (const id of unlitTiles) {
+        // expect the unlit tiles to not have the lit background color: bg-yellow-100
+        cy.get(`#tile-${id}`)
+          .find("div")
+          .should("have.class", "tile-base")
+          .should("not.have.class", "bg-yellow-100");
+      }
+    });
+    it("can place 2 lighthouses", () => {
+      // expect 2 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("2");
+
+      // toggle lighthouse mode, click a tile
+      cy.get("[data-id=toggle-lighthouse-mode]").click();
+      cy.get("#tile-72").click();
+
+      // expect 1 lighthouse left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("1");
+
+      // expect the tile to have a lighthouse, check for svg
+      cy.get("#tile-72").find("svg");
+
+      // place another lighthouse
+      cy.get("#tile-265").click();
+
+      // expect 0 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("-");
+
+      // expect the tile to have a lighthouse, check for svg
+      cy.get("#tile-265").find("svg");
+    });
+
+    it("can't place more than 2 lighthouses", () => {
+      // toggle lighthouse mode, try place 3 lighthouses
+      cy.get("[data-id=toggle-lighthouse-mode]").click();
+      cy.get("#tile-72").click();
+      cy.get("#tile-265").click();
+      cy.get("#tile-93").click();
+
+      // expect 0 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("-");
+
+      // check for 3 lighthouses, expect 2
+      cy.get("#tile-72").find("svg");
+      cy.get("#tile-265").find("svg");
+      cy.get("#tile-93").find("svg").should("not.exist");
+    });
+
+    it("placing on a sea tile reveals it", () => {
+      // expect 2 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("2");
+
+      // toggle lighthouse mode, click a sea tile
+      cy.get("[data-id=toggle-lighthouse-mode]").click();
+      cy.get("#tile-0").click();
+
+      // expect the tile to have the revealed background color: bg-sky-50
+      cy.get("#tile-0")
+        .find("div")
+        .should("have.class", "tile-base")
+        .should("have.class", "bg-sky-50");
+
+      // expect to still have 2 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("2");
     });
   });
 });
