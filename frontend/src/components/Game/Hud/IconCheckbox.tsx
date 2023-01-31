@@ -73,6 +73,7 @@ const IconCheckbox = ({
           border-2`}
         data-tip={activeTooltip ? activeTooltip : tooltip}
         data-for="checkboxInfo"
+        data-id={id}
       >
         {checkboxContent(alternateIcon)}
       </button>
@@ -91,6 +92,7 @@ const IconCheckbox = ({
           cursor-not-allowed"
         data-tip={tooltip}
         data-for="checkboxInfo"
+        data-id={id}
       >
         {checkboxContent(icon)}
       </div>
