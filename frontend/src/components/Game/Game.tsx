@@ -50,6 +50,7 @@ const Game = ({
     resetGame,
     setIsSendingHighscore,
     selectGamemode,
+    setAvailableLighthouses,
   } = gameStateActions;
 
   const { setBoard, generateNewBoard, repopulateBoard } = boardActions;
@@ -65,8 +66,10 @@ const Game = ({
         newGamemodes.find((gm) => gm.id === gameState.currentGamemode.id) ||
         gamemodes[0];
 
+      // set gamemodes, current gamemode, and board
       dispatch(setBoard(currentGamemode.board));
       dispatch(setCurrentGamemode(currentGamemode));
+      dispatch(setAvailableLighthouses(currentGamemode.nLighthouses));
       dispatch(setGamemodes(newGamemodes));
 
       if (process.env.NODE_ENV === "development") {
