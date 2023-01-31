@@ -9,6 +9,7 @@ describe("The game", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/");
   });
+
   it("successfully loads the test board", () => {
     // check some random tiles to see if it match the test board
     const randomIndices = getRandomIndices(40, testBoard.tiles);
@@ -20,6 +21,24 @@ describe("The game", () => {
         .should("have.class", "tile-base")
         .should("have.class", expectedClass);
     }
+  });
+
+  it("can win the game", () => {
+    const tilesToClick = [
+      0, 80, 64, 8, 12, 159, 396, 386, 267, 220, 82, 4, 5, 50, 49, 69, 68, 88,
+      128, 148, 147, 168, 169, 188, 209, 295, 294, 293, 313, 314, 312, 311, 291,
+      134, 114, 115, 94, 93, 74, 75, 17, 15, 327, 328, 349, 389, 242, 243, 202,
+    ];
+
+    // click all the tiles
+    for (const id of tilesToClick) {
+      cy.get(`#tile-${id}`).click();
+    }
+
+    // expect the game to end
+    cy.get(".gameoverbox-container").should("be.visible");
+    // check the header contains any number cypress
+    cy.get(".gameoverbox-header").contains(/\d+/s);
   });
 
   describe("clicking tile", () => {
@@ -93,6 +112,19 @@ describe("The game", () => {
 
       // expect the tile to still have a marker, svg
       cy.get("#tile-0").find("svg");
+    });
+
+    it("game ends when clicking a bomb tile", () => {
+      // cant click a mine before the game has started
+      // click a tile to start the game
+      cy.get("#tile-0").click();
+
+      // click a mine
+      cy.get("#tile-40").click();
+
+      // expect the game to end
+      cy.get(".gameoverbox-container").should("be.visible");
+      cy.get(".gameoverbox-header").contains("Failure achieved");
     });
   });
 
