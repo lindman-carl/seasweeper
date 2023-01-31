@@ -78,6 +78,7 @@ const HighscoresApp = forwardRef((_, ref) => {
           onClick={refetch}
           tooltip={"Refresh highscores"}
           iconColor={"#D6AF36"}
+          id="refresh-highscores"
         />
       </div>
       {/* highscore filtering input */}

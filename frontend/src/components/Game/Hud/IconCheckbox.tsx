@@ -10,6 +10,7 @@ type Props = {
   tooltip?: string;
   activeTooltip?: string;
   iconColor?: string;
+  id: string;
 };
 
 const IconCheckbox = ({
@@ -21,6 +22,7 @@ const IconCheckbox = ({
   tooltip,
   activeTooltip,
   iconColor,
+  id,
 }: Props) => {
   const checkboxContent = (iconToDisplay: JSX.Element | undefined = icon) => (
     <div
@@ -41,7 +43,7 @@ const IconCheckbox = ({
 
   const inactiveState = () => {
     return (
-      <div
+      <button
         onClick={onClick}
         className={`
           icon-checkbox-base
@@ -51,15 +53,16 @@ const IconCheckbox = ({
           shadow-lg`}
         data-tip={tooltip}
         data-for="checkboxInfo"
+        data-id={id}
       >
         {checkboxContent(icon)}
-      </div>
+      </button>
     );
   };
 
   const activeState = () => {
     return (
-      <div
+      <button
         onClick={onClick}
         className={`
           icon-checkbox-base
@@ -72,14 +75,13 @@ const IconCheckbox = ({
         data-for="checkboxInfo"
       >
         {checkboxContent(alternateIcon)}
-      </div>
+      </button>
     );
   };
 
   const disabledState = () => {
     return (
       <div
-        onClick={onClick}
         className="
           icon-checkbox-base
           text-slate-300

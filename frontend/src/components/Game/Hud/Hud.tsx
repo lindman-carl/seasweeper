@@ -131,6 +131,7 @@ const Hud = () => {
             status={showGamemodeCarousel}
             onClick={handleToggleGamemodeCarousel}
             tooltip={"Select game mode"}
+            id="toggle-gamemode-carousel"
           />
         </div>
         <div className="w-full flex flex-row mt-1 mx-1 justify-between items-center">
@@ -164,6 +165,7 @@ const Hud = () => {
               value={availableLighthouses}
               onClick={handleToggleLighthouseMode}
               tooltip={"Toogle place lighthouse mode"}
+              id={"toggle-lighthouse-mode"}
             />
           </div>
           <div className="ml-1">
@@ -173,6 +175,7 @@ const Hud = () => {
               status={markerMode}
               onClick={handleToggleMarkMode}
               tooltip={"Toggle between mark and sweep mode"}
+              id={"toggle-mark-mode"}
             />
           </div>
         </div>
