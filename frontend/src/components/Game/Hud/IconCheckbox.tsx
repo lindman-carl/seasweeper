@@ -11,6 +11,7 @@ type Props = {
   activeTooltip?: string;
   iconColor?: string;
   id: string;
+  ariaLabel: string;
 };
 
 const IconCheckbox = ({
@@ -23,6 +24,7 @@ const IconCheckbox = ({
   activeTooltip,
   iconColor,
   id,
+  ariaLabel,
 }: Props) => {
   const checkboxContent = (iconToDisplay: JSX.Element | undefined = icon) => (
     <div
@@ -54,6 +56,7 @@ const IconCheckbox = ({
         data-tip={tooltip}
         data-for="checkboxInfo"
         data-id={id}
+        aria-label={ariaLabel}
       >
         {checkboxContent(icon)}
       </button>
@@ -74,6 +77,7 @@ const IconCheckbox = ({
         data-tip={activeTooltip ? activeTooltip : tooltip}
         data-for="checkboxInfo"
         data-id={id}
+        aria-label={ariaLabel}
       >
         {checkboxContent(alternateIcon)}
       </button>
@@ -93,6 +97,7 @@ const IconCheckbox = ({
         data-tip={tooltip}
         data-for="checkboxInfo"
         data-id={id}
+        aria-label={ariaLabel}
       >
         {checkboxContent(icon)}
       </div>

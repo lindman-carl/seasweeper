@@ -111,6 +111,7 @@ const Hud = () => {
           onClick={handleToggleGamemodeCarousel}
           tooltip={"Select game mode"}
           id="toggle-gamemode-carousel"
+          ariaLabel={"Toggle gamemode carousel"}
         />
         <div className="flex flex-row flex-grow justify-evenly items-center">
           <IconBadge
@@ -140,6 +141,7 @@ const Hud = () => {
             onClick={handleToggleLighthouseMode}
             tooltip={"Toogle place lighthouse mode"}
             id={"toggle-lighthouse-mode"}
+            ariaLabel={"Toggle lighthouse mode"}
           />
           <IconCheckbox
             icon={<GiBroom size={36} className="mr-1" />}
@@ -148,6 +150,7 @@ const Hud = () => {
             onClick={handleToggleMarkMode}
             tooltip={"Toggle between mark and sweep mode"}
             id={"toggle-mark-mode"}
+            ariaLabel={"Toggle mark mode"}
           />
         </div>
         <ReactTooltip id="badgeInfo" type="info" effect="solid" />

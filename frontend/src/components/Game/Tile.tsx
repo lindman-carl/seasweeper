@@ -140,6 +140,7 @@ const Tile = ({ tile, onClick }: Props) => {
         className="tile-container"
         onClick={onClick}
         id={`tile-${tile.id}`}
+        aria-label={`tile-${tile.id}`}
       >
         {
           tile.type === 1

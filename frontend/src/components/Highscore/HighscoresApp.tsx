@@ -79,6 +79,7 @@ const HighscoresApp = forwardRef((_, ref) => {
           tooltip={"Refresh highscores"}
           iconColor={"#D6AF36"}
           id="refresh-highscores"
+          ariaLabel="Refresh highscores"
         />
       </div>
       {/* highscore filtering input */}
