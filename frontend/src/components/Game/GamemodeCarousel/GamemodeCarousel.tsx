@@ -27,6 +27,7 @@ const RegenerateGamemodeButton = ({ onClick }: { onClick: () => void }) => (
   <button
     className="h-20 col-start-1 col-span-1 row-start-1 row-span-1 flex items-center justify-center hover:animate-spin-custom"
     onClick={onClick}
+    id="carousel-regenerate-button"
   >
     <MdRefresh size={28} />
   </button>
@@ -47,6 +48,7 @@ const LeftButton = ({ onClick }: { onClick: () => void }) => (
     className="carousel-navigation-button 
             col-start-1 row-start-2"
     onClick={onClick}
+    id="carousel-left-button"
   >
     <MdArrowBackIos size={32} />
   </div>
@@ -56,6 +58,7 @@ const RightButton = ({ onClick }: { onClick: () => void }) => (
     className="carousel-navigation-button 
             col-start-3 row-start-2"
     onClick={onClick}
+    id="carousel-right-button"
   >
     <MdArrowForwardIos size={32} />
   </div>
