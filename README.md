@@ -1,6 +1,6 @@
 # Sea Sweeper
 
-[Sea Sweeper live demo](https://prickly-moth-slippers.cyclic.app/api/highscores)
+[Sea Sweeper live demo](https://seasweeper.lindman.dev)
 
 A modern take on the classic Minesweeper. The game features new gameplay mechanics that translates the game from the old boring land minesweeping to the fresh new fun sea sweeping. It features multiple game modes, that simulate different types of sea layouts. From vast open sea with no islands, to maps littered with small islands and inlets. More land = higher difficulty. The islands are intentionally blocky to provide a better gameplay experience.
 
@@ -42,3 +42,8 @@ glhf
 
 - tailwindcss
 - fully responsive design
+
+### Potential improvments to the code
+
+- ~~redux~~, nope-dux
+- cache instead of all those .find() please
