@@ -105,62 +105,50 @@ const Hud = () => {
             sm:px-20 
             flex flex-row items-center justify-between "
       >
-        <div className="">
-          <IconCheckbox
-            icon={doubleIcon()}
-            status={showGamemodeCarousel}
-            onClick={handleToggleGamemodeCarousel}
-            tooltip={"Select game mode"}
-            id="toggle-gamemode-carousel"
+        <IconCheckbox
+          icon={doubleIcon()}
+          status={showGamemodeCarousel}
+          onClick={handleToggleGamemodeCarousel}
+          tooltip={"Select game mode"}
+          id="toggle-gamemode-carousel"
+        />
+        <div className="flex flex-row flex-grow justify-evenly items-center">
+          <IconBadge
+            icon={<FaBomb size={22} className="mb-1" />}
+            value={numBombs}
+            tooltip={"Number of bombs in the sea"}
+            id="num-bombs"
+          />
+          <IconBadge
+            icon={<GiBuoy size={28} className="mb-1" />}
+            value={numPlacedMarkers}
+            tooltip={"Number of markers placed in the sea"}
+            id="num-markers-placed"
+          />
+          <IconBadge
+            icon={<BiSquare size={24} />}
+            value={numWaterTiles - numRevealedTiles - numBombs}
+            tooltip={"Number of sea tiles left to clear"}
+            id="num-tiles-left"
           />
         </div>
-        <div className="w-full flex flex-row mt-1 mx-1 justify-between items-center">
-          <div className="mr-1 grow">
-            <IconBadge
-              icon={<FaBomb size={22} className="mb-1" />}
-              value={numBombs}
-              tooltip={"Number of bombs in the sea"}
-              id="num-bombs"
-            />
-          </div>
-          <div className="grow">
-            <IconBadge
-              icon={<GiBuoy size={28} className="mb-1" />}
-              value={numPlacedMarkers}
-              tooltip={"Number of markers placed in the sea"}
-              id="num-markers-placed"
-            />
-          </div>
-          <div className="ml-1 grow">
-            <IconBadge
-              icon={<BiSquare size={24} />}
-              value={numWaterTiles - numRevealedTiles - numBombs}
-              tooltip={"Number of sea tiles left to clear"}
-              id="num-tiles-left"
-            />
-          </div>
-        </div>
-        <div className="w-64 flex flex-row justify-end items-center">
-          <div className="mr-1">
-            <IconCheckbox
-              icon={<SiLighthouse size={28} />}
-              status={lighthouseMode}
-              value={availableLighthouses}
-              onClick={handleToggleLighthouseMode}
-              tooltip={"Toogle place lighthouse mode"}
-              id={"toggle-lighthouse-mode"}
-            />
-          </div>
-          <div className="ml-1">
-            <IconCheckbox
-              icon={<GiBroom size={36} className="mr-1" />}
-              alternateIcon={<GiBuoy size={36} />}
-              status={markerMode}
-              onClick={handleToggleMarkMode}
-              tooltip={"Toggle between mark and sweep mode"}
-              id={"toggle-mark-mode"}
-            />
-          </div>
+        <div className="flex flex-row justify-end items-center gap-2">
+          <IconCheckbox
+            icon={<SiLighthouse size={28} />}
+            status={lighthouseMode}
+            value={availableLighthouses}
+            onClick={handleToggleLighthouseMode}
+            tooltip={"Toogle place lighthouse mode"}
+            id={"toggle-lighthouse-mode"}
+          />
+          <IconCheckbox
+            icon={<GiBroom size={36} className="mr-1" />}
+            alternateIcon={<GiBuoy size={36} />}
+            status={markerMode}
+            onClick={handleToggleMarkMode}
+            tooltip={"Toggle between mark and sweep mode"}
+            id={"toggle-mark-mode"}
+          />
         </div>
         <ReactTooltip id="badgeInfo" type="info" effect="solid" />
         <ReactTooltip
