@@ -25,6 +25,10 @@ import { boardActions, gameStateActions } from "../../redux/gameStateSlice";
 
 // const REFRESH_RATE = 100; // sets timer accuracy
 
+// test board
+import testData from "../../utils/test-board.json";
+const testBoard = testData as Board;
+
 type GameProps = {
   handleRefetchHighscores: () => void;
   setHighscoresMapFilter: (name: string) => void;
@@ -64,6 +68,11 @@ const Game = ({
       dispatch(setBoard(currentGamemode.board));
       dispatch(setCurrentGamemode(currentGamemode));
       dispatch(setGamemodes(newGamemodes));
+
+      if (process.env.NODE_ENV === "development") {
+        // setup the dev/test board
+        dispatch(setBoard(testBoard));
+      }
     };
 
     generateAllGamemodeBoards();
