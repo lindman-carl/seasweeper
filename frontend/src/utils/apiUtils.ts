@@ -3,8 +3,7 @@ import axios from "axios";
 // types
 import { HighscoreEntry } from "../types";
 
-const HIGHSCORES_API_URL =
-  "https://prickly-moth-slippers.cyclic.app/api/highscores";
+const HIGHSCORES_API_URL = "https://seasweeper.lindman.dev/api/highscores";
 
 const fetchHighscores = async () => {
   // const res = await axios.get("/api/highscores");
