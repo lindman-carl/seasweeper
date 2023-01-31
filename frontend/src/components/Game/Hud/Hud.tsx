@@ -42,10 +42,6 @@ const Hud = () => {
   // event handlers
   const handleToggleGamemodeCarousel = () => {
     // toggles gamemode carousel show state
-    // dispatch({
-    //   type: Types.SET_SHOW_GAMEMODE_CAROUSEL,
-    //   payload: { showGamemodeCarousel: !showGamemodeCarousel },
-    // });
     dispatch(setShowGamemodeCarousel(!showGamemodeCarousel));
   };
 
@@ -54,16 +50,8 @@ const Hud = () => {
     // if the player has available lighthouses
     if (availableLighthouses > 0) {
       // toggle lighhouse mode
-      // dispatch({
-      //   type: Types.SET_LIGHTHOUSE_MODE,
-      //   payload: { lighthouseMode: !lighthouseMode },
-      // });
-      dispatch(setLighthouseMode(!lighthouseMode));
       // disable mark mode
-      // dispatch({
-      //   type: Types.SET_MARKER_MODE,
-      //   payload: { markerMode: false },
-      // });
+      dispatch(setLighthouseMode(!lighthouseMode));
       dispatch(setMarkerMode(false));
     }
   };
@@ -71,16 +59,8 @@ const Hud = () => {
   // eventhandler for clicking mark mode button
   const handleToggleMarkMode = () => {
     // toggle mark mode
-    // dispatch({
-    //   type: Types.SET_MARKER_MODE,
-    //   payload: { markerMode: !markerMode },
-    // });
-    dispatch(setMarkerMode(!markerMode));
     // disable lighthouse mode
-    // dispatch({
-    //   type: Types.SET_LIGHTHOUSE_MODE,
-    //   payload: { lighthouseMode: false },
-    // });
+    dispatch(setMarkerMode(!markerMode));
     dispatch(setLighthouseMode(false));
   };
 
