@@ -17,7 +17,11 @@ const Tile = ({ tile }: Props) => {
   };
 
   // redering function
-  return <div className="tile-carousel-container">{renderTile()}</div>;
+  return (
+    <div className="tile-carousel-container" id={`tile-carousel-${tile.id}`}>
+      {renderTile()}
+    </div>
+  );
 };
 
 export default Tile;
