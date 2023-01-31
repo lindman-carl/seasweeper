@@ -30,7 +30,7 @@ export const handleClickTile = (
     setGameOver,
   } = gameStateActions;
 
-  const { setBoard, revealBoard, setNumRevealedTiles } = boardActions;
+  const { setBoard, revealBoard, setNumRevealedTiles, markTile } = boardActions;
 
   const startGame = () => {
     // start game
@@ -106,7 +106,8 @@ export const handleClickTile = (
     dispatch(setNumPlacedMarkers(placed));
 
     // toggle tile
-    tile.marked = !tile.marked;
+    // tile.marked = !tile.marked;
+    dispatch(markTile({ id: tile.id }));
 
     return;
   }

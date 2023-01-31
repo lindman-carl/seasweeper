@@ -75,6 +75,22 @@ export const boardSlice = createSlice({
 
       return { ...newBoard };
     },
+    markTile: (state: Board, action: PayloadAction<{ id: number }>) => {
+      const tileToMark = state.tiles.find(
+        (tile) => tile.id === action.payload.id
+      );
+      if (!tileToMark) {
+        return;
+      }
+      tileToMark.marked = !tileToMark.marked;
+
+      const updatedTiles = [
+        ...state.tiles.filter((el) => el.id !== action.payload.id),
+        tileToMark,
+      ].sort((a, z) => a.id - z.id);
+
+      state.tiles = updatedTiles;
+    },
   },
 });
 
