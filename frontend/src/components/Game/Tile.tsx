@@ -136,7 +136,11 @@ const Tile = ({ tile, onClick }: Props) => {
   // redering function
   const renderTile = () => {
     return (
-      <div className="tile-container" onClick={onClick}>
+      <button
+        className="tile-container"
+        onClick={onClick}
+        id={`tile-${tile.id}`}
+      >
         {
           tile.type === 1
             ? renderLand() // if land
@@ -144,7 +148,7 @@ const Tile = ({ tile, onClick }: Props) => {
             ? renderRevealed() // if revealed water
             : renderWater() // if not revealed water
         }
-      </div>
+      </button>
     );
   };
 
