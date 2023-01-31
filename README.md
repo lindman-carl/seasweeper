@@ -9,6 +9,12 @@ Placing flags (buoys) is for slow players, but you can if you want to.
 
 glhf
 
+## Lessons learned
+
+- don't postpone testing
+- e2e testing is really cool
+- use ORM
+
 ## Gameplay mechanics
 
 - minesweeping
@@ -30,6 +36,8 @@ glhf
 ### Libraries
 
 - axios
+- cypress
+- jest
 - redux
 - react-query
 - react-router
@@ -37,6 +45,11 @@ glhf
 - react-icons
 - react-spinners
 - react-tooltip
+
+### Testing
+
+- unit testing with jest
+- e2e testing with cypress
 
 ### Styling
 
