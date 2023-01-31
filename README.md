@@ -47,3 +47,4 @@ glhf
 
 - ~~redux~~, nope-dux
 - cache instead of all those .find() please
+- fix the spaghetti code, gamemode/board
