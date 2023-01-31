@@ -154,10 +154,7 @@ const Game = ({
     <GameContainer>
       <GamemodeCarousel {...gamemodeCarouselProps} />
       <Hud />
-      <button>
-        <BoardComponent board={board} handleRetryGame={handleRetryGame} />
-      </button>
-
+      <BoardComponent board={board} handleRetryGame={handleRetryGame} />
       <GameOverBox {...gameOverBoxProps} />
       <ScrollDownArrow />
     </GameContainer>
