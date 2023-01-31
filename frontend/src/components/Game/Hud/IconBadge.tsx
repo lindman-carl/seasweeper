@@ -4,9 +4,10 @@ type Props = {
   icon: JSX.Element;
   value: number;
   tooltip: string;
+  id: string;
 };
 
-const IconBadge = ({ icon, value, tooltip }: Props) => {
+const IconBadge = ({ icon, value, tooltip, id }: Props) => {
   return (
     <div className="icon-badge-base">
       <div
@@ -20,6 +21,7 @@ const IconBadge = ({ icon, value, tooltip }: Props) => {
           flex justify-between items-center"
         data-tip={tooltip}
         data-for="badgeInfo"
+        data-id={id}
       >
         <>{icon}</>
         <>{value && <div className="ml-1 sm:ml-2">{value}</div>}</>

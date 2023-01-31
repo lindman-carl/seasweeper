@@ -139,7 +139,8 @@ const Hud = () => {
             <IconBadge
               icon={<FaBomb size={22} className="mb-1" />}
               value={numBombs}
-              tooltip={"Number of bombs remaining in the sea"}
+              tooltip={"Number of bombs in the sea"}
+              id="num-bombs"
             />
           </div>
           <div className="grow">
@@ -147,6 +148,7 @@ const Hud = () => {
               icon={<GiBuoy size={28} className="mb-1" />}
               value={numPlacedMarkers}
               tooltip={"Number of markers placed in the sea"}
+              id="num-markers-placed"
             />
           </div>
           <div className="ml-1 grow">
@@ -154,6 +156,7 @@ const Hud = () => {
               icon={<BiSquare size={24} />}
               value={numWaterTiles - numRevealedTiles - numBombs}
               tooltip={"Number of sea tiles left to clear"}
+              id="num-tiles-left"
             />
           </div>
         </div>
