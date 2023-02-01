@@ -30,9 +30,6 @@ highscoresRouter.post("/", async (req, res) => {
     return res.status(400).json({ error: "invalid secret key" });
   }
 
-  console.log("expected key", process.env.SECRET_KEY);
-  console.log("secret key", secretKey);
-
   // create new highscore object
   const newHighscoreObject = new Highscore({
     time,
