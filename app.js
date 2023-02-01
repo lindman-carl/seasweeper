@@ -27,7 +27,7 @@ const connectDB = () =>
     });
 
 // middleware
-app.use(cors());
+app.use(cors({ origin: "https://seasweeper.lindman.dev" }));
 app.use(express.static("build"));
 app.use(express.json());
 app.use(compression());
