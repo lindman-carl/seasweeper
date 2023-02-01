@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const compression = require("compression");
 require("express-async-errors");
+const helmet = require("helmet");
 
 // utils
 const config = require("./utils/config");
@@ -15,7 +16,6 @@ const app = express(); // initialize express app
 console.log("connecting to", config.MONGODB_URI); // log mongodb uri
 
 // connect to mongodb
-// test
 const connectDB = () =>
   mongoose
     .connect(config.MONGODB_URI, { useNewUrlParser: true })
@@ -27,6 +27,7 @@ const connectDB = () =>
     });
 
 // middleware
+app.use(helmet());
 app.use(
   cors({
     origin: "https://seasweeper.lindman.dev",
