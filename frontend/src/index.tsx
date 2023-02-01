@@ -3,6 +3,12 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { disableReactDevTools } from "./utils/disableReactDevTools";
+
+if (process.env.NODE_ENV !== "development") {
+  console.log(process.env.NODE_ENV);
+  disableReactDevTools();
+}
 
 ReactDOM.render(
   <React.StrictMode>
