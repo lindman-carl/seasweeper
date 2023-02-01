@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 const highscoresRouter = require("express").Router();
 
 const Highscore = require("../models/Highscore");
@@ -24,9 +26,12 @@ highscoresRouter.get("/:id", async (req, res) => {
 
 // create highscore
 highscoresRouter.post("/", async (req, res) => {
-  const { time, playerName, gameMode, secretKey } = req.body; // destructure request body
+  const { time, playerName, gameMode, hash } = req.body; // destructure request body
 
-  if (secretKey !== process.env.SECRET_KEY) {
+  const hashString = `${time}${gameMode}${playerName}${process.env.SECRET_KEY}`;
+  console.log(hashString);
+
+  if (!bcrypt.compareSync(hashString, hash)) {
     return res.status(400).json({ error: "invalid secret key" });
   }
 

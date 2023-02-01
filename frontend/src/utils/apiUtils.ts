@@ -1,4 +1,5 @@
 import axios from "axios";
+import bcrypt from "bcryptjs";
 
 // types
 import { HighscoreEntry } from "../types";
@@ -17,12 +18,18 @@ const postHighscore = async (
   playerName: string,
   gameMode: string
 ) => {
-  localStorage.setItem("playerName", playerName.trim());
+  const trimmedPlayerName = playerName.trim();
+  localStorage.setItem("playerName", trimmedPlayerName);
+
+  // create hashsum of time, gameMode and playerName
+  const hashString = `${time}${gameMode}${trimmedPlayerName}${process.env.REACT_APP_SECRET_KEY}`;
+  const hash = await bcrypt.hash(hashString, 10);
+
   const res = await axios.post(HIGHSCORES_API_URL, {
     time,
-    playerName: playerName.trim(),
+    playerName: trimmedPlayerName,
     gameMode,
-    secretKey: process.env.REACT_APP_SECRET_KEY,
+    hash,
   });
   return res.data;
 };
