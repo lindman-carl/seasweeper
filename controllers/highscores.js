@@ -27,7 +27,7 @@ highscoresRouter.post("/", async (req, res) => {
   const { time, playerName, gameMode, secretKey } = req.body; // destructure request body
 
   if (secretKey !== process.env.SECRET_KEY) {
-    res.status(400).json({ error: "invalid secret key" });
+    res.status(400).json({ error: "invalid secret key" }).end();
   }
 
   console.log("secret key", secretKey);
