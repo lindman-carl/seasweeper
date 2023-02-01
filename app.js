@@ -5,12 +5,13 @@ const path = require("path");
 const compression = require("compression");
 require("express-async-errors");
 const helmet = require("helmet");
+const { rateLimit } = require("express-rate-limit");
+const mongoSanitize = require("express-mongo-sanitize");
 
 // utils
 const config = require("./utils/config");
 // routers
 const highscoresRouter = require("./controllers/highscores");
-const { rateLimit } = require("express-rate-limit");
 
 const app = express(); // initialize express app
 
@@ -47,6 +48,7 @@ app.use(
 app.use(express.static("build"));
 app.use(express.json());
 app.use(compression());
+app.use(mongoSanitize());
 app.use("/api", apiLimiter);
 
 // routers
