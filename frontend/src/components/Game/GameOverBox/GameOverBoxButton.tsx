@@ -6,6 +6,7 @@ type Props = {
   borderColor?: string;
   type?: string;
   onClick?: () => void;
+  id?: string;
 };
 
 const GameOverBoxButton = ({
@@ -13,13 +14,14 @@ const GameOverBoxButton = ({
   onClick,
   textColor = "text-sky-700",
   borderColor = "border-sky-700",
+  id,
 }: Props) => {
   // generate className to avoid tailwind purging
   const buttonClassName = `gameoverbox-button ${textColor} ${borderColor}`;
 
   return (
     <div className="gameoverbox-item">
-      <button className={buttonClassName} onClick={onClick}>
+      <button className={buttonClassName} onClick={onClick} id={id}>
         {label}
       </button>
     </div>

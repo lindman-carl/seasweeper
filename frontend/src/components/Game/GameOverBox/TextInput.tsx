@@ -30,6 +30,7 @@ const TextInput = ({
       },
     })}
     defaultValue={localStorage.getItem("playerName") || ""}
+    id="player-name-input"
   />
 );
 

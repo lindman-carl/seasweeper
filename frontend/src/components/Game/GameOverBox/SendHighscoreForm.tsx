@@ -36,7 +36,11 @@ const SendHighscoreForm = ({
       {errors.playerName?.type === "maxLength" &&
         "Player name length must be shorter than 21 characters"}
     </div>
-    <GameOverBoxButton label={"Submit highscore"} type="submit" />
+    <GameOverBoxButton
+      label={"Submit highscore"}
+      type="submit"
+      id={"submit-highscore-button"}
+    />
   </form>
 );
 
