@@ -22,6 +22,7 @@ const postHighscore = async (
     time,
     playerName: playerName.trim(),
     gameMode,
+    secretKey: process.env.REACT_APP_SECRET_KEY,
   });
   return res.data;
 };

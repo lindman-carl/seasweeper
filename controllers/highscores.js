@@ -24,7 +24,11 @@ highscoresRouter.get("/:id", async (req, res) => {
 
 // create highscore
 highscoresRouter.post("/", async (req, res) => {
-  const { time, playerName, gameMode } = req.body; // destructure request body
+  const { time, playerName, gameMode, secretKey } = req.body; // destructure request body
+
+  if (secretKey !== process.env.SECRET_KEY) {
+    res.status(400).json({ error: "invalid secret key" });
+  }
 
   // create new highscore object
   const newHighscoreObject = new Highscore({
