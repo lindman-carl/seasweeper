@@ -61,6 +61,7 @@ glhf
 - ~~redux~~, nope-dux
 - cache instead of all those .find() please
 - fix the spaghetti code, gamemode/board
+- paging or limiting the highscores should be necessary with more entries
 
 #### Missing e2e tests
 
