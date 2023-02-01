@@ -30,7 +30,7 @@ const connectDB = () =>
 app.use(
   cors({
     origin: "https://seasweeper.lindman.dev",
-    methods: ["POST"],
+    methods: ["GET", "POST"],
     allowedHeaders: "appliction/json",
     maxAge: 5,
   })
