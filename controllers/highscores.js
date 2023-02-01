@@ -29,10 +29,9 @@ highscoresRouter.post("/", async (req, res) => {
   const { time, playerName, gameMode, hash } = req.body; // destructure request body
 
   const hashString = `${time}${gameMode}${playerName}${process.env.SECRET_KEY}`;
-  console.log(hashString);
 
   if (!bcrypt.compareSync(hashString, hash)) {
-    return res.status(400).json({ error: "invalid secret key" });
+    return res.status(400).json({ error: "invalid hash" });
   }
 
   // create new highscore object
