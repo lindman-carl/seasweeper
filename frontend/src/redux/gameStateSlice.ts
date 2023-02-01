@@ -194,7 +194,6 @@ export const gameStateSlice = createSlice({
     },
     winGame: (state: GameState) => {
       const finalTime = Date.now() - state.gameStartTimestamp;
-      console.log("final time", finalTime);
       state.gameWin = true;
       state.gameOver = true;
       state.gameTime = finalTime;
