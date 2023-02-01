@@ -10,6 +10,7 @@ const helmet = require("helmet");
 const config = require("./utils/config");
 // routers
 const highscoresRouter = require("./controllers/highscores");
+const { rateLimit } = require("express-rate-limit");
 
 const app = express(); // initialize express app
 
@@ -26,6 +27,13 @@ const connectDB = () =>
       console.error("error connection to MongoDB:", error.message);
     });
 
+const apiLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: true,
+});
+
 // middleware
 app.use(helmet());
 app.use(
@@ -39,6 +47,7 @@ app.use(
 app.use(express.static("build"));
 app.use(express.json());
 app.use(compression());
+app.use("/api", apiLimiter);
 
 // routers
 app.use("/api/highscores", highscoresRouter);
