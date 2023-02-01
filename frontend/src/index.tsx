@@ -5,8 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { disableReactDevTools } from "./utils/disableReactDevTools";
 
-if (process.env.NODE_ENV !== "development") {
-  console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV !== "production") {
   disableReactDevTools();
 }
 
