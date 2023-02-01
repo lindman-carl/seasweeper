@@ -32,6 +32,7 @@ app.use(
     origin: "https://seasweeper.lindman.dev",
     methods: ["POST"],
     allowedHeaders: "appliction/json",
+    maxAge: 5,
   })
 );
 app.use(express.static("build"));
