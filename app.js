@@ -12,6 +12,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const config = require("./utils/config");
 // routers
 const highscoresRouter = require("./controllers/highscores");
+const dailyRouter = require("./controllers/daily");
 
 const app = express(); // initialize express app
 
@@ -53,6 +54,8 @@ app.use("/api", apiLimiter);
 
 // routers
 app.use("/api/highscores", highscoresRouter);
+app.use("/api/daily", dailyRouter);
+
 app.get("/*", function (_, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
