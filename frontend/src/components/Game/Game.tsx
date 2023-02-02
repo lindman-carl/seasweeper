@@ -145,17 +145,13 @@ const Game = ({
     handleRetryGame,
   };
 
-  const gamemodeCarouselProps = {
-    handleSelectGamemode,
-  };
-
   // render loading spinner while generating maps
   if (!board) return <GeneratingMapSpinner />;
 
   // render
   return (
     <GameContainer>
-      <GamemodeCarousel {...gamemodeCarouselProps} />
+      <GamemodeCarousel handleSelectGamemode={handleSelectGamemode} />
       <Hud />
       <BoardComponent board={board} handleRetryGame={handleRetryGame} />
       <GameOverBox {...gameOverBoxProps} />
