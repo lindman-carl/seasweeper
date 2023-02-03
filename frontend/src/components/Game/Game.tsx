@@ -4,10 +4,14 @@ import React, { useEffect } from "react";
 import { Board, Gamemode } from "../../types";
 
 // utils
-import { gamemodes, getGamemodeById } from "../../utils/gameUtils";
-import { generateBoardsForAllGamemodes } from "../../utils/boardGeneration";
+import { gamemodes, getGamemodeById, stringToMap } from "../../utils/gameUtils";
+import {
+  generateBoard,
+  generateBoardFrom2DArray,
+  generateBoardsForAllGamemodes,
+} from "../../utils/boardGeneration";
 
-import { postHighscore } from "../../utils/apiUtils";
+import { fetchDaily, postHighscore } from "../../utils/apiUtils";
 
 // components
 import BoardComponent from "./BoardComponent";
@@ -58,13 +62,38 @@ const Game = ({
   // useEffect
   useEffect(() => {
     const generateAllGamemodeBoards = async () => {
+      let newGamemodes: Gamemode[] = [];
+      try {
+        // fetch daily gamemode
+        const daily = await fetchDaily();
+        const dailyMap = stringToMap(daily.map, daily.width);
+        const dailyBoard = generateBoardFrom2DArray(dailyMap, daily.numBombs);
+        const dailyGamemode: Gamemode = {
+          id: -1,
+          name: `daily-${daily.dateString}`,
+          label: `Daily-${daily.dateString}`,
+          link: "/daily",
+          width: daily.width,
+          height: daily.height,
+          board: dailyBoard,
+          nLighthouses: daily.nLighthouses,
+          numBombs: daily.numBombs,
+          clusterSpread: -1,
+          nIslands: -1,
+          keepFromBorder: false,
+        };
+        newGamemodes = [...newGamemodes, dailyGamemode];
+      } catch (err) {
+        console.error(err);
+      }
+
       // generates initial maps for gamemodes
-      const newGamemodes = await generateBoardsForAllGamemodes(gamemodes);
+      const generatedGamemodes = await generateBoardsForAllGamemodes(gamemodes);
+      newGamemodes = [...newGamemodes, ...generatedGamemodes];
 
       // get current gamemode
       const currentGamemode =
-        newGamemodes.find((gm) => gm.id === gameState.currentGamemode.id) ||
-        gamemodes[0];
+        newGamemodes.find((gm) => gm.id === -1) || gamemodes[0];
 
       // set gamemodes, current gamemode, and board
       dispatch(setBoard(currentGamemode.board));
@@ -72,10 +101,10 @@ const Game = ({
       dispatch(setAvailableLighthouses(currentGamemode.nLighthouses));
       dispatch(setGamemodes(newGamemodes));
 
-      if (process.env.NODE_ENV === "development") {
-        // setup the dev/test board
-        dispatch(setBoard(testBoard));
-      }
+      // if (process.env.NODE_ENV === "development") {
+      //   // setup the dev/test board
+      //   dispatch(setBoard(testBoard));
+      // }
     };
 
     generateAllGamemodeBoards();
