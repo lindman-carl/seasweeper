@@ -6,7 +6,6 @@ import { Board, Gamemode } from "../../types";
 // utils
 import { gamemodes, getGamemodeById, stringToMap } from "../../utils/gameUtils";
 import {
-  generateBoard,
   generateBoardFrom2DArray,
   generateBoardsForAllGamemodes,
 } from "../../utils/boardGeneration";
@@ -35,13 +34,9 @@ const testBoard = testData as Board;
 
 type GameProps = {
   handleRefetchHighscores: () => void;
-  setHighscoresMapFilter: (name: string) => void;
 };
 
-const Game = ({
-  handleRefetchHighscores,
-  setHighscoresMapFilter,
-}: GameProps) => {
+const Game = ({ handleRefetchHighscores }: GameProps) => {
   // state
   const gameState = useAppSelector((state: RootState) => state.gameState);
   const board = useAppSelector((state: RootState) => state.board);
@@ -69,9 +64,9 @@ const Game = ({
         const dailyMap = stringToMap(daily.map, daily.width);
         const dailyBoard = generateBoardFrom2DArray(dailyMap, daily.numBombs);
         const dailyGamemode: Gamemode = {
-          id: -1,
-          name: `daily-${daily.dateString}`,
-          label: `Daily-${daily.dateString}`,
+          id: 0,
+          name: `${daily.dateString}`,
+          label: `Daily challenge`,
           link: "/daily",
           width: daily.width,
           height: daily.height,
@@ -82,7 +77,7 @@ const Game = ({
           nIslands: -1,
           keepFromBorder: false,
         };
-        newGamemodes = [...newGamemodes, dailyGamemode];
+        newGamemodes = [dailyGamemode, ...newGamemodes];
       } catch (err) {
         console.error(err);
       }
@@ -93,7 +88,7 @@ const Game = ({
 
       // get current gamemode
       const currentGamemode =
-        newGamemodes.find((gm) => gm.id === -1) || gamemodes[0];
+        newGamemodes.find((gm) => gm.id === 0) || newGamemodes[0];
 
       // set gamemodes, current gamemode, and board
       dispatch(setBoard(currentGamemode.board));
@@ -160,10 +155,6 @@ const Game = ({
 
     // reset game
     dispatch(resetGame());
-
-    // update highscore filtering to match the selected gamemode
-    const newGamemodeName = getGamemodeById(gameState.gamemodes, id).name;
-    setHighscoresMapFilter(newGamemodeName);
   };
 
   // props
@@ -180,7 +171,10 @@ const Game = ({
   // render
   return (
     <GameContainer>
-      <GamemodeCarousel handleSelectGamemode={handleSelectGamemode} />
+      <GamemodeCarousel
+        handleSelectGamemode={handleSelectGamemode}
+        startGamemode={gameState.currentGamemode}
+      />
       <Hud />
       <BoardComponent board={board} handleRetryGame={handleRetryGame} />
       <GameOverBox {...gameOverBoxProps} />
