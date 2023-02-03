@@ -225,6 +225,8 @@ describe("The game", () => {
       // select a gamemode
       cy.get("[data-id=toggle-gamemode-carousel]").click();
       cy.get("#carousel-right-button").click();
+      cy.get("#carousel-right-button").click();
+
       // select Kiddie pool
       cy.get(".carousel-header").contains("Kiddie pool");
       cy.get(".carousel-card").click();
@@ -238,6 +240,7 @@ describe("The game", () => {
       // toggle the carousel
       // select a gamemode
       cy.get("[data-id=toggle-gamemode-carousel]").click();
+      cy.get("#carousel-left-button").click();
       cy.get("#carousel-left-button").click();
       cy.get("#carousel-left-button").click();
       // select Continent
@@ -276,6 +279,10 @@ describe("The game", () => {
       // toggle the carousel
       cy.get("[data-id=toggle-gamemode-carousel]").click();
       cy.get(".carousel-container").should("be.visible");
+
+      // navigate to islands
+      cy.get("#carousel-right-button").click();
+      cy.get(".carousel-header").contains("Islands");
 
       // compare the number of sea tiles in the old board and the new board
       // most of the time, the number of sea tiles should be different

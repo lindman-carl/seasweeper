@@ -96,10 +96,11 @@ const Game = ({ handleRefetchHighscores }: GameProps) => {
       dispatch(setAvailableLighthouses(currentGamemode.nLighthouses));
       dispatch(setGamemodes(newGamemodes));
 
-      // if (process.env.NODE_ENV === "development") {
-      //   // setup the dev/test board
-      //   dispatch(setBoard(testBoard));
-      // }
+      if (process.env.NODE_ENV === "development") {
+        // setup the dev/test board
+        dispatch(setAvailableLighthouses(2));
+        dispatch(setBoard(testBoard));
+      }
     };
 
     generateAllGamemodeBoards();
