@@ -188,3 +188,15 @@ export const gamemodes: Gamemode[] = [
   //   board: openSeaBoard,
   // },
 ];
+
+// converts a string to a 2d array of numbers based on width
+export const stringToMap = (str: string, width: number) => {
+  const results = [];
+  for (let i = 0; i < str.length; i += width) {
+    const rowString = str.slice(i, i + width);
+    const row = rowString.split("").map((s) => parseInt(s));
+    results.push(row);
+  }
+
+  return results;
+};
