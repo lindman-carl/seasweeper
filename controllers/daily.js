@@ -29,13 +29,18 @@ const mapToString = (map) => {
   return results;
 };
 
+// zero-pad a number, if it's less than 10
+const zeroPad = (num) => (num < 10 ? `0${num}` : num);
+
 // get the current date as a string
-// "DD-MM-YYYY" not zero-padded, month is 1-indexed
+// "YYYY-MM-DD" zero-padded, e.g. "2020-01-01", day and month is 1-indexed
 const getDateString = (date) =>
-  `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+  `${date.getFullYear()}-${zeroPad(date.getMonth() + 1)}-${zeroPad(
+    date.getDate()
+  )}`;
 
 // get the current daily map
-dailyRouter.get("/", async (req, res) => {
+dailyRouter.get("/", async (_, res) => {
   // query the db for the daily map by the date string
   const date = new Date();
   const dateString = getDateString(date);
