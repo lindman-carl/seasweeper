@@ -26,7 +26,7 @@ import { GiTrophy } from "react-icons/gi";
 import { useAppSelector } from "../../redux/hooks";
 import { DateFilter } from "./DateFilter";
 import { generateBoardFrom2DArray } from "../../utils/boardGeneration";
-import { FaSpinner } from "react-icons/fa";
+import { ClipLoader } from "react-spinners";
 
 const dateString = getDateString(new Date());
 
@@ -165,7 +165,9 @@ const HighscoresApp = forwardRef((_, ref) => {
         currentDailyBoard ? (
           <HighscoreBoard board={currentDailyBoard} />
         ) : (
-          <FaSpinner />
+          <div className="h-8 m-auto text-sky-800 flex items-center">
+            <ClipLoader color="text-sky-800" />
+          </div>
         )
       ) : null}
       {/* map highscores */}
