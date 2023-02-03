@@ -5,8 +5,9 @@ import { MdOpenInNew } from "react-icons/md";
 
 const GameText = () => (
   <div className="game-text-container">
-    Click to reveal tile. Flags are for slow players, try to mark the mines in
-    your head. Place lighthouses on land to safely reveal adjacent water tiles.
+    Click on a blue (sea tile) tile to reveal it. Flags are for slow players,
+    try to mark the mines in your head. Place lighthouses on green tiles (land
+    tiles) to safely reveal adjacent water tiles.
     <a
       className="game-text-link"
       href="https://minesweepergame.com/strategy.php"
