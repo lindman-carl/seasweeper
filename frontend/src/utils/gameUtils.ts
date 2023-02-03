@@ -88,6 +88,7 @@ export const formatTime = (time: number) => {
 
 const openSeaBoard = generateOpenSeaBoard(20, 20, 32);
 
+// id 0 is reserved for daily challenge
 export const gamemodes: Gamemode[] = [
   {
     name: "islands2032",
@@ -100,7 +101,7 @@ export const gamemodes: Gamemode[] = [
     nIslands: 10,
     clusterSpread: 4,
     keepFromBorder: false,
-    id: 0,
+    id: 1,
     board: openSeaBoard,
   },
   {
@@ -114,7 +115,7 @@ export const gamemodes: Gamemode[] = [
     nIslands: 0,
     clusterSpread: 2,
     keepFromBorder: false,
-    id: 1,
+    id: 2,
     board: openSeaBoard,
   },
   {
@@ -128,12 +129,12 @@ export const gamemodes: Gamemode[] = [
     nIslands: 20,
     clusterSpread: 2,
     keepFromBorder: false,
-    id: 2,
+    id: 3,
     board: openSeaBoard,
   },
   {
     name: "pacificocean2032",
-    label: "Pacific Islands",
+    label: "Pacific islands",
     link: "/pacificocean",
     width: 20,
     height: 20,
@@ -142,7 +143,7 @@ export const gamemodes: Gamemode[] = [
     nIslands: 6,
     clusterSpread: 2,
     keepFromBorder: false,
-    id: 3,
+    id: 4,
     board: openSeaBoard,
   },
   {
@@ -156,7 +157,7 @@ export const gamemodes: Gamemode[] = [
     nIslands: 0,
     clusterSpread: 4,
     keepFromBorder: false,
-    id: 4,
+    id: 5,
     board: openSeaBoard,
   },
   {
@@ -170,7 +171,7 @@ export const gamemodes: Gamemode[] = [
     nIslands: 3,
     clusterSpread: 10,
     keepFromBorder: true,
-    id: 5,
+    id: 6,
     board: openSeaBoard,
   },
   // {
@@ -200,3 +201,13 @@ export const stringToMap = (str: string, width: number) => {
 
   return results;
 };
+
+// zero-pad a number, if it's less than 10
+const zeroPad = (num: number) => (num < 10 ? `0${num}` : num);
+
+// get the current date as a string
+// "YYYY-MM-DD" zero-padded, e.g. "2020-01-01", day and month is 1-indexed
+export const getDateString = (date: Date) =>
+  `${date.getFullYear()}-${zeroPad(date.getMonth() + 1)}-${zeroPad(
+    date.getDate()
+  )}`;
