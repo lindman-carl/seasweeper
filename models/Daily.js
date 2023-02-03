@@ -21,6 +21,14 @@ const dailySchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  numBombs: {
+    type: Number,
+    required: true,
+  },
+  nLighthouses: {
+    type: Number,
+    required: true,
+  },
 });
 
 dailySchema.set("toJSON", {

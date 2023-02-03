@@ -13,6 +13,7 @@ const generationCombos = [
   [10, 4],
   [20, 2],
 ];
+const lighthouseOptions = [0, 1, 2, 3];
 
 // get a random element from an array
 const randomElement = (array) =>
@@ -36,7 +37,8 @@ const getDateString = (date) =>
 // get the current daily map
 dailyRouter.get("/", async (req, res) => {
   // query the db for the daily map by the date string
-  const dateString = getDateString();
+  const date = new Date();
+  const dateString = getDateString(date);
 
   const dailyMap = await Daily.findOne({ dateString });
 
@@ -55,11 +57,25 @@ dailyRouter.post("/", async (req, res) => {
     return res.status(400).json({ error: "illegal request" });
   }
 
+  // check if a daily map already exists for today
+  // get the date and make it a string: "DD-MM-YYYY"
+  const date = new Date();
+  const dateString = getDateString(date);
+  const timestamp = date.getTime();
+
+  const dailyMap = await Daily.findOne({ dateString });
+  if (dailyMap !== null) {
+    console.log(dailyMap);
+    return res.status(400).json({ error: `${dateString} already exists` });
+  }
+
   // generate the new map
   const width = 20;
   const height = 20;
   const [nIslands, clusterSpread] = randomElement(generationCombos);
   const waterRatio = 0.6;
+  const numBombs = 32;
+  const nLighthouses = randomElement(lighthouseOptions);
   const newMap = generateValidIslandsMap(
     width,
     height,
@@ -70,11 +86,6 @@ dailyRouter.post("/", async (req, res) => {
   );
   const mapString = mapToString(newMap);
 
-  // get the date and make it a string: "DD-MM-YYYY"
-  const date = new Date();
-  const dateString = getDateString(date);
-  const timestamp = date.getTime();
-
   // create a new daily object and save it to the db
   const newDaily = new Daily({
     map: mapString,
@@ -82,6 +93,8 @@ dailyRouter.post("/", async (req, res) => {
     height,
     dateString,
     timestamp,
+    numBombs,
+    nLighthouses,
   });
   const savedDaily = await newDaily.save();
 
