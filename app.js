@@ -31,7 +31,7 @@ const connectDB = () =>
 
 const apiLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 100,
+  max: 15,
   standardHeaders: true,
   legacyHeaders: true,
 });
@@ -54,7 +54,7 @@ app.use(express.static("build"));
 app.use(express.json());
 app.use(compression());
 app.use(mongoSanitize());
-app.use("/api", apiLimiter);
+app.use("/api/highscores", apiLimiter);
 
 // routers
 app.use("/api/highscores", highscoresRouter);
