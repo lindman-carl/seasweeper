@@ -54,6 +54,19 @@ dailyRouter.get("/", async (_, res) => {
   res.status(200).json(dailyMap);
 });
 
+// GET daily map by date string
+dailyRouter.get("/:dateString", async (req, res) => {
+  const { dateString } = req.params;
+
+  const dailyMap = await Daily.findOne({ dateString });
+
+  if (dailyMap === null) {
+    return res.status(400).json({ error: `${dateString} not found` });
+  }
+
+  res.status(200).json(dailyMap);
+});
+
 // schedule a cron task to generate a new map every 24 hours
 dailyRouter.post("/", async (req, res) => {
   const { key } = req.headers;
