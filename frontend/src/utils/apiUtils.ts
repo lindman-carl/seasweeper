@@ -59,4 +59,24 @@ const fetchDaily = async () => {
   return dailyMap.data;
 };
 
-export { fetchHighscores, postHighscore, fetchDaily };
+// GET daily map by date string
+// not very DRY
+const fetchDailyByDateString = async (dateString: string) => {
+  if (!process.env.REACT_APP_DAILY_KEY) {
+    throw new Error("invalid daily key");
+  }
+
+  const dailyMap = await axios.get(DAILY_API_URL + "/" + dateString, {
+    headers: {
+      key: process.env.REACT_APP_DAILY_KEY,
+    },
+  });
+
+  if (!dailyMap.data) {
+    throw new Error(`${dateString} not found`);
+  }
+
+  return dailyMap.data;
+};
+
+export { fetchHighscores, postHighscore, fetchDaily, fetchDailyByDateString };
