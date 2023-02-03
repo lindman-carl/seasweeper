@@ -43,8 +43,7 @@ const postHighscore = async (
 // GET the daily map
 const fetchDaily = async () => {
   if (!process.env.REACT_APP_DAILY_KEY) {
-    console.error("no env var REACT_APP_DAILY_KEY");
-    return;
+    throw new Error("invalid daily key");
   }
 
   const dailyMap = await axios.get(DAILY_API_URL, {
@@ -53,7 +52,9 @@ const fetchDaily = async () => {
     },
   });
 
-  console.log(dailyMap.data);
+  if (!dailyMap.data) {
+    throw new Error("daily not found");
+  }
 
   return dailyMap.data;
 };
