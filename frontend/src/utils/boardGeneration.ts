@@ -233,6 +233,14 @@ export const generateBoard = (gamemode: Gamemode) => {
   return newBoard;
 };
 
+export const generateBoardFrom2DArray = (
+  array: number[][],
+  numBombs: number
+) => {
+  const board = populateGeneratedMap(numBombs, array);
+  return board;
+};
+
 export const generateBoardsForAllGamemodes = async (
   gamemodes: Gamemode[]
 ): Promise<Gamemode[]> => {
