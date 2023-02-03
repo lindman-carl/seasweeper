@@ -11,15 +11,17 @@ import {
   MdRefresh,
 } from "react-icons/md";
 
+// types
+import { Gamemode } from "../../../types";
+
 // redux
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { gameStateActions } from "../../../redux/gameStateSlice";
-import { getGamemodeById } from "../../../utils/gameUtils";
 import { RootState } from "../../../redux/store";
-import { Gamemode } from "../../../types";
 
 type Props = {
   handleSelectGamemode: (index: number) => void;
+  startGamemode: Gamemode;
 };
 
 // local components
@@ -64,26 +66,22 @@ const RightButton = ({ onClick }: { onClick: () => void }) => (
   </div>
 );
 
-const GamemodeCarousel = ({ handleSelectGamemode }: Props) => {
-  const {
-    gamemodes,
-    showGamemodeCarousel,
-    currentGamemode: { id: startIndex },
-  } = useAppSelector((state: RootState) => state.gameState);
+const GamemodeCarousel = ({ handleSelectGamemode, startGamemode }: Props) => {
+  const { gamemodes, showGamemodeCarousel } = useAppSelector(
+    (state: RootState) => state.gameState
+  );
   const dispatch = useAppDispatch();
 
   const { setShowGamemodeCarousel, regenerateGamemodeBoard } = gameStateActions;
 
   // index state
-  const [currentIndex, setCurrentIndex] = useState<number>(
-    startIndex ? startIndex : -1
-  );
-  const [gamemodeToDisplay, setGamemodeToDisplay] = useState<Gamemode>(
-    gamemodes[startIndex]
-  );
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [gamemodeToDisplay, setGamemodeToDisplay] =
+    useState<Gamemode>(startGamemode);
 
   useEffect(() => {
-    const newGamemode = getGamemodeById(gamemodes, currentIndex);
+    const newGamemode =
+      gamemodes.find((el) => el.id === currentIndex) || gamemodes[0];
     setGamemodeToDisplay(newGamemode);
   }, [gamemodes, currentIndex]);
 
@@ -115,7 +113,9 @@ const GamemodeCarousel = ({ handleSelectGamemode }: Props) => {
 
   return (
     <div className="carousel-container">
-      <RegenerateGamemodeButton onClick={handleRegenerateBoard} />
+      {currentIndex !== 0 ? (
+        <RegenerateGamemodeButton onClick={handleRegenerateBoard} />
+      ) : null}
       <Header label={gamemodeToDisplay.label} />
       <CloseButton onClick={handleToggleGamemodeCarousel} />
       <LeftButton onClick={() => handleCarouselNavigationClick(-1)} />
