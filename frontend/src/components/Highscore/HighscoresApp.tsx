@@ -165,7 +165,7 @@ const HighscoresApp = forwardRef((_, ref) => {
         currentDailyBoard ? (
           <HighscoreBoard board={currentDailyBoard} />
         ) : (
-          <div className="h-8 m-auto text-sky-800 flex items-center">
+          <div className="h-8 m-auto mb-4 text-sky-800 flex items-center">
             <ClipLoader color="text-sky-800" />
           </div>
         )
