@@ -177,14 +177,17 @@ export const gameStateSlice = createSlice({
         state.gamemodes,
         action.payload
       );
-      const newGamemodes = generateBoardForSpecificGamemode(
-        state.gamemodes,
-        action.payload
-      );
+
+      // dont generate a new board for the daily challenge
+      if (action.payload !== 0) {
+        const newGamemodes = generateBoardForSpecificGamemode(
+          state.gamemodes,
+          action.payload
+        );
+        state.gamemodes = newGamemodes;
+      }
 
       state.currentGamemode = newCurrentGamemode;
-      state.gamemodes = newGamemodes;
-
       state.showGamemodeCarousel = false;
     },
     startGame: (state: GameState, action: PayloadAction<any>) => {
