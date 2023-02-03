@@ -123,7 +123,7 @@ const HighscoresApp = forwardRef((_, ref) => {
     // hard code daily option first
     return [
       <option value={"daily"} key={0}>
-        Daily
+        Daily challenge
       </option>,
       ...optionTags,
     ];
