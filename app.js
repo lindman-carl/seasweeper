@@ -31,21 +31,25 @@ const connectDB = () =>
 
 const apiLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 10,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: true,
 });
 
 // middleware
 app.use(helmet());
-app.use(
-  cors({
-    origin: "https://seasweeper.lindman.dev",
-    methods: ["GET", "POST"],
-    allowedHeaders: "appliction/json",
-    maxAge: 5,
-  })
-);
+if (process.env.NODE_ENV === "development") {
+  app.use(cors());
+} else {
+  app.use(
+    cors({
+      origin: "https://seasweeper.lindman.dev",
+      methods: ["GET", "POST"],
+      allowedHeaders: "appliction/json",
+      maxAge: 5,
+    })
+  );
+}
 app.use(express.static("build"));
 app.use(express.json());
 app.use(compression());
