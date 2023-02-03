@@ -20,19 +20,11 @@ const GameApp = () => {
     highscoresRef.current.refetchHighscores();
   };
 
-  const setHighscoresMapFilter = (name: string) => {
-    // sets highscoreApp filter to name
-    highscoresRef.current.setMapFilter(name);
-  };
-
   // render
   return (
     <div className="game-app-container">
       <Provider store={store}>
-        <Game
-          handleRefetchHighscores={handleRefetchHighscores}
-          setHighscoresMapFilter={setHighscoresMapFilter}
-        />
+        <Game handleRefetchHighscores={handleRefetchHighscores} />
         <div className="game-info-container">
           <Logo variant={"logo-large"} />
 
