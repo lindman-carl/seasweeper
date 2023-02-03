@@ -1,26 +1,42 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+} from "react";
 import { useQuery } from "react-query";
 
 // types
 import { HighscoreEntry } from "../../types";
 
 // utils
-import { gamemodes } from "../../utils/gameUtils";
+import { fetchHighscores } from "../../utils/apiUtils";
+import { gamemodes, getDateString } from "../../utils/gameUtils";
+import { RootState } from "../../redux/store";
 
 // components
 import HighScoresContainer from "./HighscoreContainer";
 import HighscoreList from "./HighscoreList";
 import HighscoreFilter from "./HighscoreFilter";
 import IconCheckbox from "../Game/Hud/IconCheckbox";
-import { fetchHighscores } from "../../utils/apiUtils";
 
 //icons
 import { GiTrophy } from "react-icons/gi";
+import { useAppSelector } from "../../redux/hooks";
+import { DateFilter } from "./DateFilter";
+
+const dateString = getDateString(new Date());
 
 const HighscoresApp = forwardRef((_, ref) => {
+  // game state
+  const { currentGamemode } = useAppSelector(
+    (state: RootState) => state.gameState
+  );
+
   const sortedGamemodes = [...gamemodes].sort((a, z) => a.id - z.id);
-  const [mapFilter, setMapFilter] = useState<string>(sortedGamemodes[0].name); // init on first gamemode
+  const [mapFilter, setMapFilter] = useState<string>(currentGamemode.name); // init on current gamemode
   const [searchFilter, setSearchFilter] = useState<string>("");
+  const [dailyFilter, setDailyFilter] = useState<string>(dateString); // init on current date
 
   // fetch highscores on mount
   const { data, isLoading, error, refetch } = useQuery(
@@ -34,21 +50,31 @@ const HighscoresApp = forwardRef((_, ref) => {
   // handle undefined data
   const highscoreData: HighscoreEntry[] = data ?? [];
 
-  // export functions to parent
+  // "export functions to parent"
   useImperativeHandle(ref, () => ({
     refetchHighscores() {
       refetch();
     },
-    setMapFilter(idx: string) {
-      setMapFilter(idx);
-    },
   }));
+
+  // set map filter on gamemode change
+  useEffect(() => {
+    if (currentGamemode.id === 0) {
+      setMapFilter("daily");
+      return;
+    }
+    setMapFilter(currentGamemode.name);
+  }, [currentGamemode]);
 
   // eventhandlers
   // handles map filter by selection of select input
   const handleMapFilter = ({
     currentTarget,
   }: React.ChangeEvent<HTMLSelectElement>) => {
+    if (currentTarget.value === "daily") {
+      setMapFilter("daily");
+      return;
+    }
     setMapFilter(currentTarget.value);
   };
 
@@ -58,9 +84,15 @@ const HighscoresApp = forwardRef((_, ref) => {
     setSearchFilter(currentTarget.value.trim());
   };
 
+  const handleDailyFilter = ({
+    currentTarget,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setDailyFilter(currentTarget.value);
+  };
+
   // mapping gamemodes to select input
-  const mapGamemodesToSelect = () =>
-    sortedGamemodes
+  const mapGamemodesToSelect = () => {
+    const optionTags = sortedGamemodes
       .sort((a, b) => 0 - (a.name > b.name ? 1 : -1))
       .map((gm) => (
         <option value={gm.name} key={gm.id}>
@@ -68,6 +100,14 @@ const HighscoresApp = forwardRef((_, ref) => {
         </option>
       ));
 
+    // hard code daily option first
+    return [
+      <option value={"daily"} key={0}>
+        Daily
+      </option>,
+      ...optionTags,
+    ];
+  };
   return (
     <HighScoresContainer>
       {/* trophy icon/refresh */}
@@ -84,7 +124,14 @@ const HighscoresApp = forwardRef((_, ref) => {
       </div>
       {/* highscore filtering input */}
       <div className="highscores-input-container">
-        <HighscoreFilter onChange={handleSearchFilter} />
+        {mapFilter === "daily" ? (
+          <DateFilter
+            handleDailyFilter={handleDailyFilter}
+            value={dailyFilter}
+          />
+        ) : (
+          <HighscoreFilter onChange={handleSearchFilter} />
+        )}
         <select
           className="highscores-select"
           onChange={handleMapFilter}
@@ -98,7 +145,7 @@ const HighscoresApp = forwardRef((_, ref) => {
         data={highscoreData}
         isLoading={isLoading}
         error={error}
-        mapFilter={mapFilter}
+        mapFilter={mapFilter === "daily" ? dailyFilter : mapFilter}
         searchFilter={searchFilter}
       />
     </HighScoresContainer>
