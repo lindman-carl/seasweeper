@@ -76,7 +76,7 @@ const GamemodeCarousel = ({ handleSelectGamemode }: Props) => {
 
   // index state
   const [currentIndex, setCurrentIndex] = useState<number>(
-    startIndex ? startIndex : 0
+    startIndex ? startIndex : -1
   );
   const [gamemodeToDisplay, setGamemodeToDisplay] = useState<Gamemode>(
     gamemodes[startIndex]
