@@ -9,15 +9,18 @@ import { Board, Gamemode } from "../../types";
 // components
 import Tile from "./Tile";
 import TileCarousel from "./GamemodeCarousel/TileCarousel";
+import TileHighscore from "../Highscore/TileHighscore";
 
 type BoardProps = {
   board: Board;
   carousel?: boolean;
+  daily?: boolean;
   handleRetryGame?: (board: Board, gamemode: Gamemode) => void;
 };
 
 const BoardComponent = ({
   carousel = false,
+  daily = false,
   handleRetryGame = () => {},
   board,
 }: BoardProps) => {
@@ -32,6 +35,8 @@ const BoardComponent = ({
     const mappedRow = row.map((tile, idx) => {
       if (carousel) {
         return <TileCarousel key={idx} tile={tile} />;
+      } else if (daily) {
+        return <TileHighscore key={idx} tile={tile} />;
       } else {
         return (
           <Tile

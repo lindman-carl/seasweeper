@@ -7,23 +7,26 @@ import React, {
 import { useQuery } from "react-query";
 
 // types
-import { HighscoreEntry } from "../../types";
+import { Board, HighscoreEntry } from "../../types";
 
 // utils
-import { fetchHighscores } from "../../utils/apiUtils";
-import { gamemodes, getDateString } from "../../utils/gameUtils";
+import { fetchDailyByDateString, fetchHighscores } from "../../utils/apiUtils";
+import { gamemodes, getDateString, stringToMap } from "../../utils/gameUtils";
 import { RootState } from "../../redux/store";
 
 // components
 import HighScoresContainer from "./HighscoreContainer";
 import HighscoreList from "./HighscoreList";
 import HighscoreFilter from "./HighscoreFilter";
+import HighscoreBoard from "./HighscoreBoard";
 import IconCheckbox from "../Game/Hud/IconCheckbox";
 
 //icons
 import { GiTrophy } from "react-icons/gi";
 import { useAppSelector } from "../../redux/hooks";
 import { DateFilter } from "./DateFilter";
+import { generateBoardFrom2DArray } from "../../utils/boardGeneration";
+import { FaSpinner } from "react-icons/fa";
 
 const dateString = getDateString(new Date());
 
@@ -37,6 +40,9 @@ const HighscoresApp = forwardRef((_, ref) => {
   const [mapFilter, setMapFilter] = useState<string>(currentGamemode.name); // init on current gamemode
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [dailyFilter, setDailyFilter] = useState<string>(dateString); // init on current date
+  const [currentDailyBoard, setCurrentDailyBoard] = useState<Board | null>(
+    null
+  );
 
   // fetch highscores on mount
   const { data, isLoading, error, refetch } = useQuery(
@@ -65,6 +71,20 @@ const HighscoresApp = forwardRef((_, ref) => {
     }
     setMapFilter(currentGamemode.name);
   }, [currentGamemode]);
+
+  // fetch daily map on daily filter change
+  useEffect(() => {
+    const fetchDaily = async () => {
+      const daily = await fetchDailyByDateString(dailyFilter);
+      if (!daily) return;
+
+      const dailyMap = stringToMap(daily.map, daily.width);
+
+      const dailyBoard = generateBoardFrom2DArray(dailyMap, 0);
+      setCurrentDailyBoard(dailyBoard);
+    };
+    fetchDaily();
+  }, [dailyFilter]);
 
   // eventhandlers
   // handles map filter by selection of select input
@@ -140,6 +160,14 @@ const HighscoresApp = forwardRef((_, ref) => {
           {mapGamemodesToSelect()}
         </select>
       </div>
+      {/* daily map */}
+      {mapFilter === "daily" ? (
+        currentDailyBoard ? (
+          <HighscoreBoard board={currentDailyBoard} />
+        ) : (
+          <FaSpinner />
+        )
+      ) : null}
       {/* map highscores */}
       <HighscoreList
         data={highscoreData}

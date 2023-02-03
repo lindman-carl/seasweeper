@@ -136,6 +136,17 @@ body {
       select-none;
   }
 
+  .tile-highscore-container {
+    @apply w-full h-min 
+    m-[0.5px]
+    flex justify-center items-center;
+  }
+
+  .tile-highscore-base {
+    @apply w-1 h-1 
+    select-none;
+  }
+
   .tile-container {
     @apply w-full h-min 
     p-px md:p-0.5 
