@@ -31,7 +31,7 @@ const connectDB = () =>
 
 const apiLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 15,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: true,
 });
