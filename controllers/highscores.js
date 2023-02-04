@@ -4,13 +4,22 @@ const highscoresRouter = require("express").Router();
 
 const Highscore = require("../models/Highscore");
 
+// cache highscores
+let highscoresCache;
+let highscoresCacheNeedsUpdate = true;
+
 // get all highscores
 highscoresRouter.get("/", async (req, res) => {
-  // find all highscores
-  const highscores = await Highscore.find({});
+  if (highscoresCacheNeedsUpdate) {
+    // find all highscores
+    console.log("[highscores] updating cache...");
+    const highscores = await Highscore.find({});
+    highscoresCache = highscores;
+    highscoresCacheNeedsUpdate = false;
+  }
 
   // respond with json
-  res.json(highscores.map((highscore) => highscore.toJSON()));
+  res.json(highscoresCache.map((highscore) => highscore.toJSON()));
 });
 
 // get highscore by id
@@ -42,10 +51,11 @@ highscoresRouter.post("/", async (req, res) => {
     timestamp: Date.now(),
   });
 
-  // save to db
+  // save to db, tell cache to update
   const savedHighscoreObject = await newHighscoreObject.save();
+  highscoresCacheNeedsUpdate = true;
 
-  console.log(savedHighscoreObject);
+  console.log(`[highscores] posted ${savedHighscoreObject}`);
 
   // respond with saved object
   res.status(201).json(savedHighscoreObject);
