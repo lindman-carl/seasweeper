@@ -41,11 +41,8 @@ const getDateString = (date) =>
 
 // get the current daily map
 dailyRouter.get("/", async (_, res) => {
-  // query the db for the daily map by the date string
-  const date = new Date();
-  const dateString = getDateString(date);
-
-  const dailyMap = await Daily.findOne({ dateString });
+  // query the db for the daily map with the most recent timestamp
+  const dailyMap = await Daily.findOne().sort({ timestamp: -1 });
 
   if (dailyMap === null) {
     return res.status(400).json({ error: "daily map not found" });
