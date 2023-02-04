@@ -12,7 +12,7 @@ body {
   .game-app-container {
     @apply h-full 
     flex flex-col items-start justify-center 
-    lg:h-screen lg:min-h-full
+    lg:min-h-full
     lg:flex-row lg:justify-center
     lg:overflow-hidden
     overflow-x-hidden;
