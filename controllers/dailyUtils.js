@@ -8,7 +8,7 @@ const generationCombos = [
   [10, 4],
   [20, 2],
 ];
-const lighthouseOptions = [0, 1, 2, 3];
+const lighthouseOptions = [2, 3];
 
 // get a random element from an array
 const randomElement = (array) =>
