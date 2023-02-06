@@ -13,6 +13,7 @@ const config = require("./utils/config");
 // routers
 const highscoresRouter = require("./controllers/highscores");
 const dailyRouter = require("./controllers/daily");
+const leaderboardRouter = require("./controllers/leaderboard");
 
 const app = express(); // initialize express app
 
@@ -59,6 +60,7 @@ app.use("/api/highscores", apiLimiter);
 // routers
 app.use("/api/highscores", highscoresRouter);
 app.use("/api/daily", dailyRouter);
+app.use("/api/leaderboard", leaderboardRouter);
 
 app.get("/*", function (_, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
