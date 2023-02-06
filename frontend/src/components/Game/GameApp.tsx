@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Provider } from "react-redux";
 
 // components
@@ -7,6 +7,7 @@ import GameText from "./GameText";
 import HighscoresApp from "../Highscore";
 import Logo from "../Logo";
 import SignatureFooter from "../SignatureFooter";
+import UpdateModal from "../UpdateModal";
 
 // state management
 import { store } from "../../redux/store";
@@ -14,6 +15,16 @@ import { store } from "../../redux/store";
 const GameApp = () => {
   // refs
   const highscoresRef = useRef<any>();
+
+  // state
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(
+    window.localStorage.getItem("dismissedUpdateModal") === null
+  );
+
+  const closeUpdateModal = () => {
+    setShowUpdateModal(false);
+    window.localStorage.setItem("dismissedUpdateModal", "true");
+  };
 
   const handleRefetchHighscores = () => {
     // calls highscoreApp refetch method
@@ -35,6 +46,7 @@ const GameApp = () => {
           <SignatureFooter />
         </div>
       </Provider>
+      {showUpdateModal ? <UpdateModal onClose={closeUpdateModal} /> : null}
     </div>
   );
 };

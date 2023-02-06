@@ -310,7 +310,7 @@ body {
   .leaderboard-header {
     @apply 
     mb-4
-    text-2xl font-semibold text-sky-900
+    text-xl font-semibold text-sky-900
     underline underline-offset-auto decoration-blue-300 decoration-2;
   }
 
@@ -410,5 +410,26 @@ body {
     text-sky-900
     font-semibold text-center text-lg 
     focus:outline;
+  }
+
+  /* Modal */
+  .modal-header {
+    @apply 
+    mb-4
+    text-2xl font-semibold text-sky-900 text-center
+    underline underline-offset-auto decoration-blue-300 decoration-2;
+  }
+
+  .modal-subheader {
+    @apply 
+    mb-2
+    text-lg font-semibold text-sky-900 text-center
+    underline underline-offset-auto decoration-blue-300 decoration-2;
+  }
+
+  .modal-text {
+    @apply 
+    mb-2
+    text-base font-medium text-sky-900 text-left;
   }
 }
