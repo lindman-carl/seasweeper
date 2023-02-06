@@ -2,7 +2,7 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 
 // types
-import { HighscoreEntry } from "../types";
+import { HighscoreEntry, LeaderboardEntry } from "../types";
 
 const BASE_URL =
   process.env.NODE_ENV === "development"
@@ -11,6 +11,7 @@ const BASE_URL =
 
 const HIGHSCORES_API_URL = BASE_URL + "highscores";
 const DAILY_API_URL = BASE_URL + "daily";
+const LEADERBOARD_API_URL = BASE_URL + "leaderboard";
 
 const fetchHighscores = async () => {
   // const res = await axios.get("/api/highscores");
@@ -79,4 +80,16 @@ const fetchDailyByDateString = async (dateString: string) => {
   return dailyMap.data;
 };
 
-export { fetchHighscores, postHighscore, fetchDaily, fetchDailyByDateString };
+const fetchLeaderboard = async () => {
+  const res = await axios.get<LeaderboardEntry[]>(LEADERBOARD_API_URL);
+  const sortedData = res.data.sort((a, z) => z.medalScore - a.medalScore);
+  return sortedData;
+};
+
+export {
+  fetchHighscores,
+  postHighscore,
+  fetchDaily,
+  fetchDailyByDateString,
+  fetchLeaderboard,
+};
