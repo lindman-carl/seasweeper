@@ -7,6 +7,14 @@ export type HighscoreEntry = {
   id?: string;
 };
 
+export type LeaderboardEntry = {
+  playerName: string;
+  goldMedals: number;
+  silverMedals: number;
+  bronzeMedals: number;
+  medalScore: number;
+};
+
 export type Gamemode = {
   name: string;
   label: string;
