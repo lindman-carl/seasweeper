@@ -310,8 +310,8 @@ body {
   .leaderboard-header {
     @apply 
     mb-4
-    text-xl font-semibold text-sky-900
-    ;
+    text-2xl font-semibold text-sky-900
+    underline underline-offset-auto decoration-blue-300 decoration-2;
   }
 
   .leaderboard-champion {
