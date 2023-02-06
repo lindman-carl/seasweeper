@@ -201,6 +201,30 @@ describe("The game", () => {
       cy.get("#tile-93").find("svg").should("not.exist");
     });
 
+    it("can't place a lighthouse on a tile with a lighthouse", () => {
+      // expect 2 lighthouses left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("2");
+
+      // toggle lighthouse mode, click a tile
+      cy.get("[data-id=toggle-lighthouse-mode]").click();
+      cy.get("#tile-72").click();
+
+      // expect 1 lighthouse left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("1");
+
+      // expect the tile to have a lighthouse, check for svg
+      cy.get("#tile-72").find("svg");
+
+      // try place a lighthouse on the same tile
+      cy.get("#tile-72").click();
+
+      // expect 1 lighthouse left
+      cy.get("[data-id=toggle-lighthouse-mode]").contains("1");
+
+      // expect the tile to have a lighthouse, check for svg
+      cy.get("#tile-72").find("svg");
+    });
+
     it("placing on a sea tile reveals it", () => {
       // expect 2 lighthouses left
       cy.get("[data-id=toggle-lighthouse-mode]").contains("2");
