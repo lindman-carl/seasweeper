@@ -40,7 +40,7 @@ dailyRouter.post("/", async (req, res) => {
   const { key } = req.headers;
 
   if (key !== process.env.DAILY_KEY) {
-    return res.status(400).json({ error: "illegal request" });
+    return res.status(403).json({ error: "illegal request" });
   }
 
   // check if a daily map already exists for today
