@@ -8,6 +8,7 @@ const testBoard = testData as Board;
 describe("The game", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/");
+    cy.get("#close-modal-button").click();
   });
 
   it("successfully loads the test board", () => {

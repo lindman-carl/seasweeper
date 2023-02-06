@@ -41,7 +41,11 @@ const UpdateModal = ({ onClose }: Props) => {
           <div>Multiple minor bug fixes.</div>
         </div>
         <div className="my-2">
-          <GameOverBoxButton label={"Ok"} onClick={onClose} />
+          <GameOverBoxButton
+            label={"Ok"}
+            onClick={onClose}
+            id={"close-modal-button"}
+          />
         </div>
       </div>
     </Modal>
