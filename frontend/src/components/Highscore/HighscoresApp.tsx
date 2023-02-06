@@ -148,9 +148,9 @@ const HighscoresApp = forwardRef((_, ref) => {
         </div>
         <div className="leaderboard-header">Daily challenge champion</div>
         <LeaderboardList />
-        <div className="bg-sky-50 text-sm text-sky-900 font-light text-center px-4 py-1">
-          The leaderboard is updated every 24h, after the daily challenge has
-          concluded.
+        <div className="bg-sky-50 text-xs text-sky-900 font-light text-center px-4 py-1">
+          3 points for gold, 2 for silver, 1 for bronze. The leaderboard is
+          updated every 24h, after the daily challenge has concluded.
         </div>
       </HighScoresContainer>
     );
