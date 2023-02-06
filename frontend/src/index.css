@@ -305,6 +305,79 @@ body {
     focus:outline-none;
   }
 
+  /* Leaderboard */
+
+  .leaderboard-header {
+    @apply 
+    mb-4
+    text-xl font-semibold text-sky-900
+    ;
+  }
+
+  .leaderboard-champion {
+    @apply
+    w-full mb-4
+    flex flex-row justify-center items-center
+    gap-x-4
+    ;
+  }
+
+  .leaderboard-champion-name {
+    @apply 
+    text-sky-900 font-semibold text-xl
+    underline underline-offset-auto decoration-blue-300 decoration-2;
+  }
+
+  .leaderboard-list-row {
+    @apply w-64 
+    grid grid-cols-12 grid-rows-1
+    text-sky-900 text-base font-medium;
+  }
+
+  .leaderboard-list-headers {
+    @apply w-64 
+    mb-2 
+    grid grid-cols-12 grid-rows-1
+    text-sky-900 font-semibold text-base
+    underline underline-offset-auto decoration-blue-300 decoration-2;
+  }
+
+  .leaderboard-list-rank {
+    @apply 
+    col-start-1 col-span-2 row-start-1 row-span-1
+    font-semibold;
+  }
+  .leaderboard-list-name {
+    @apply 
+    col-start-3 col-span-4 row-start-1 row-span-1
+    font-medium;
+  }
+  .leaderboard-list-goldmedal {
+    @apply 
+    col-start-7 col-span-1 row-start-1 row-span-1
+    flex justify-center
+    font-medium;
+  }
+  .leaderboard-list-silvermedal {
+    @apply 
+    col-start-8 col-span-1 row-start-1 row-span-1
+    flex justify-center
+    font-medium;
+  }
+  .leaderboard-list-bronzemedal {
+    @apply 
+    col-start-9 col-span-1 row-start-1 row-span-1
+    flex justify-center
+    font-medium;
+  }
+  .leaderboard-list-totalscore {
+    @apply 
+    col-start-10 col-span-3 row-start-1 row-span-1
+    w-full
+    flex justify-center
+    font-medium;
+  }
+
   /* Logo */
   .logo-base {
     @apply flex flex-row justify-center items-center

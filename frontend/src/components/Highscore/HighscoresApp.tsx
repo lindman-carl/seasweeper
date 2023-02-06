@@ -12,7 +12,9 @@ import { Board, HighscoreEntry } from "../../types";
 // utils
 import { fetchDailyByDateString, fetchHighscores } from "../../utils/apiUtils";
 import { gamemodes, getDateString, stringToMap } from "../../utils/gameUtils";
+import { generateBoardFrom2DArray } from "../../utils/boardGeneration";
 import { RootState } from "../../redux/store";
+import { useAppSelector } from "../../redux/hooks";
 
 // components
 import HighScoresContainer from "./HighscoreContainer";
@@ -20,12 +22,12 @@ import HighscoreList from "./HighscoreList";
 import HighscoreFilter from "./HighscoreFilter";
 import HighscoreBoard from "./HighscoreBoard";
 import IconCheckbox from "../Game/Hud/IconCheckbox";
-
-//icons
-import { GiTrophy } from "react-icons/gi";
-import { useAppSelector } from "../../redux/hooks";
+import LeaderboardList from "./LeaderboardList";
 import { DateFilter } from "./DateFilter";
-import { generateBoardFrom2DArray } from "../../utils/boardGeneration";
+
+//icons and spinners
+import { GiTrophy } from "react-icons/gi";
+import { FaMedal } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
 
 const dateString = getDateString(new Date());
@@ -43,6 +45,7 @@ const HighscoresApp = forwardRef((_, ref) => {
   const [currentDailyBoard, setCurrentDailyBoard] = useState<Board | null>(
     null
   );
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
   // fetch highscores on mount
   const { data, isLoading, error, refetch } = useQuery(
@@ -128,6 +131,31 @@ const HighscoresApp = forwardRef((_, ref) => {
       ...optionTags,
     ];
   };
+
+  if (showLeaderboard) {
+    return (
+      <HighScoresContainer>
+        <div className="relative -top-4">
+          <IconCheckbox
+            icon={<FaMedal size={28} />}
+            status={false}
+            onClick={() => setShowLeaderboard(false)}
+            tooltip={"View highscores"}
+            iconColor={"#D6AF36"}
+            id="view-highscores"
+            ariaLabel="View highscores"
+          />
+        </div>
+        <div className="leaderboard-header">Daily challenge champion</div>
+        <LeaderboardList />
+        <div className="bg-sky-50 text-sm text-sky-900 font-light text-center px-4 py-1">
+          The leaderboard is updated every 24h, after the daily challenge has
+          concluded.
+        </div>
+      </HighScoresContainer>
+    );
+  }
+
   return (
     <HighScoresContainer>
       {/* trophy icon/refresh */}
@@ -135,11 +163,11 @@ const HighscoresApp = forwardRef((_, ref) => {
         <IconCheckbox
           icon={<GiTrophy size={28} />}
           status={false}
-          onClick={refetch}
-          tooltip={"Refresh highscores"}
+          onClick={() => setShowLeaderboard(true)}
+          tooltip={"View daily challenge leaderboard"}
           iconColor={"#D6AF36"}
-          id="refresh-highscores"
-          ariaLabel="Refresh highscores"
+          id="view-leaderboard"
+          ariaLabel="View daily challenge leaderboard"
         />
       </div>
       {/* highscore filtering input */}
