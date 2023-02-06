@@ -17,6 +17,10 @@ const leaderboardSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  medalScore: {
+    type: Number,
+    required: true,
+  },
 });
 
 leaderboardSchema.set("toJSON", {
