@@ -90,10 +90,6 @@ export const handleClickTile = (
     return;
   }
 
-  if (tile.marked && !gameState.markerMode) {
-    return;
-  }
-
   if (gameState.markerMode || markClick) {
     // handle marker mode
     if (tile.type !== 2) {
@@ -114,6 +110,10 @@ export const handleClickTile = (
     // tile.marked = !tile.marked;
     dispatch(markTile({ id: tile.id }));
 
+    return;
+  }
+
+  if (tile.marked && !gameState.markerMode) {
     return;
   }
 
