@@ -117,7 +117,7 @@ export const handleClickTile = (
     return;
   }
 
-  if (gameState.lighthouseMode) {
+  if (gameState.lighthouseMode && !tile.lighthouse) {
     // handle lighthouse mode
     if (tile.type === 1 && gameState.availableLighthouses > 0) {
       // check if on land
