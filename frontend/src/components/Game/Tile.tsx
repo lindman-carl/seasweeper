@@ -24,10 +24,18 @@ const numberColors: { [key: number]: string } = {
 type Props = {
   tile: TileType;
   onClick: () => void;
+  onRightClick: () => void;
 };
 
-const Tile = ({ tile, onClick }: Props) => {
+const Tile = ({ tile, onClick, onRightClick }: Props) => {
   let iconSize = "1.5em";
+
+  const handleContextMenuClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    onRightClick();
+  };
 
   const formatCount = () => {
     if (tile.count > 0) {
@@ -139,6 +147,7 @@ const Tile = ({ tile, onClick }: Props) => {
       <button
         className="tile-container"
         onClick={onClick}
+        onContextMenu={handleContextMenuClick}
         id={`tile-${tile.id}`}
         aria-label={`tile-${tile.id}`}
       >

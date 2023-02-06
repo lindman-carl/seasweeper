@@ -45,6 +45,16 @@ const BoardComponent = ({
             onClick={() =>
               handleClickTile(tile, gameState, board, dispatch, handleRetryGame)
             }
+            onRightClick={() =>
+              handleClickTile(
+                tile,
+                gameState,
+                board,
+                dispatch,
+                handleRetryGame,
+                true
+              )
+            }
           />
         );
       }

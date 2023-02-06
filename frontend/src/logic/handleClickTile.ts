@@ -16,7 +16,8 @@ export const handleClickTile = (
     AnyAction
   > &
     Dispatch<AnyAction>,
-  handleRetryGame: (board: Board, currentGamemode: Gamemode) => void
+  handleRetryGame: (board: Board, currentGamemode: Gamemode) => void,
+  markClick?: boolean
 ) => {
   const REFRESH_RATE = 1000;
 
@@ -93,7 +94,7 @@ export const handleClickTile = (
     return;
   }
 
-  if (gameState.markerMode) {
+  if (gameState.markerMode || markClick) {
     // handle marker mode
     if (tile.type !== 2) {
       // only mark water tiles
