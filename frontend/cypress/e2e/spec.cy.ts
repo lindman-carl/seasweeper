@@ -108,6 +108,20 @@ describe("The game", () => {
       cy.get(".gameoverbox-container").should("be.visible");
       cy.get(".gameoverbox-header").contains("Failure achieved");
     });
+
+    it("can place markers with right click", () => {
+      // right click a tile
+      cy.get("#tile-0").rightclick();
+
+      // expect the tile to have a marker, svg
+      cy.get("#tile-0").find("svg");
+
+      // right click a tile with a marker
+      cy.get("#tile-0").rightclick();
+
+      // expect the tile to not have a marker, svg
+      cy.get("#tile-0").find("svg").should("not.exist");
+    });
   });
 
   describe("placing lighthouse", () => {
