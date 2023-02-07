@@ -23,7 +23,7 @@ console.log("[server] starting server...");
 const connectDB = () => {
   console.log("[database] connecting...");
 
-  mongoose
+  return mongoose
     .connect(config.MONGODB_URI, { useNewUrlParser: true })
     .then(() => {
       console.log("[database] connected to MongoDB");
