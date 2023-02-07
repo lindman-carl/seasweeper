@@ -55,7 +55,7 @@ highscoresRouter.post("/", async (req, res) => {
   const savedHighscoreObject = await newHighscoreObject.save();
   highscoresCacheNeedsUpdate = true;
 
-  console.log(`[highscores] posted ${savedHighscoreObject}`);
+  console.log(`[highscores] posted \n${savedHighscoreObject}`);
 
   // respond with saved object
   res.status(201).json(savedHighscoreObject);

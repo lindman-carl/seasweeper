@@ -17,18 +17,21 @@ const leaderboardRouter = require("./controllers/leaderboard");
 
 const app = express(); // initialize express app
 
-console.log("connecting to", config.MONGODB_URI); // log mongodb uri
+console.log("[server] starting server...");
 
 // connect to mongodb
-const connectDB = () =>
+const connectDB = () => {
+  console.log("[database] connecting...");
+
   mongoose
     .connect(config.MONGODB_URI, { useNewUrlParser: true })
     .then(() => {
-      console.log("connected to MongoDB");
+      console.log("[database] connected to MongoDB");
     })
     .catch((error) => {
-      console.error("error connection to MongoDB:", error.message);
+      console.error("[database] error connecting to MongoDB:", error.message);
     });
+};
 
 const apiLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
