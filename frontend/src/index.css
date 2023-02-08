@@ -29,7 +29,7 @@ body {
   .game-info-container {
     @apply flex flex-col items-center justify-start
     mt-4 mx-auto
-    lg:ml-16 lg:mr-0 lg:mt-16;
+    lg:ml-16 lg:mr-0 lg:mt-6;
   }
 
   .game-text-container {
