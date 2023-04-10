@@ -1,3 +1,8 @@
+# Version 1.2
+10/04-23
+
+- Made clicking tiles more responsive by using the onMouseDown event instead of onClick.
+
 # Version 1.1
 
 ## Features
