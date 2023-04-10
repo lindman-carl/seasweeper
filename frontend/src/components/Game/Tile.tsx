@@ -146,7 +146,7 @@ const Tile = ({ tile, onClick, onRightClick }: Props) => {
     return (
       <button
         className="tile-container"
-        onClick={onClick}
+        onMouseDown={onClick}
         onContextMenu={handleContextMenuClick}
         id={`tile-${tile.id}`}
         aria-label={`tile-${tile.id}`}
