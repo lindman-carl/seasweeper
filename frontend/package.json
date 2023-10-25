@@ -9,7 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
-    "cypress": "^12.4.1",
+    "cypress": "^13.3.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.28.0",
